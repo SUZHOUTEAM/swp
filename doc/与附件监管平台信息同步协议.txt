@@ -1,0 +1,108 @@
+企业信息(协议队列名称：enterprise_info_msg)：
+
+企业ID:  ent_id
+企业名称:  ent_name
+企业简称:  ent_short_name
+企业组织机构代码:  ent_code
+企业类型:  ent_type 产废企业(PRODUCTION)/处置企业(DISPOSITION)
+法人名称:  legal_name
+联系人:  contacts
+联系电话:  contactsTel
+联系邮箱:  contacts_email
+传真:  fax
+邮编:  zip_code
+企业地址:  ent_addr
+企业所在地址经度:  ent_posx
+企业所在地址纬度:  ent_posy
+企业所在地址行政区域代码:  ent_canton
+
+
+
+许可证信息(协议队列名称：licence_info_msg)：
+
+许可证ID:  licence_id
+许可证所属企业ID:  ent_id
+许可证所属企业名称:  ent_name
+许可证编号:  licence_no
+许可证所属环保局的名称:  licence_canton_name
+许可证所属环保局的行政区域代码:  licence_canton_code
+许可证发证日期:  licence_date
+许可证所属企业的法人:  corporate
+许可证注册地址:  register_addr
+许可证营业地址:  machine_addr
+许可证有效开始日期:  start_date
+许可证有效结束日期:  end_date
+许可证的经营模式:  operation_mode   危险废物收集经营(COLLECTION)/收集、贮存、处置综合经营（INCLUDEALL）
+
+许可证处置方式详情(licence_items):
+{
+    该处置方式代码: disposition_type_code（D1/D2等等）
+    该处置方式总许可量:  approved_quantity
+    该处置方式已处置量:  excuted_quantity
+    该处置方式下的许可证明细:  licence_details
+    {
+        该明细的二位码:  waste_type_code(HW01/HW02等等)
+        该明细的八位码:  waste_code
+        该明细的危废名称:  waste_name
+    }
+}
+
+
+企业危废信息(enterprisewaste_info_msg)：
+
+危废所属企业ID:  ent_id
+危废对应的八位码:  waste_code
+危废名称或俗称:  waste_name
+危废的计量单位:  unit_code (T:吨/C:只)
+危废信息的描述或备注等信息:  waste_describe
+危废是否被删除的标志:  delete_flg （删除是1 未删除是0）
+
+
+许可证的剩余量信息(licence_item_surplus)：
+
+许可证ID:  licence_id
+许可证编号:  licence_no
+处置方式代码:  disposition_type_code/D2等等）
+该处置方式剩余可处置量:  surplus_quantity
+
+
+
+
+处置企业购买产废的经营协议(order_buyWaste_info_msg)
+
+协议名称 protocolName (null不可):  订单编号值
+协议编号 protocolNo (null不可):    订单编号值
+产废企业id wasteEnterpriseId (null不可):
+处置企业id dispostionEnterpriseId (null不可):
+协议开始日期 protocolStartDate(null可）:
+协议结束日期 protocolEndDate  (null可）:
+协议签订日期 protocolConfirmedDate  (null不可）:
+创建人 createBy:
+创建时间 createTime:
+编辑人editBy:
+编辑时间editTime:
+删除标志 deleteflg(0：正常;1:不正常):
+协议明细 protocolDetails:
+[
+  合同量 atpQuantity:
+  产废八位码 wasteCode
+  产废名称 wasteName
+  创建人createBy:
+  创建时间createTime:
+  编辑人editBy:
+  编辑时间editTime:
+  删除标志 deleteflg(0：正常;1:不正常):
+]
+
+
+一键发布信息(one_button_publish_waste_info_msg)：
+
+企业ID:  ent_id
+登录名：login_name
+可处置数量：num
+八位码：waste_code
+危废名称：waste_name
+单位：unit_code
+危废描述：wfDescribe
+删除标志 deleteflg(0：正常;1:不正常)
+

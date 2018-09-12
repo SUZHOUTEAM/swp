@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>易废网直播</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <script src="../../common/liveAdaptation.js"></script>
+    <script type="text/javascript">
+        document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        window.onresize=function () {
+            document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        }
+    </script>
+    <link rel="stylesheet" href="../../pc/css/live.css" />
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            width: 10rem;
+            height: 100%;
+            position: fixed;
+            left:0;
+            right: 0;
+            top:0;
+            bottom: 0;
+            overflow: hidden;
+        }
+        .live-container{
+            width: 100%;
+            margin-top: 0;
+            position: absolute;
+            height: 100%;
+            border-radius: 0;
+        }
+        .videoDiv{
+            height: 5.625rem;
+            width: 10rem;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        #video{
+            position: absolute;
+            height: 5.625rem;
+            width: 100%;
+            left: 0;
+            /*background: url(../img/video-bg.jpg) center 1rem no-repeat #495060;*/
+        }
+        .poster_img{
+             background: url(../img/video-bg10.png) center center no-repeat;
+             /*background: url(../../pc/img/source/play.png) center center no-repeat rgba(0,0,0,.6);*/
+             height: 5.625rem;
+             width: 10rem;
+             position: absolute;
+             z-index: 12;
+            background-size: 100% auto;
+         }
+        .play_img{
+             background: url(http://yifeiwang.com/img/source/play.png) center center no-repeat rgba(0,0,0,.6);
+             height: 5.625rem;
+             width: 10rem;
+             position: absolute;
+             z-index: 14;
+         }
+        #poster_img{
+            height: 5.625rem;
+            width: 10rem;
+            position: absolute;
+            background:url(../../pc/img/load.gif) center center no-repeat transparent;
+            display: none;
+            z-index: 100;
+        }
+        .messageList{
+            width: 10rem;
+            //position: absolute;
+            //bottom: 1.6rem;
+            /*bottom: 1.6rem;*/
+            /*position: fixed;*/
+            height: 8rem;
+            color: #333;
+            z-index: -1;
+        }
+        .live-title{
+            padding-left: 0;
+            text-align: center;
+            font-size: .34rem;
+        }
+        video::-internal-media-controls-download-button {
+            display:none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            overflow:hidden;
+        }
+
+        video::-webkit-media-controls-panel {
+            width: calc(100% + 30px);
+        }
+        .inputDiv{
+            background-color: #f4f5f6;
+            border-top: 1px solid #e8e8e8;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 1.6rem;
+            display: table;
+            z-index: 100000;
+        }
+        .input{
+            border: 1px solid #cacaca;
+            border-radius: 4px;
+            padding: 0 .3rem;
+            vertical-align: middle;
+            width: 6rem;
+            height: 1rem;
+            font-size: .4rem;
+        }
+        .btn{
+            vertical-align: middle;
+            display: inline-block;
+            width: 2rem;
+            height: 1rem;
+            background-color: #1171d1;
+            color: #ffffff;
+            text-align: center;
+            font-size: .4rem;
+            line-height: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: .5rem;
+        }
+        .arrow-div{
+            position: fixed;
+            right: 0;
+            bottom: 3rem;
+        }
+        .arrow{
+            width: 1rem;
+            height: 1rem;
+            background: rgba(121,121,121,.6);
+            display: block;
+            font-size: .5rem;
+            line-height: 1rem;
+            text-decoration: none;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: .1rem;
+        }
+    </style>
+</head>
+<body scroll="no">
+<div class="live-container">
+    <div class="live-title"><span style="width: 74%;text-overflow: ellipsis;display: inline-block;white-space: nowrap;overflow: hidden;float: left;">【<b id="liveStatus">未开始</b>】易废网提醒您产废单位这些行为将受到行政处罚</span>(当前人数：<span id="count">0</span>)</div>
+    <div id="poster_img"></div>
+    <div class="poster_img"></div>
+    <div class="play_img"></div>
+    <div class="videoDiv">
+        <video id="video" controls preload="auto" poster="../img/video-bg10.png">
+            <!--<source src="http://yifeiwang.com/zyjh.mp4" type="video/mp4"></video>-->
+        <source src="http://flvc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df.flv?netease=flvc2dcb30a.live.126.net" type="video/x-flv">
+        <source src="http://pullhlsc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df/playlist.m3u8" type="application/x-mpegURL">
+        <source src="rtmp://vc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df" type="rtmp/flv">
+        </video>
+    </div>
+    <div class="arrow-div">
+        <a href="javascript:" class="arrow" onclick="msgScroll('up')">↑</a>
+        <a href="javascript:" class="arrow" onclick="msgScroll('down')">↓</a>
+    </div>
+    <div class="messageList" id="content">
+        欢迎来到易废网!<br/>
+    </div>
+    <div class="inputDiv" id="inputDiv">
+        <input type="text" class="input" id="message" placeholder="请输入..."/>
+        <a href="javascript:" class="btn" onclick="sendMessage();" title="发送">发送</a>
+    </div>
+</div>
+<!-- html5 video tag -->
+
+<!-- nePlayer Js -->
+<script src="../../common/jquery.min.js"></script>
+<!--<script src="../../common/nep/nep.min.js"></script>-->
+<script src="../../../app/js/util.js"></script>
+<script type="text/javascript">
+    var websocket=null;
+    var account;
+    var msContent=$('#content')[0];
+    var speed=2,distance=80;
+    $(document).ready(function () {
+        /*$('#content').on('touchmove',function (e) {
+            e.stopPropagation&& e.stopPropagation();
+        })*/
+//        $("body").on("touchmove",function(event){
+//            event.preventDefault;
+//        }, false);
+        initHeight();
+//        account=readCookie('nickName');
+        if(!account){
+            account=generateAccount(6);
+        }
+        if('WebSocket' in window) {
+//            websocket = new WebSocket("ws://www.yifeiwang.com:5000");
+            websocket = new WebSocket("ws://"+window.location.host+"/swp/websocket/channel01/"+account);
+            websocket.onopen = function() {};
+            websocket.onmessage = function(event) {
+                var obj=JSON.parse(event.data);
+                if(typeof obj=='number'){
+                    $('#count').html(event.data);
+                    return;
+                }
+                $('#content').append('<div class="sayItem">'+obj.account+'<br/><span class="pao"><span class="bot"></span><span class="top"></span>'+obj.message+'</span></div>');
+                $('#content')[0].scrollTop = $('#content')[0].scrollHeight;
+            };
+            websocket.onerror = function() {};
+        } else {
+            alert('当前浏览器 Not support websocket')
+        }
+        var startTime=new Date('2018-08-16 14:00:00'.replace(new RegExp("-","gm"),"/")).getTime();
+        var currentTime=new Date().getTime();
+        if(startTime>currentTime){
+            $('#liveStatus').html('未开始');
+        }else{
+            $('#liveStatus').html('直播中');
+        }
+        $("#video").bind("play canplay",function(){
+            $("#poster_img").hide();
+            $(".poster_img").hide();
+        });
+        $('#video').on('waiting', function() {
+            $("#poster_img").css('background','url(../../pc/img/load.gif) center center no-repeat').show();
+        });
+        $('#video').on('ended', function() {
+            $("#poster_img").css('background','url('+logo+') center center no-repeat').show();
+        });
+        $('.play_img').on('click',function () {
+            $("#poster_img").show();
+            $(this).hide();
+            document.getElementById('video').play();
+        });
+        $('#message').focus(function () {
+            document.getElementById('message').scrollIntoView();
+        });
+    });
+    function msgScroll(type){
+        var scrollTop=msContent.scrollTop;
+        var y=0;
+        var flag=type=='up';
+        var timer=setInterval(function () {
+            y+=speed;
+            msContent.scrollTop=flag?(scrollTop-y):(scrollTop+y);
+            if(y==distance){
+                clearInterval(timer);
+            }
+        },10)
+    }
+    window.onbeforeunload = function() {
+        closeWebSocket();
+    };
+    window.onunload = function() {
+        closeWebSocket();
+    };
+    function sendMessage() {
+        var message=$('#message').val();
+        websocket.send(message);
+//        var str = "{name:'" + account + "',msg:'" + message + "'}";
+//        websocket.send(str);
+        $('#message').val('');
+    }
+    function generateAccount(l) {
+        var  x="0123456789";
+        var  tmp="";
+//            var timestamp = new Date().getTime();
+        for(var  i=0;i<l;i++)  {
+            tmp+=x.charAt(Math.ceil(Math.random()*100000000)%x.length);
+        }
+        return  '游客'+tmp;
+    }
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e && e.keyCode==13){ // enter 键
+            var message = document.getElementById('message');
+            if (message == document.activeElement) {
+                sendMessage();
+            }
+        }
+    };
+    function initHeight() {
+        var h=window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        $('body').height(h-80+'px');
+        $('.messageList').height(h-$('.live-title').height()-$('#video').height()-$('.inputDiv').height()-30+'px');
+    }
+</script>
+</body>
+</html>

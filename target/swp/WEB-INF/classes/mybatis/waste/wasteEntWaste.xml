@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.entwaste.mapper.EntWasteMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.entwaste.entity.EntWaste">
+		<id column="id" property="id" />
+		<result column="entId" property="entId" />
+		<result column="wasteId" property="wasteId" />
+		<result column="wasteCode" property="wasteCode" />
+		<result column="wasteName" property="wasteName" />
+		<result column="unitCode" property="unitCode" />
+		<result column="harmfulSubstance" property="harmfulSubstance" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+		<result column="resource" property="resource" />
+		<result column="externalEntId" property="externalEntId" />
+		<result column="entWasteId" property="entWasteId" />
+	</resultMap>
+
+	<resultMap id="entWasteModel" type="com.mlsc.yifeiwang.entwaste.model.EntWasteModel">
+		<id column="entWasteId" property="entWasteId" />
+		<result column="wasteId" property="wasteId" />
+		<result column="wasteCode" property="wasteCode" />
+		<result column="wasteNameId" property="wasteNameId" />
+		<result column="wasteName" property="wasteName" />
+		<result column="unitCode" property="unitCode" />
+		<result column="unitValue" property="unitValue" />
+		<result column="harmfulSubstance" property="harmfulSubstance" />
+		<collection property="fileList" ofType="com.mlsc.entity.UploadFile" column="reference_id" >
+			<id property="id" column="id"/>
+			<result property="businessCode" column="business_code"/>
+			<result property="fileId" column="file_id"/>
+			<result property="fileType" column="file_type"/>
+			<result property="referenceId" column="reference_id"/>
+		</collection>
+	</resultMap>
+
+	<select id="getEntWasteDetailById" resultMap="entWasteModel" parameterType="com.mlsc.yifeiwang.entwaste.model.EntWasteParams">
+		SELECT
+			entWaste.id AS entWasteId,
+			entWaste.wasteCode,
+			entWaste.wasteId,
+			entWaste.wasteName,
+			entWaste.harmfulSubstance,
+			uploadFile.id,
+			uploadFile.business_code,
+			uploadFile.file_id,
+			uploadFile.file_type,
+			uploadFile.reference_id,
+		    codeValue.value as unitValue
+		FROM
+			ent_waste entWaste
+		INNER JOIN waste waste ON entWaste.wasteId = waste.id
+		INNER join code_value codeValue on codeValue.code = entWaste.unitCode and codeValue.type_code = 'UNIT_TYPE'
+		LEFT JOIN upload_file uploadFile ON entWaste.id = uploadFile.reference_id
+		where entWaste.deleteFlag = 0
+		<if test=" entWasteId !=null and entWasteId !='' ">
+			 and entWaste.id = #{entWasteId}
+		</if>
+	</select>
+	<select id="listEntWasteByEntId"
+            resultType="com.mlsc.yifeiwang.entwaste.model.EntWasteModel" parameterType="com.mlsc.yifeiwang.entwaste.model.EntWasteParams">
+		SELECT
+		entWaste.id as entWasteId,
+		entWaste.wasteCode,
+		entWaste.wasteId,
+		entWaste.wasteName,
+		entWaste.unitCode,
+		codeValue.value as unitValue
+		FROM
+		ent_waste entWaste
+		INNER JOIN waste waste ON entWaste.wasteId = waste.id
+		INNER join code_value codeValue on codeValue.code = entWaste.unitCode and codeValue.type_code = 'UNIT_TYPE'
+		where entWaste.deleteFlag = 0
+		<if test=" entId !=null and entId !='' ">
+			and entWaste.entId = #{entId}
+		</if>
+		order by entWaste.editTime desc
+	</select>
+
+	<select id="listEntWaste"
+            resultType="com.mlsc.yifeiwang.entwaste.model.EntWasteModel" parameterType="com.mlsc.yifeiwang.entwaste.model.EntWasteParams">
+		SELECT
+		DISTINCT entWaste.id as entWasteId,
+		entWaste.wasteCode,
+		entWaste.wasteId,
+		entWaste.wasteName,
+		entWaste.unitCode,
+		codeValue.value as unitValue,
+		CONCAT(wasteType.code, ' ', wasteType.description) AS wasteTypeDesc,
+		case when inquiryDetail.id is not null   then TRUE
+			else FALSE
+		end as inquiried
+		FROM
+		ent_waste entWaste INNER JOIN waste waste ON entWaste.wasteId = waste.id
+		INNER join code_value codeValue on codeValue.code = entWaste.unitCode and codeValue.type_code = 'UNIT_TYPE'
+		INNER JOIN waste_type wasteType on waste.waste_type_id = wasteType.id
+		left join ent_release_detail releaseDetail on releaseDetail.entWasteId = entWaste.id
+		left join ent_inquiry_detail inquiryDetail on inquiryDetail.releaseDetailId = releaseDetail.id
+		where entWaste.deleteFlag = 0
+		<if test=" entWasteId !=null and entWasteId !='' ">
+			and  entWaste.id = #{entWasteId}
+		</if>
+		<if test=" entId !=null and entId !='' ">
+			and entWaste.entId = #{entId}
+		</if>
+		<if test=" wasteCode !=null and wasteCode !='' ">
+			and entWaste.wasteCode like concat('%',#{wasteCode},'%')
+		</if>
+		<if test=" wasteName !=null and wasteName !='' ">
+			and entWaste.wasteName like concat('%',#{wasteName},'%')
+		</if>
+		<if test=" wasteTypeDesc !=null and wasteTypeDesc !='' ">
+			and CONCAT(wasteType.code, ' ', wasteType.description) like concat('%',#{wasteTypeDesc},'%')
+		</if>
+		group by entWaste.id
+		order by entWaste.editTime desc
+		<if test='startRowIndex!=null and rows!=null and rows!=0 '>
+			LIMIT ${startRowIndex} , ${rows}
+		</if>
+	</select>
+
+	<select id="countEntWaste"
+			resultType="java.lang.Integer" parameterType="com.mlsc.yifeiwang.entwaste.model.EntWasteParams">
+		SELECT
+			count(1)
+		FROM
+			ent_waste entWaste
+			INNER JOIN waste waste ON entWaste.wasteId = waste.id
+			INNER join code_value codeValue on codeValue.code = entWaste.unitCode and codeValue.type_code = 'UNIT_TYPE'
+			INNER JOIN waste_type wasteType on waste.waste_type_id = wasteType.id
+			where entWaste.deleteFlag = 0
+		<if test=" entId !=null and entId !='' ">
+			and entWaste.entId = #{entId}
+		</if>
+		<if test=" wasteCode !=null and wasteCode !='' ">
+			and entWaste.wasteCode like concat('%',#{wasteCode},'%')
+		</if>
+		<if test=" wasteName !=null and wasteName !='' ">
+			and entWaste.wasteName like concat('%',#{wasteName},'%')
+		</if>
+		<if test=" wasteTypeDesc !=null and wasteTypeDesc !='' ">
+			and CONCAT(wasteType.code, ' ', wasteType.description) like concat('%',#{wasteTypeDesc},'%')
+		</if>
+		<if test='startRowIndex!=null and rows!=null and rows!=0 '>
+			LIMIT ${startRowIndex} , ${rows}
+		</if>
+	</select>
+
+	<select id="listEntWasteByLicenceId"
+			resultType="com.mlsc.yifeiwang.entwaste.model.EntWasteModel" >
+		SELECT
+			entWaste.id as entWasteId,
+			entWaste.wasteCode,
+			entWaste.wasteId,
+			entWaste.wasteName,
+			entWaste.unitCode,
+			codeValue.value as unitValue
+		FROM
+			ent_waste entWaste
+			INNER JOIN waste waste ON entWaste.wasteId = waste.id
+			INNER join code_value codeValue on codeValue.code = entWaste.unitCode and codeValue.type_code = 'UNIT_TYPE'
+			INNER JOIN operation_licence_detail licenceDetail on licenceDetail.waste_id = entWaste.wasteId
+			where entWaste.deleteFlag = 0
+			<if test=" entId !=null and entId !='' ">
+				and entWaste.entId = #{entId}
+			</if>
+			<if test=" licenceId !=null and licenceId !='' ">
+				and licenceDetail.licence_id  = #{licenceId}
+			</if>
+		order by entWaste.editTime desc
+	</select>
+
+	<select id="getEntWasteId"
+			resultType="java.lang.Integer" parameterType="com.mlsc.yifeiwang.entwaste.model.EntWasteParams">
+		SELECT
+			count(entWaste.id)
+		FROM
+			ent_waste entWaste
+		where entWaste.deleteFlag = 0
+		<if test=" entId !=null and entId !='' ">
+			and entWaste.entId = #{entId}
+		</if>
+		<if test=" wasteId !=null and wasteId !='' ">
+			and entWaste.wasteId = #{wasteId}
+		</if>
+		<if test=" wasteName !=null and wasteName !='' ">
+			and entWaste.wasteName = #{wasteName}
+		</if>
+	</select>
+
+
+</mapper>

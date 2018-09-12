@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.codedirectory.mapper.CodeTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.codedirectory.entity.CodeType">
+        <id column="id" property="id"/>
+        <result column="type_code" property="type_code" />
+        <result column="type_name" property="type_name" />
+        <result column="splice" property="splice" />
+        <result column="status" property="status" />
+        <result column="create_by" property="create_by" />
+        <result column="create_time" property="create_time" />
+        <result column="edit_by" property="edit_by" />
+        <result column="edit_time" property="edit_time" />
+    </resultMap>
+
+    <resultMap id="CodeDirctoryResultMap" type="com.mlsc.yifeiwang.codedirectory.model.CodeDirectory">
+        <id property="type_id" column="type_id"/>
+        <result property="type_code" column="type_code"/>
+        <!-- ofType指定students集合中的对象类型 -->
+        <collection property="codeValueList" ofType="com.mlsc.yifeiwang.codedirectory.entity.CodeValue">
+            <id property="id" column="id"/>
+            <result column="code" property="code"/>
+            <result column="value" property="value"/>
+        </collection>
+    </resultMap>
+
+    <select id="listAllCodeType" resultMap="CodeDirctoryResultMap">
+        select c.id type_id, c.type_code, t.id , t.code, t.value
+        from code_type c
+        left join code_value t on t.type_id = c.id
+	</select>
+
+    <select id="getCodeValuesTypeCode" resultType="com.mlsc.yifeiwang.codedirectory.entity.CodeValue">
+        select t.*
+        from code_type c
+        inner join code_value t on t.type_id = c.id
+        <where>
+            <if test="typeCode != null">
+                c.type_code = #{typeCode}
+            </if>
+        </where>
+    </select>
+    <select id="listMergeCodeValue" resultType="com.mlsc.yifeiwang.codedirectory.model.CodeVo">
+        SELECT  t1.id, t1.status,t1.type_name, t1.type_code,
+        ( CASE WHEN (t1.splice != '1')
+              THEN substring_index(group_concat(value), ',', 6)
+              ELSE substring_index(group_concat(code, '-', value), ',',6) END ) AS information
+        FROM code_type t1
+        LEFT JOIN code_value t2 ON (t1.ID = t2.TYPE_ID)
+        <where>
+            <if test="type_code != null">
+                t1.type_code like #{type_code}
+            </if>
+            <if test="type_name != null">
+                AND t1.type_name like #{type_name}
+            </if>
+            <if test="information != null">
+                AND ( t2.code like #{information} or t2.value like #{information})
+            </if>
+        </where>
+        GROUP BY t1.type_code
+        LIMIT ${start} , ${rows}
+    </select>
+    <select id="countMergeCodeValue" resultType="int">
+        select count(1) from (
+            select t1.type_code from code_type t1
+            LEFT JOIN code_value t2 on t1.id = t2.type_id
+            <where>
+                <if test="type_code != null">
+                    t1.type_code like #{type_code}
+                </if>
+                <if test="type_name != null">
+                    AND t1.type_name like #{type_name}
+                </if>
+                <if test="information != null">
+                    AND ( t2.code like #{information} or t2.value like #{information})
+                </if>
+            </where>
+            GROUP BY t1.type_code
+        ) t
+    </select>
+
+</mapper>

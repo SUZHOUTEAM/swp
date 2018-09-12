@@ -1,0 +1,31 @@
+DB Server
+Local:
+url:192.168.252.132
+username:test
+password:test
+
+
+SIT/UAT
+url:192.168.252.132
+username:swp_root
+password:mlscDb8890
+
+SIT DB NAME:test_yifei_db
+UAT DB NAME: yifei_db
+
+Server:
+Test env
+IP:121.40.113.7
+user/password: root/sckj.8888
+deploy path : /opt/apache-tomcat-test/webapps
+log path:  /mnt/logs/swptest
+
+yifei url:http://121.40.113.7:38080/swp/#page1
+
+
+Real Env
+IP:121.40.113.7
+user/password: root/sckj.8888
+deploy path : /opt/apache-tomcat-7.0.72/webapps
+log path:  /mnt/logs/swp
+yifei url:http://121.40.113.7/swp/#page1

@@ -1,0 +1,222 @@
+body{
+    overflow-y: auto;
+    padding-bottom: 83px;
+}
+.header{
+    position: static;
+}
+/*.row .entName,.row .licNo,.row .licDate,.row .entAddress{*/
+    /*display: inline-block;*/
+    /*border:1px solid #008aff;*/
+    /*height: 68px;*/
+    /*width: 294px;*/
+    /*text-align: center;*/
+    /*!*margin-left:8px;*!*/
+    /*margin-top: 8px;*/
+    /*font-size: 14px;*/
+/*}*/
+.row .entName{
+    display: inline-block;
+    border:1px solid #008aff;
+    height: 68px;
+    width: 292px;
+    text-align: center;
+    margin-top: 8px;
+    font-size: 14px;
+    float: left;
+}
+.container .row:after { clear: both; content: " "; display: block; }
+.row .entName:first-child +.entName{
+    margin-left:8px;
+    margin-right:8px;
+}
+.row .entName:first-child +.entName +.entName{
+    margin-right:8px;
+}
+.row div span{
+    color: #008aff;
+}
+.row .tt{
+    margin-bottom: 8px;
+    margin-top: 7px;
+}
+.row div .hrLine{
+    vertical-align:middle ;
+    display:inline-block ;
+    width:30px ;
+    border-top:1px solid  #008aff;
+}
+.row div .mydata{
+    display:block;
+    color: #090c38;
+    padding: 0px;
+    width: 94%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0 auto;
+    margin-bottom: 14px;
+    font-weight: bold;
+}
+.remarktitle{
+    margin-top: 42px;
+    /*text-align: center;*/
+}
+.remarkdetail{
+    margin-top: 10px;
+    margin-bottom: 40px;
+    color: #2e2e46;
+    font-size: 13px;
+    line-height: 26px;
+    width: 700px;
+}
+.container .button{
+    text-align:center;
+}
+.container .button a{
+    width: 144px;
+    height: 35px;
+    padding: 0px;
+    line-height: 35px;
+    font-size: 16px;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.container .gobtn{
+    background: #008aff;
+    color: #ffffff;
+    border:1px solid #008aff;
+}
+.container .gobtn.grey{
+    background-color: #cccccc;
+    color: #ffffff;
+    cursor: not-allowed;
+    border: 1px solid #cccccc;
+}
+.container .goIntroduction{
+    font-size: 16px;
+    color: #0179de;
+}
+.container .backbtn{
+    margin-left: 8px;
+    background: #ffffff;
+    color: #008aff;
+    border:1px solid #0178de;
+}
+.container .remarktitle span{
+    color: #0179de;
+    border-bottom:1px solid #008aff;
+    width: 100px;
+    display: inline-block;
+    padding-bottom:4px ;
+    padding-top: 0px;
+    font-size: 14px;
+}
+.btn_two{
+    width: 144px;
+    height: 35px;
+    display: inline-block;
+    border:1px solid #008aff;
+    margin-left: 8px;
+}
+
+.activityImg{
+    padding: 0;
+    background: #008aff;
+    height:430px;
+    width:100%;
+    /*margin-top: 74px;*/
+    text-align:center;
+}
+.countDown{
+    font-size: 100px;
+    background-image: url("../img/wasteactivity.png");
+    background-repeat: no-repeat;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    vertical-align: middle;
+}
+.footer{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 1px solid #e4eaec;
+    padding: 20px;
+    z-index: 109;
+    text-align: center;
+    background: #ffffff;
+    font-size: 14px;
+    color: #959595;
+}
+.activity{
+    /* margin: 0 auto; */
+    width: 100%;
+    height: 480px;
+    /* background: url(../img/activityBG.png) center no-repeat; */
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* margin-top: 150px; */
+    /* border: 1px dotted #fff; */
+    background-color: #e9eaef;
+}
+.closeDiv{
+    text-align: right;
+    height: 0;
+}
+.closeDiv a{
+    color: #ffffff;
+    font-size: 14px;
+    margin-right: 3px;
+}
+.timeDiv{
+    text-align: center;
+    padding-top: 225.5px;
+}
+.time{
+    margin-left: 316px;
+    display: inline-block;
+    line-height: 23px;
+    width: 261px;
+}
+.time small{
+    color: #666666;
+    /*color: #dee0f3;*/
+    float: left;
+}
+.time b{
+    color: #f8d39f;
+    /*color: #8bffd7;*/
+    font-size: 23px;
+    float: left;
+}
+.activity_btn{
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    width: 216px;
+    margin: 69px auto 0;
+    height: 43px;
+    line-height: 43px;
+    display: block;
+}
+.activity_btn.grey{
+    background-color: #cccccc;
+    color: #ffffff;
+    cursor: not-allowed;
+}
+.item{
+    display: inline-block;
+    width: 480px;
+    text-align: left;
+    vertical-align: top;
+}
+.item:first-child{
+    width: 715px;
+}
+.item:first-child +.item{
+    width: 480px;
+}

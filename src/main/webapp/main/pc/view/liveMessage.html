@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>易废网直播消息</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+    <!--<link rel="stylesheet" href="../css/common.css" />-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/demo.css">-->
+    <link rel="stylesheet" href="../css/live.css" />
+    <style type="text/css">
+        /*body{*/
+            /*overflow-y: hidden;*/
+        /*}*/
+        .live-container {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .messageInput{
+            width: 86%;
+            margin: 0;
+            border: 0;
+            padding: 7px 5%;
+            line-height: normal;
+            height: 26px;
+            font-size: 14px;
+        }
+        .sendBtn{
+            width: 51px;
+            right: 3%;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<!--<div id="my-publisher" class="m-demo-container"></div>-->
+<div class="live-container">
+    <div style="padding: 10px 0"><span style="margin-right: 20px">危险废物管理知识培训</span>(当前人数：<span id="count">1</span>)</div>
+    <div style="width: 100%;background-color: #495060;border-radius: 4px">
+        <div class="messageList" id="content">
+            开始直播！<br/>
+        </div>
+        <div style="position: relative;width: 100%;padding-bottom: 10px">
+            <input type="text" class="messageInput" id="message" placeholder="请输入..."/>
+            <a href="javascript:;" class="sendBtn" onclick="sendMessage();" title="发送">发送</a>
+        </div>
+
+    </div>
+
+</div>
+<script src="../../common/jquery.min.js"></script>
+<!--<script src="../js/detailInit.js"></script>-->
+<script type="text/javascript">
+    var account='主播';
+    $(document).ready(function () {
+        onResize();
+       window.onresize=onResize;
+        //webSocket方法
+        if('WebSocket' in window) {
+            websocket = new WebSocket("ws://"+window.location.host+"/swp/websocket/channel01/"+account);
+        } else {
+            alert('当前浏览器 Not support websocket')
+        }
+        websocket.onopen = function() {
+//            this.send("");
+        }
+        websocket.onmessage = function(event) {
+//        console.log(typeof event.data);
+            var obj=JSON.parse(event.data)
+            if(typeof obj=='number'){
+                $('#count').html(event.data);
+                return;
+            }
+            $('#content').append('<div class="sayItem">'+obj.account+'<br/><span class="pao"><span class="bot"></span><span class="top"></span>'+obj.message+'</span></div>');
+            $('#content')[0].scrollTop = $('#content')[0].scrollHeight;
+        }
+    });
+    function onResize(){
+        var widths=$(window).width();
+        var heights=$(window).height();
+        $('.messageList').height(heights-111+'px');
+        if(widths>=640){
+            $('.messageList').width('620px');
+        }else{
+            $('.messageList').width(widths-20+'px');
+        }
+    }
+    function sendMessage() {
+        var message=$('#message').val();
+        websocket.send(message);
+        $('#message').val('');
+    }
+
+    window.onbeforeunload = function() {
+        closeWebSocket();
+    }
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e && e.keyCode==13){ // enter 键
+            var message = document.getElementById('message');
+            if (message == document.activeElement) {
+                sendMessage();
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

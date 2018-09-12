@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.bindserve.mapper.EntRechargeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.bindserve.entity.EntRecharge">
+        <id column="id" property="id"/>
+        <result column="entId" property="entId"/>
+        <result column="userId" property="userId"/>
+        <result column="orderNo" property="orderNo"/>
+        <result column="orderName" property="orderName"/>
+        <result column="price" property="price"/>
+        <result column="bitCionAmount" property="bitCionAmount"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="remark" property="remark"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+
+</mapper>

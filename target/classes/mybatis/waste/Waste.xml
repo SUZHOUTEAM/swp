@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.waste.mapper.WasteMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.waste.entity.Waste">
+		<id column="id" property="id" />
+		<result column="waste_type_id" property="wasteTypeId" />
+		<result column="calling_id" property="callingId" />
+		<result column="code" property="code" />
+		<result column="description" property="description" />
+		<result column="status" property="status" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_by" property="editBy" />
+		<result column="edit_time" property="editTime" />
+		<result column="corrosivity" property="corrosivity" />
+		<result column="toxicity" property="toxicity" />
+		<result column="ignitability" property="ignitability" />
+		<result column="reactivity" property="reactivity" />
+		<result column="infectivity" property="infectivity" />
+		<result column="waste_type_code" property="wasteTypeCode" />
+	</resultMap>
+
+</mapper>

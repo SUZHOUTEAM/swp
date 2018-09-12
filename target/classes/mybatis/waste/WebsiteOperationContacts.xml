@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.operaction.mapper.WebsiteOperationContactsMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.operaction.entity.WebsiteOperationContacts">
+		<result column="id" property="id" />
+		<result column="operationId" property="operationId" />
+		<result column="entName" property="entName" />
+		<result column="entId" property="entId" />
+		<result column="contactsName" property="contactsName" />
+		<result column="contactsTel" property="contactsTel" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+	</resultMap>
+	<select id="listWebsiteOperationContacts"  resultType="com.mlsc.yifeiwang.operaction.entity.WebsiteOperationContacts" parameterType="com.mlsc.yifeiwang.operaction.entity.WebsiteOperationContacts" >
+		select DISTINCT(contactsTel) as contactsTel from website_operation_contacts
+		where contactsTel  REGEXP "^[1][35678][0-9]{9}$"
+		<if test=" operationId !=null and operationId !='' ">
+			and operationId =  #{operationId}
+		</if>
+	</select>
+
+
+	<select id="listUserConstactsFromEntContact"  resultType="com.mlsc.yifeiwang.operaction.entity.WebsiteOperationContacts" parameterType="java.util.List" >
+		select
+		contacts.entName,
+		contacts.entId,
+		contacts.contacts as contactsName,
+		contacts.contactsTel
+		FROM
+		sys_enterprise_contacts contacts
+		<where>
+			<if test="list !=null and list.size() >0">
+				 contacts.entId IN
+				<foreach item="enterId" index="index" collection="list" open="(" separator=","
+						 close=")">
+					#{enterId}
+				</foreach>
+			</if>
+		</where>
+
+
+	</select>
+
+</mapper>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>危废在线咨询</title>
+		<meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+	    <meta name="format-detection" content="telephone=no">
+	    <meta name="renderer" content="webkit" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<link rel="shortcut icon" href="../../../app/img/favicon.ico">
+	    <link rel="stylesheet" href="../css/common.css?11" />
+		<link rel="stylesheet" href="../css/online.css" />
+	    <!--<link rel="stylesheet" href="../../../thirdparty/dialog/dialog.css" />-->
+		<!--<script src="../../../thirdparty/dialog/dialog.js"></script>-->
+		<!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+	</head>
+	<body style="overflow-y: auto">
+		<div class="header">
+			<div class="container">
+				<div class="logo">
+					<a href="/swp/index.html" tag="0" title="易废网"> <img src="../img/logo_short.png" alt="易废网 logo"> </a>
+				</div>
+				<div class="headerAction">
+					<span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+					<span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+				</div>
+				<a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+				<ul>
+					<li class="active">
+						<a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+					</li>
+					<li>
+						<a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="company_banner" id="chuzhi">
+			<div class="company_container">
+				<div class="banner_left">
+					<div class="left_info">
+						<img src="../img/chuzhi_banner.png">
+					</div>
+				</div>
+				<div class="banner_right">
+					<div class="right_info">
+						<span class="title"><font>在线咨询</font></span>
+						<span class="subtitle">小易为你服务！</span>
+					</div>
+				</div>
+				<div class="clearfloat"></div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="content_title"><i class="online-service"></i>小易在线</div>
+			<iframe name="IMChat" id="IMChat" scrolling="no" frameborder="0" src="/swp/webdemo/im/online.html?2"></iframe>
+		</div>
+		<script src="../../common/jquery.min.js"></script>
+		<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+		<script src="../../../app/js/util.js"></script>
+		<script src="../js/detailInit.js?16"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+			    var timer=setInterval(function () {
+					if(IMChat.window.yunXin&&IMChat.window.yunXin.openChatBox){
+                        IMChat.window.yunXin.openChatBox('18962177691', 'p2p');
+                        clearInterval(timer);
+					}
+                },1000);
+				$('#selectbtn_company').on('click', function() {
+					window.location.href = "company.html" ;
+				});
+            })
+		</script>
+		<!--<script src="../js/app_detail.js"></script>-->
+	</body>
+</html>

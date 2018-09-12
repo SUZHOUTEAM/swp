@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+    <script type="text/javascript">
+        document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        window.onresize=function () {
+            document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        }
+    </script>
+    <title>易废网-汽修行业活动</title>
+    <link rel="stylesheet" href="../css/activity.css" />
+</head>
+<body>
+    <div class="bg">
+        <div class="android-arrow"></div>
+        <div class="ios-arrow"></div>
+        <div class="weixin-arrow"></div>
+    </div>
+    <div class="share_box">
+        <a href="javscript:" class="close"></a>
+        <a href="javascript:;" data-type="weixin">
+            <img src="../img/weixin.png"/><br/>微信好友
+        </a>
+        <a href="javascript:;" data-type="weixinFriend">
+            <img src="../img/weixin_friend.png"/><br/>微信朋友圈
+        </a>
+    </div>
+    <a href="javascript:;" class="share" id="share"></a>
+    <div class="cover-bg"></div>
+    <div class="tel-div">
+        咨询电话：<a href="tel:051262717018" class="tel">0512-62717018</a><span class="tip-text">(点击咨询)</span>
+    </div>
+    <script src="../../common/jquery.min.js"></script>
+    <script src="../js/nativeShare.js?1"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript">
+        //window.browserType 1不是UC,QQ,微信  2.是UC或QQ  3.是微信
+        var buildShareConf,link,activityId;
+        $(document).ready(function () {
+            link=window.location.href;
+            if(link.indexOf('?from')>-1){
+                window.location.href=link.split('?from')[0];
+            }
+            if(link.indexOf('&from')>-1){
+                window.location.href=link.split('&from')[0];
+            }
+            initShare();
+            activityId=getParam('activityId');
+            if(!activityId){
+                return;
+            }
+           $.ajax({
+               url:'/swp/activityOpenRecord/save',
+               type:'post',
+               data:{
+                   activityId:activityId
+               },
+               success:function (result) {
+
+               }
+           })
+        });
+        function getParam(paraName) {
+            var search = document.location.search,
+                reg = new RegExp("[?&]+" + paraName + "=([^&]+)");
+            if (search && reg.test(search)) {
+                return decodeURIComponent(RegExp['$1']).replace(/\+/g, " ");
+            }
+            return null;
+        }
+        function insertShareData() {
+            $.ajax({
+                url:'/swp/activityOpenRecord/save',
+                type:'post',
+                data:{
+                    activityId:'点击分享按钮'
+                },
+                success:function (result) {
+
+                }
+            })
+        }
+        function initShare() {
+            var str=activityId?('?activityId='+activityId):'';
+            var config = {
+                url:'http://www.yifeiwang.com/swp/main/mobile/view/activity.html'+str,
+                title:'易废网-汽修行业活动',
+                desc:'超低活动价仅市场半价8800元/吨（含运输）',
+                img:'http://www.yifeiwang.com/swp/main/mobile/img/qixiu-logo.jpg',
+                img_title:'易废网汽修活动',
+                from:'易废网'
+            };
+            var share_obj = new nativeShare('share',config);
+            if(window.browserType==3){
+                getbuildShareConf();
+                weixinShareInit();
+            }
+            $('#share').on('click',function () {
+                insertShareData();
+                if(window.browserType==1){
+                    $('.bg').show();
+                    if(window.platform=='iPhone'){
+                        $('.ios-arrow').show().siblings().hide();
+                    }else if(window.platform=='Android'){
+                        $('.android-arrow').show().siblings().hide();
+                    }
+                }
+                if(window.browserType==2){
+                    $('.share_box').show();
+                }
+                if(window.browserType==3||window.browserType==4){
+                    $('.bg').show();
+                    $('.weixin-arrow').show().siblings().hide();
+                }
+            });
+            $('.bg').on('click',function () {
+                $('.bg').hide();
+            });
+            $('.bg').on('touchmove',function (event) {
+                event.preventDefault();
+            });
+            $('.share_box >a.close').on('click',function () {
+                $('.share_box').hide();
+            })
+
+            $('.share_box >a:not(.close)').on('click',function () {
+                share_obj.share($(this).attr('data-type'));
+            })
+        }
+        function getbuildShareConf(){
+            // this.buildShareConf = {
+            //     appId:"wx1f7da8ce41f7ac3e",
+            //     nonceStr:"dceba45f-21d9-4c0f-8fee-4c933fdd5778",
+            //     signature:"091384752a063cc9936f89ea29b827318d383e36",
+            //     timestamp:"1517202350"
+            // };
+            buildShareConf = getShareConfig(link);
+            //	alert(this.buildShareConf.appId+' '+this.buildShareConf.timestamp+' '+this.buildShareConf.nonceStr+' '+this.buildShareConf.signature);
+            wx.config({
+                debug: false,
+                appId: buildShareConf.appId,
+                timestamp: buildShareConf.timestamp,
+                nonceStr: buildShareConf.nonceStr,
+                signature: buildShareConf.signature,
+                jsApiList: [
+                    'checkJsApi',
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo'
+                ]
+            });
+        }
+        function getShareConfig(wxUrl){
+            var buildShareConf = {};
+            $.ajax({
+                url: "/swp/weixin/getWeiXinConfig",
+                data: {
+                    'url': wxUrl
+                },
+                type: "get",
+                dataType: 'json',
+                async: false,
+                success: function(data) {
+                    if (!data||!data.data) {
+                        alert('请求出现异常，请联系官方客服');
+                        return;
+                    }
+                    buildShareConf=data.data;
+                },
+                error: function(er) {}
+            });
+            return buildShareConf;
+        }
+        function weixinShareInit(){
+            var imgurl='http://www.yifeiwang.com/swp/main/mobile/img/qixiu-logo.jpg';
+            var desc = "超低活动价仅市场半价8800元/吨（含运输）";
+            var descpy = "超低活动价仅市场半价8800元/吨（含运输）";
+            var wxData = {
+                "imgUrl": imgurl,
+                "sharelink": window.location.href.split('&from')[0],
+                "desc": desc,
+                "descpy": descpy,
+                "title": "易废网-汽修行业活动",
+            };
+            wx.ready(function() {
+                wx.checkJsApi({
+                    jsApiList: ['onMenuShareTimeline',
+                        'onMenuShareAppMessage',
+                        'onMenuShareQQ',
+                        'onMenuShareWeibo'
+                    ]
+                });
+                wx.onMenuShareTimeline({
+                    title: wxData.descpy,
+                    link: wxData.sharelink,
+                    imgUrl: wxData.imgUrl,
+                    trigger: function(res) {},
+                    success: function(res) {
+                    },
+                    cancel: function(res) {
+                    },
+                    fail: function(res) {}
+                });
+                wx.onMenuShareAppMessage({
+                    title: wxData.title,
+                    desc: wxData.desc,
+                    link: wxData.sharelink,
+                    imgUrl: wxData.imgUrl,
+                    success: function() {
+                    },
+                    cancel: function() {
+                    }
+                });
+                wx.onMenuShareQQ({
+                    title: wxData.title,
+                    desc: wxData.desc,
+                    link: wxData.sharelink,
+                    imgUrl: wxData.imgUrl,
+                    success: function() {
+                    },
+                    cancel: function() {}
+                });
+                wx.onMenuShareWeibo({
+                    title: wxData.title,
+                    desc: wxData.desc,
+                    link: wxData.sharelink,
+                    imgUrl: wxData.imgUrl,
+                    success: function() {
+                    },
+                    cancel: function() {}
+                });
+            });
+        }
+    </script>
+</body>
+</html>

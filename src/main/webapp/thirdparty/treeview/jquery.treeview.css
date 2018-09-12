@@ -1,0 +1,139 @@
+.treeview_container{
+	position: fixed;
+	left: 0;
+	top: 165px;
+	text-align: center;
+	display: none;
+	border: 1px solid #f0f5fa;
+	border-radius:2px ;
+	max-height: 400px;
+	overflow-y: auto;
+	z-index: 10;
+}
+.treeview_container::-webkit-scrollbar{width:5px;}
+.treeview_container::-webkit-scrollbar-track{background-color:#bee1eb;}
+.treeview_container::-webkit-scrollbar-thumb{background-color:#00aff0;}
+.treeview_container::-webkit-scrollbar-thumb:hover {background-color:#9c3}
+.treeview_container::-webkit-scrollbar-thumb:active {background-color:#00aff0}
+.treeview_container .title{
+	font-size: 12px;
+    color: #839fb8;
+    background:#FFFFFF;
+    text-align: left;
+}
+a.treeview_btn{
+	float: right;
+    background-color: #f0f5fa;
+    color: #839fb8;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 20px;
+    width: 208px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*a.treeview_btn:hover{
+	background-color: #e2e8ee;
+}*/
+.treeview {
+	font-family: Verdana, helvetica, arial, sans-serif;
+	font-size: 68.75%;
+	background:#FFFFFF;
+	color: #333;
+    width:200px;
+    margin: 0 auto;
+    padding: 7px;
+    list-style: none;
+    border-radius:4px ;
+}
+.treeview ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.treeview ul {
+	background-color: white;
+	margin-top: 4px;
+}
+
+.treeview .hitarea {
+	background: url(images/treeview-default.gif) -64px -25px no-repeat;
+	height: 16px;
+	width: 16px;
+	margin-left: -16px;
+	float: left;
+	cursor: pointer;
+}
+/* fix for IE6 */
+* html .hitarea {
+	display: inline;
+	float:none;
+}
+
+.treeview li {
+	margin: 0;
+	padding: 3px 0pt 3px 16px;
+}
+
+.treeview a.selected {
+	background-color: #eee;
+}
+
+#treecontrol { margin: 1em 0; display: none; }
+
+.treeview .hover { color: #006ad8; cursor: pointer; }
+
+.treeview .curr {
+    color: #ff9a18;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.treeview li { background: url(images/treeview-default-line.gif) 0 0 no-repeat; text-align: left;}
+.treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
+
+.treeview .expandable-hitarea { background-position: -80px -3px; }
+
+.treeview li.last { background-position: 0 -1766px }
+.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url(images/treeview-default.gif); }
+.treeview li.lastCollapsable { background-position: 0 -111px }
+.treeview li.lastExpandable { background-position: -32px -67px }
+
+.treeview div.lastCollapsable-hitarea, .treeview div.lastExpandable-hitarea { background-position: 0; }
+
+.treeview-red li { background-image: url(images/treeview-red-line.gif); }
+.treeview-red .hitarea, .treeview-red li.lastCollapsable, .treeview-red li.lastExpandable { background-image: url(images/treeview-red.gif); }
+
+.treeview-black li { background-image: url(images/treeview-black-line.gif); }
+.treeview-black .hitarea, .treeview-black li.lastCollapsable, .treeview-black li.lastExpandable { background-image: url(images/treeview-black.gif); }
+
+.treeview-gray li { background-image: url(images/treeview-gray-line.gif); }
+.treeview-gray .hitarea, .treeview-gray li.lastCollapsable, .treeview-gray li.lastExpandable { background-image: url(images/treeview-gray.gif); }
+
+.treeview-famfamfam li { background-image: url(images/treeview-famfamfam-line.gif); }
+.treeview-famfamfam .hitarea, .treeview-famfamfam li.lastCollapsable, .treeview-famfamfam li.lastExpandable { background-image: url(images/treeview-famfamfam.gif); }
+
+.treeview .placeholder {
+	background: url(images/ajax-loader.gif) 0 0 no-repeat;
+	height: 16px;
+	width: 16px;
+	display: block;
+}
+
+.filetree li { padding: 3px 0 2px 16px; }
+.filetree span.folder, .filetree span.file { padding: 1px 0 1px 16px; display: block; }
+.filetree span.folder { background: url(images/folder.gif) 0 0 no-repeat; }
+.filetree li.expandable span.folder { background: url(images/folder-closed.gif) 0 0 no-repeat; }
+.filetree span.file { background: url(images/file.gif) 0 0 no-repeat; }
+.treeview a{
+    color: #839fb8;
+    font-size: 12px;
+    text-decoration: none;
+}
+.treeview >li>a{
+	margin-left: 9px;
+}

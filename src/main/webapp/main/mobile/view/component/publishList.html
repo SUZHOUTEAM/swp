@@ -1,0 +1,389 @@
+<link rel="stylesheet" href="../css/publishList.css" />
+<div id="app">
+    <van-nav-bar
+            title="我的询价"
+            left-text=""
+            :right-text="rightText"
+            left-arrow
+            @click-left="onClickLeft"
+            @click-right="onClickRight"
+    ></van-nav-bar>
+    <van-popup v-model="resourcePickerShow" position="bottom" :overlay="true">
+        <van-picker :columns="activityList" :show-toolbar="true" title="选择来源" @confirm="confirmCity" @cancel="cancelCity"></van-picker>
+    </van-popup>
+    <van-list
+            v-model="loading"
+            :finished="finished"
+            :offset="400"
+            @load="onLoad">
+        <van-cell v-for="(item,index) in list" :key="index" >
+            <van-row class="item-header">
+                <van-col span="18">
+                    <span class="total-title">总计</span>
+                    <span class="total-content"><b>{{item.totalWasteCount}}</b>种危废，累积<b>{{item.totalWasteAmountDesc}}</b></span>
+                </van-col>
+                <van-col span="6" align="right">
+                    <div class="inquiry-count" v-if="item.inquiryEntCount>0">{{item.inquiryEntCount}}条报价</div>
+                </van-col>
+            </van-row>
+            <div class="waste-list-container">
+                <div class="waste-list" :style="'width:'+'14rem'">
+                    <div class="waste-item" v-for="(item,index) in item.releaseWasteDetails">
+                        <p class="waste-name">{{item.wasteName}}</p>
+                        <p class="waste-code">{{item.wasteCode}}</p>
+                        <p class="waste-qty">{{item.wasteAmount+item.unitValue}}</p>
+                    </div>
+                </div>
+            </div>
+            <van-row class="waste-info">
+                <van-col span="16">
+                    <span class="inquiry-name"><i class="person-icon"></i>{{item.releaseOwner}}</span>
+                    <span class="inquiry-resource"><i class="resource-icon"></i>{{item.activityName||'处置询价'}}</span>
+                </van-col>
+                <van-col span="8" align="right">
+                    <div class="inquiry-time">{{item.releaseDate.substring(0,16)}}</div>
+                </van-col>
+            </van-row>
+            <div class="remark" v-if="item.releaseRemark">备注：{{item.releaseRemark}}</div>
+            <div align="right" class="btn-div">
+                <a class="btn" v-if="!item.activityName&&item.releaseStatus!='END'" title="完结" @click="close(item,index)">完结</a>
+                <van-tag v-if="!item.activityName&&item.releaseStatus=='END'" style="margin-right: .1rem;" plain type="primary">已完结</van-tag>
+                <a class="btn" v-if="item.releaseStatus!='DONE'&&item.releaseStatus!='REFUSED'" title="删除" @click="del(item,index)">删除</a>
+                <a class="btn light" @click="inquiryDetail(index)" v-if="item.inquiryEntCount>0">查看报价</a>
+                <a class="btn" v-else>{{item.releaseStatus=='REFUSED'?'被谢绝':'暂无报价'}}</a>
+            </div>
+            <div class="split"></div>
+        </van-cell>
+    </van-list>
+    <van-popup v-model="detailShow" class="add-waste-form-dialog" position="right" :overlay="false">
+        <van-nav-bar
+                title="查看报价"
+                left-text="返回"
+                left-arrow
+                @click-left="hideDetail"
+        ></van-nav-bar>
+        <van-list
+                v-model="listLoading"
+                :finished="inquiryFinished"
+                :offset="400"
+                @load="onLoadInquiry">
+            <van-cell v-for="(item,index) in inquiryList" class="inquiry-van-cell">
+                <van-row class="inquiry-header">
+                    <van-col span="12">
+                        <i class="ent-logo"></i>
+                        <span class="ent-name">{{item.inquiryEnterName}}</span>
+                    </van-col>
+                    <van-col span="12" align="right">
+                        <div class="inquiry-time">{{item.inquiryDate.substring(0,10)}}<span class="status" :class="statusClass[item.busiStatus]">{{item.busiStatus}}</span></div>
+                    </van-col>
+                </van-row>
+                <div class="item-info">报价方式：{{item.quotedType==0?'打包报价':'单独报价'}}</div>
+                <div class="item-info" v-if="item.inquiryRemark">备注：{{item.inquiryRemark||'--'}}</div>
+                <van-row class="total-container">
+                    <van-col span="12" align="left"><em>总量：</em><b>{{item.totalAmount}}</b></van-col>
+                    <van-col span="12" align="right" class="totalPrice"><em>总额：</em><b>￥{{item.totalPriceStr}}</b></van-col>
+                </van-row>
+                <div class="release-container" v-for="(item1,index) in item.inquiryDetail">
+                    <van-row>
+                        <van-col span="24" class="waste-name">{{item1.wasteName}}</van-col>
+                    </van-row>
+                    <van-row>
+                        <van-col span="12" class="waste-code">{{item1.wasteCode}}</van-col>
+                        <van-col span="12" align="right" class="totalAmount"><em>数量：</em><b>{{item1.amount+item1.unitValue}}</b></van-col>
+                    </van-row>
+                    <van-row v-if="item.quotedType!=0" style="padding-bottom: .12rem;">
+                        <van-col span="12" class="totalPrice"><em>单价：</em><b>￥{{item1.priceStr}}</b></van-col>
+                        <van-col span="12" align="right" class="totalPrice"><em>单项总价：</em><b>￥{{item1.wasteTotalPriceStr}}</b></van-col>
+                    </van-row>
+                </div>
+                <div align="right" class="btn-div" v-show="item.busiStatus=='待确认'">
+                    <a href="javascript:;" class="btn" @click="reject(item,index)">谢绝</a>
+                    <a href="javascript:;" class="btn light" @click="confirm(item,index)" >成交</a>
+                </div>
+            </van-cell>
+        </van-list>
+    </van-popup>
+</div>
+<script src="../../common/provinces.js"></script>
+<script src="../../../thirdparty/la-number/la-number.js"></script>
+<script type="text/javascript">
+    var loading=false;
+    var listLoading=false;
+    var vue=new Vue({
+        el:'#app',
+        data:{
+            ticketId:(localStorage.ticketId||''),
+            list:[],
+            loading:true,
+            finished:false,
+            pageIndex:1,
+            pageSize:5,
+            totalRecord:0,
+            detailShow:false,
+            index:0,
+            inquiryIndex:1,
+            inquirySize:5,
+            inquiryList:[],
+            inquiryTotal:0,
+            inquiryFinished:false,
+            listLoading:true,
+            statusClass:{'已成交':'ACCEPT','待确认':'SUBMIT','已谢绝':'REFUSED'},//询价单的状态
+            activityList:[],
+            activityId:'',
+            resourcePickerShow:false,
+            resourceIndex:''
+        },
+        created:function () {
+            this.getList();
+            this.getActivityList();
+        },
+        computed: {
+          rightText:function () {
+              return this.activityList.length>0&&typeof this.resourceIndex=='number'?this.activityList[this.resourceIndex]['text']:'来源';
+          }
+        },
+        mounted:function(){
+            $(window).scroll(function () {
+                var totalheight = parseFloat($(window).height()) + parseFloat(
+                        $(window).scrollTop());
+                if ($(document).height() <= totalheight + 50) {
+                    vue.onLoad();
+                }
+            });
+            document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+            window.onresize=function () {
+                document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+            }
+        },
+        methods:{
+            getList:function () {
+                $.ajax({
+                  url:'/swp/entRelease/listWasteEntReleaseByEntId.htm?ticketId='+this.ticketId+'&pageIndex='+(this.pageIndex++)+'&pageSize='+this.pageSize,
+                  type:'post',
+                  data:JSON.stringify({activityId:this.activityId}),
+                  dataType:'json',
+                  contentType:'application/json',
+                  success:function (result) {
+                      console.log(result);
+                      vue.loading = false;
+                      loading=false;
+                      if (result.status == 1) {
+                          vue.list=vue.list.concat(result.data.wasteEntRelaseList);
+                          vue.totalRecord=result.data.paging.totalRecord;
+                          vue.finished=vue.list.length>=vue.totalRecord;
+                      }else if(result.status==-1){
+                          window.location='/swp/login.jsp';
+                      }
+                  }
+              })
+            },
+            getActivityList:function(){
+                var _this=this;
+                $.ajax({
+                    url:'/swp/wasteActivity/listActiviyNameByApplyEntId',
+                    dataType: 'json',
+                    data:{ticketId:this.ticketId},
+                    type:'post',
+                    success:function (data) {
+                        var obj={'activityName':'全部',activityId:''};
+                        var defaultObj ={'activityName':'处置询价',activityId:'resourcePull'};
+                        var arr=[obj,defaultObj];
+                        arr=arr.concat(data.data);
+                        for(var i in arr){
+                            arr[i]['code']=arr[i]['activityId'];
+                            arr[i]['text']=arr[i]['activityName'];
+                        }
+                        _this.activityList = arr;
+                    }
+                });
+            },
+            onClickLeft:function () {
+                window.history.go(-1);
+            },
+            onClickRight:function () {
+                this.resourcePickerShow=true;
+            },
+            confirmCity:function (obj, index) {
+                var activityId=this.activityList[index]['code'];
+                this.resourceIndex=index;
+                this.resourcePickerShow=false;
+                this.loading=true;
+                this.pageIndex=1;
+                this.activityId=activityId;
+                this.list=[];
+                this.getList();
+            },
+            cancelCity:function (obj, index) {
+                this.resourcePickerShow=false;
+            },
+            onLoad:function () {
+                if(!this.finished&&!loading){
+                    vue.loading=true;
+                    loading=true;
+                    setTimeout(function () {
+                        vue.getList();
+                    },1000)
+                }
+            },
+            onLoadInquiry:function () {
+                if(!this.inquiryFinished&&!listLoading){
+                    vue.listLoading=true;
+                    listLoading=true;
+                    setTimeout(function () {
+                        vue.getInquiryList();
+                    },1000)
+                }
+            },
+            inquiryDetail:function (index) {
+                this.index=index;
+                this.detailShow=true;
+                this.inquiryIndex=1;
+                this.inquiryList=[];
+                this.getInquiryList();
+            },
+            getInquiryList: function () {
+//                this.inquiryList=[];
+                var _this = this;
+                var param = {
+                    releaseId:this.list[this.index]['releaseId'],
+                    pageIndex:this.inquiryIndex++,
+                    pageSize:this.inquirySize,
+                    ticketId:this.ticketId
+                };
+                $.ajax({
+                    url: '/swp/entInquiry/listEntInquiryByReleaseId.htm',
+                    dataType: 'json',
+                    data: param,
+                    type:'post',
+                    success: function (result) {
+                        console.log(result);
+                        vue.listLoading = false;
+                        listLoading=false;
+                        if (result.status == 1) {
+                            vue.inquiryList=vue.inquiryList.concat(result.data.inquiryList);
+                            vue.inquiryTotal=result.data.paging.totalRecord;
+                            vue.inquiryFinished=vue.inquiryList.length>=vue.inquiryTotal;
+//                            for(var i in _this.inquiryList){
+//                                _this.inquiryList[i]['busiStatus']='待确认';
+//                            }
+//                            _this.inquiryTotal=result.data.paging.totalRecord;
+                        }
+                    }
+                })
+            },
+            hideDetail:function () {
+                this.detailShow=false;
+            },
+            del:function (item,index) {
+                this.$dialog.confirm({
+                    title: '提示',
+                    message: '此操作将删除该发布, 是否确定?'
+                }).then(function(){
+                    $.ajax({
+                        url:'/swp/entRelease/deleteWasteEntReleaseByReleaseId.htm?ticketId='+vue.ticketId,
+                        data:JSON.stringify({
+                            releaseId:item.releaseId
+                        }),
+                        dataType:'json',
+                        contentType:'application/json',
+                        type:'post',
+                        success:function (data) {
+                            if(data.status==1&&data.data==true){
+                                vue.$toast('删除成功');
+                                vue.list.splice(index,1);
+                            }else if(data.status==-1){
+                                window.location='/swp/login.jsp';
+                            }
+                        }
+                    })
+                }).catch(function(){});
+            },
+            close:function (item,index) {
+                var releaseId=item.releaseId;
+                this.$dialog.confirm({
+                    title: '提示',
+                    message: '如选择完结，系统将不再公开此次询价信息'
+                }).then(function(){
+                    $.ajax({
+                        url:'/swp/entRelease/endWasteEntReleaseByReleaseId?ticketId='+vue.ticketId,
+                        data:JSON.stringify({releaseId:releaseId}),
+                        contentType:'application/json',
+                        type:'post',
+                        dataType:'json',
+                        success:function (result) {
+                            if(result.status==1&&result.data==true){
+                                vue.$toast('完结成功');
+                                item.releaseStatus='END';
+                                Vue.set(vue.list,index,item);
+                            }else if(data.status==-1){
+                                window.location='/swp/login.jsp';
+                            }
+                        }
+                    })
+                }).catch(function(){});
+            },
+            reject:function (item,index) {
+                this.$dialog.confirm({
+                    title: '提示',
+                    message: '此操作将拒绝该报价, 是否确定?'
+                }).then(function(){
+                    $.ajax({
+                        url:'/swp/entInquiry/rejectEntInquiry.htm',
+                        data:{
+                            inquiryId:item.inquiryId,
+                            inquiryEntId:item.inquiryEntId,
+                            ticketId:vue.ticketId
+                        },
+                        dataType:'json',
+                        type:'post',
+                        success:function (data) {
+                            if(data.status==1&&data.data==true){
+                                vue.$toast('拒绝成功');
+                                item.busiStatus='已谢绝';
+                                Vue.set(vue.inquiryList,index,item);
+                                collectingUserBehavior(vue.ticketId,'RESPONSE');
+                            }
+                        }
+                    })
+                }).catch(function(){});
+            },
+            confirm:function (item,index) {
+                var activityId=this.list[this.index].activityId;
+                var releaseId=this.list[this.index].releaseId;
+                var inquiryId=item.inquiryId;
+                var param={
+                    inquiryId:inquiryId,
+                    inquiryEntId:item.inquiryEntId,
+                    disEntId:item.disEntId
+                }
+                if(activityId){
+                    param.activityId=activityId;
+                }
+                if(releaseId){
+                    param.releaseId=releaseId;
+                }
+                param.ticketId=this.ticketId;
+                this.$dialog.confirm({
+                    title: '提示',
+                    message: '此操作将确认该报价, 是否确定?'
+                }).then(function(){
+                    $.ajax({
+                        url:'/swp/entInquiry/confirmEntInquiry.htm',
+                        data:param,
+                        dataType:'json',
+                        type:'post',
+                        success:function (data) {
+                            if(data.status==1&&data.data==true){
+                                vue.$toast('确认成功,已形成新的订单');
+                                item.busiStatus='已成交';
+                                Vue.set(vue.inquiryList,index,item);
+                                collectingUserBehavior(vue.ticketId,'RESPONSE');
+//                                collectingUserBehavior(getParam('ticketId'),'RESPONSE');
+                            }
+                        }
+                    })
+                }).catch(function(){});
+            },
+        }
+    });
+</script>

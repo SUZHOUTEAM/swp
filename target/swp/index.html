@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="utf-8">
+	<title>易废网,平台够大,价格够低</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="renderer" content="webkit" />
+	<meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+	<meta name="description" content="易废网,危废处置,危废询价,处置危废,提供一站式固废解决方案">
+	<link rel="shortcut icon" href="./app/img/favicon.ico">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<link rel="stylesheet" href="main/pc/css/common.css?11" />
+	<link rel="stylesheet" href="main/pc/css/que-sug.css" />
+	<script type="text/javascript" src="/swp/main/common/adaptation.js?2"></script>
+	<link rel="stylesheet" href="./main/common/elementui/index.css">
+	<link rel="stylesheet" href="main/pc/css/style.css?3" />
+	<!-- 先引入 Vue -->
+	<script src="./main/common/elementui/vue.min.js"></script>
+	<!-- 引入组件库 -->
+	<script src="./main/common/elementui/index.js"></script>
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" href="main/pc/css/style_ie.css" />
+	<![endif]-->
+	<!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+</head>
+
+<body>
+<div class="m-help">
+	<div class="m-help-text">
+		<i class="m-help-logo"></i>咨询&建议
+	</div>
+	<div class="m-tip fadeIn">
+		<ul>
+			<li style="cursor: default">
+				<i class="contactTel"></i>
+				<div class="m-tip-title telTitle">咨询电话</div>
+				<div class="m-tip-content tel">0512-62717018</div>
+			</li>
+			<li title="在线咨询" onclick="yfw.onlineTalk();">
+				<i class="onlineTalk"></i>
+				<div class="m-tip-title">在线咨询</div>
+				<div class="m-tip-content">小易在线提供咨询服务</div>
+			</li>
+			<li title="聆听·建议" onclick="yfw.goSuggest();">
+				<i class="suggestion"></i>
+				<div class="m-tip-title">聆听·建议</div>
+				<div class="m-tip-content" style="line-height: 22px">易废网是不完善的，我们渴望你的建议</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="app" @click="cityShow=false">
+	<div class="header">
+		<div class="container">
+			<div class="logo">
+				<a href="/swp/index.html" tag="0" title="易废网"><img src="main/pc/img/logo_short.png" alt="易废网 logo"></a>
+			</div>
+			<div class="city-select" v-cloak>
+				<a href="javascript:" @click.stop="cityShow=!cityShow"><span>{{provinces[cantonCode]}}</span><i class="el-icon-arrow-down"></i></a>
+				<div class="city-select-content" v-show="cityShow">
+					<span><em></em></span>
+					<a href="javascript:" v-for="code in provinceCode" @click="changeProvince(code)" :class="{current:code==cantonCode}">{{provinces[code]}}</a>
+				</div>
+			</div>
+			<!--<el-select v-model="cantonCode" class="city-select" placeholder="区域" @change="changeProvince">
+				<el-option :label="item.value" :value="item.code" v-for="(item,index) in provinces"
+						   :key="item.code"></el-option>
+			</el-select>-->
+			<div class="follow-div">
+				<span class="split"></span><i class="follow-icon"></i>关注易废网
+				<div class="follow-dialog">
+					<div class="follow-title">打开微信"扫一扫",关注易废网<a class="follow-close"></a></div>
+					<div class="follow-list">
+						<div class="follow-item">
+							<img src="./main/pc/img/wechat-code.jpg">
+							<div class="follow-text">
+								<i class="chat-icon"></i>微信公众号 "yifeiwang"
+							</div>
+						</div>
+						<div class="follow-item">
+							<img src="./main/pc/img/headline-code.jpg">
+							<div class="follow-text">
+								<i class="headline-icon"></i>今日头条号 "yifeiwang"
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="headerAction" style="margin-right: 126px;">
+				<span class="no-login">易废网欢迎你！
+					请<a href="login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="selectEntType.html" class="register-btn">注册</a>
+				</span>
+				<span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+			</div>
+			<ul>
+				<li class="active">
+					<a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+				</li>
+				<li>
+					<a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+				</li>
+				<li>
+					<a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+				</li>
+				<li>
+					<a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+				</li>
+				<li>
+					<a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+				</li>
+			</ul>
+			<!--<div class="el-input el-input-group el-input-group&#45;&#45;append" style="width: 230px;margin-top: 3px;margin-right: 45px;float: right;">&lt;!&ndash;&ndash;&gt;<input autocomplete="off" placeholder="请输入内容" type="text" rows="2" validateevent="true" class="el-input__inner">&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;<div class="el-input-group__append"><button type="button" class="el-button el-button&#45;&#45;default">&lt;!&ndash;&ndash;&gt;<i class="el-icon-search"></i>&lt;!&ndash;&ndash;&gt;</button></div></div>-->
+		</div>
+	</div>
+	<div style="position: fixed;top: 0;z-index: 100;width: 940px;margin: 0 auto;left: 0;right: 0;top: 59px;" v-cloak v-if="showVideo">
+		<video id="video" controls="" preload="auto" width="100%" autoplay="true" height="100%" poster="http://www.yifeiwang.com/img/source/video-poster.png">
+			<source src="http://www.yifeiwang.com/advertising.mp4">
+		</video>
+		<a href="javascript:" @click="showVideo=false" class="closeVideo">关闭</a>
+	</div>
+	<div class="content" >
+		<el-carousel  arrow="hover" :autoplay="true" :interval="3000" height="480px" indicator-position="none" v-if="activityList.length>0">
+			<el-carousel-item v-for="(item,index) in activityList" :key="index" :style="'background: url('+item.logo+') center center no-repeat #e9eaef'" v-loading="!item.imgLoaded&&(!item.hidden||item.logo.indexOf('redbag')>-1)"
+							  element-loading-spinner="el-icon-loading"
+							  element-loading-background="rgba(233, 234, 239, 1)">
+				<div class="cover" v-if="item.video" @click="goVideo"></div>
+				<div class="remainTime" v-if="item.enrollFee>0&&item.currentTime<item.riseEndDate" v-cloak>
+					众筹截止时间：{{item.riseEndDateStr.substring(0,16)}}
+				</div>
+				<!--<div class="carouselBg" @click="checkLogo(item.logo)" v-if="item.imgLoaded&&item.logo.indexOf('zhaomu')>-1" title="合作伙伴招募令"></div>-->
+				<div class="priceDiv" v-if="item.enrollFee>0&&item.currentTime<item.riseEndDate" v-cloak>
+					<span class="price-title">众筹优惠</span>
+					<span class="price-text">￥<b>{{item.enrollFee*item.discount}}</b></span>
+					<span class="old-price-text">原价{{item.enrollFee}}</span>
+				</div>
+				<div class="priceDiv" v-if="item.enrollFee>0&&item.currentTime>=item.riseEndDate" v-cloak>
+					<span class="price-title">报名费用</span>
+					<span class="price-text">￥<b>{{item.enrollFee}}</b></span>
+				</div>
+				<div class="timeDiv" v-if="!item.hidden" v-cloak>
+					<span class="time"><small>{{item.remainText||'剩余时间'}}：</small><b v-if="item.remainTimeText" v-cloak>{{item.remainTimeText}}</b></span>
+				</div>
+				<a href="javascript:" v-if="item.enrollFee>0" class="activity_btn" @click="goEnrollFee(item.activityId,item.activityName)">查看详情></a>
+				<a href="javascript:" v-if="!item.hidden&&item.videoResource&&item.enrollFee==0" class="activity_btn" @click="goLive(item.videoResource,item.activityName)">在线观看</a>
+				<a href="javascript:" v-if="!item.hidden&&!item.videoResource&&item.enrollFee==0" class="activity_btn" @click="goActivityDetail(item.activityId,item.activityName)">查看详情></a>
+				<a href="javascript:" v-if="item.hidden&&item.btnShow" class="activity_btn" style="margin-top: 327px;font-size: 16px" @click="publish(1)">现在询价</a>
+				<a href="javascript:" v-if="item.inquiry" class="activity_btn" style="margin-top: 323px;font-size: 16px;color:#161719;width: 197px" @click="publish(1)">现在询价</a>
+				<div class="live-tip" v-if="item.enrollFee>0"></div>
+			</el-carousel-item>
+		</el-carousel>
+		<div class="middle-div">
+			<div class="searchDiv">
+				<el-autocomplete
+						v-model="keyWord"
+						:fetch-suggestions="querySearchAsync"
+						placeholder="请输入危废代码、名称、企业名称等,多关键词用空格隔开..."
+						@select="handleSelect">
+					<el-button slot="append" icon="el-icon-search" title="搜索" @click="search">搜索</el-button>
+				</el-autocomplete>
+			</div><el-button title="危废处置询价" class="inquiry-btn" @click="publish(2)">危废处置询价</el-button>
+		</div>
+		<div class="inquiry-guide-div" v-if="guideShow" v-cloak>
+			<div class="inquiry-guide-line">
+				<div class="inquiry-guide">
+					<a href="javascript:" @click="know"></a>
+				</div>
+			</div>
+		</div>
+		<div class="container" style="width: 1200px !important;">
+			<el-row style="margin-bottom: 22px">
+				<el-col :span="18">
+					<i class="title_logo cz_icon"></i>
+					<span class="title_text">危废焚烧</span>
+					<el-radio-group class="title_type" v-model="czArea" style="margin-bottom: 30px;" @change="changeCZArea">
+						<el-radio-button label="native">省内</el-radio-button>
+						<el-radio-button label="outer">跨省</el-radio-button>
+					</el-radio-group>
+					<div class="huadong" v-if="cantonCode=='32'">
+						<span class="huadong-title">本月参考价:</span>
+						<div class="notice_active">
+							<ul>
+								<li class="notice_active_ch" v-for="(item,index) in carouselData['DISPOSITION']">
+									<span>{{item['name']}}</span>
+									<em>{{item['value']}}</em>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<el-button type="warning" class="inquiry-btn2"  @click="publish(2)">危废处置询价</el-button>
+				</el-col>
+				<el-col :span="6" align="right">
+					<!--<el-button type="text" class="refresh" @click="showDocument" :style="czMaxPage>1?'margin-right: 30px':''"  title="合作伙伴招募令"><i class="ling"></i>合作伙伴招募令</el-button>-->
+					<el-button type="text"  class="refresh not-allowed"  v-if="czMaxPage>1" title="换一换" @click="getCZRefresh"><i class="huan_grey"></i>换一换</el-button>
+				</el-col>
+			</el-row>
+			<div style="text-align: center;font-size: 30px;color: #232428" v-if="listLoading"><i class="el-icon-loading"></i></div>
+			<div class="cardList cz" v-if="czList.length>0">
+				<div class="cardItem" v-for="(item, index) in czList" :key="index" :class="{'first':index==0&&czPage==1}" @click="goEntDetail(item.entId,item.entName)">
+					<el-card :body-style="{ padding: '0px' }">
+						<i class="tuijian" v-if="index==0&&czPage==1"></i>
+						<div class="image" v-loading="!item.imgLoaded" element-loading-spinner="el-icon-loading"
+							 element-loading-background="rgba(208, 225,255, 1)"><img v-if="item.imgLoaded" :src="item.logo"/>
+						</div>
+						<div style="padding: 14px;">
+							<div class="entName" :style="index!=0?'height:44px':''">{{item.entName}}</div>
+							<div class="address"><i class="address_icon"></i>{{item.entAddress}}</div>
+							<div class="entContent" v-if="index==0">
+								<i class="xukezheng_icon"></i>
+								<span><em>许可证编号</em><b>{{item.licenceNo}}</b></span><br v-if="index==0&&czPage==1"/>
+								<span style="margin-left: 20px"><em>经营方式</em><b>{{item.dispositionType}}</b></span>
+							</div>
+							<div class="entContent shenglv" v-else>
+								<i class="xukezheng_icon"></i>
+								<span><b style="margin-right: 1px">{{item.licenceNo}}</b></span><span class="split" style="margin: 0 1px">|</span>
+								<span><b style="margin-right: 1px" :title="item.dispositionType">{{item.dispositionType}}</b></span>
+							</div>
+						</div>
+					</el-card>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="nodata" v-cloak v-if="czList.length==0&&!listLoading">处置企业陆续加盟中，加盟电话 0512-62717018</div>
+		</div>
+
+		<div style="background-color:#f5f6fa;padding-top: 30px;padding-bottom: 60px">
+			<div class="container" style="margin-bottom: 20px;width: 1200px !important;">
+				<el-row style="margin-bottom: 22px">
+					<el-col :span="18">
+						<i class="title_logo ly_icon"></i>
+						<span class="title_text">危废利用</span>
+						<el-radio-group class="title_type" v-model="lyArea" style="margin-bottom: 30px;" @change="changeLYArea">
+							<el-radio-button label="native">省内</el-radio-button>
+							<el-radio-button label="outer">跨省</el-radio-button>
+						</el-radio-group>
+						<div class="huadong" v-if="cantonCode=='32'">
+							<span class="huadong-title">本月参考价:</span>
+							<div class="notice_active">
+								<ul>
+									<li class="notice_active_ch" v-for="(item,index) in carouselData['RECYCLING']">
+										<span>{{item['name']}}</span>
+										<em>{{item['value']}}</em>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<el-button type="warning" class="inquiry-btn2"  @click="publish(2)">危废处置询价</el-button>
+					</el-col>
+					<el-col :span="6" align="right">
+						<!--<el-button type="text" class="refresh" @click="showDocument" :style="lyMaxPage>1?'margin-right: 30px':''" title="合作伙伴招募令"><i class="ling"></i>合作伙伴招募令</el-button>-->
+						<el-button type="text"  class="refresh not-allowed" v-if="lyMaxPage>1"  title="换一换" @click="getLYRefresh"><i class="huan_grey"></i>换一换</el-button>
+					</el-col>
+				</el-row>
+				<div style="text-align: center;font-size: 30px;color: #232428" v-if="listLoading"><i class="el-icon-loading"></i></div>
+				<div class="cardList ly" v-if="lyList.length>0">
+					<div class="cardItem" v-for="(item, index) in lyList" :key="index" @click="goEntDetail(item.entId,item.entName)">
+						<el-card :body-style="{ padding: '0px' }">
+							<div class="image" v-loading="!item.imgLoaded" element-loading-spinner="el-icon-loading"
+								 element-loading-background="rgba(208, 225,255, 1)"><img v-if="item.imgLoaded" :src="item.logo"/>
+							</div>
+							<div style="padding: 14px;">
+								<div class="entName" :style="'height:44px'">{{item.entName}}</div>
+								<div class="address"><i class="address_icon"></i>{{item.entAddress}}</div>
+								<div class="entContent">
+									<i v-show="item.licenceNo||item.dispositionType" class="xukezheng_icon"></i>
+									<span><b>{{item.licenceNo}}</b></span>
+									<span  style="margin-left: 20px;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-overflow: ellipsis;width: 177px;display: inline-block;">
+										<b :title="item.dispositionType">{{item.dispositionType}}</b>
+									</span>
+								</div>
+								<div class="appendContent">
+									{{item.wasteType}}
+								</div>
+							</div>
+						</el-card>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="nodata" v-cloak v-if="lyList.length==0&&!listLoading">处置企业陆续加盟中，加盟电话 0512-62717018</div>
+			</div>
+		</div>
+		</div>
+	</div>
+	<el-dialog
+			v-cloak
+			title="提示"
+			:visible.sync="dialogVisible"
+			width="920px"
+			:modal="true"
+			:modal-append-to-body="true"
+			:show-close="false"
+			center>
+		<div slot="title" class="dialogTitle" align="left">欢迎加盟<em>易废网</em><b>!</b>
+			<el-button type="text" class="closeDialog" @click="hideDocument" title="关闭"></el-button>
+		</div>
+		<div class="dialogBody">
+			<p class="titleText">易废网危废服务居间协议</p>
+			<div class="contentText">
+				<p>甲方：_________________________________________（甲方）</p>
+				<p>地址： </p>
+				<p>乙方：易废网（乙方）</p>
+				<p>地址：苏州市工业园区娄阳路12号</p>
+				<p style="text-indent: 2em">甲方是取得政府环保部门核发的《危险废物经营许可证》（许可证号：__________________
+					）的合法收集、处置企业。甲方委托乙方以代理商身份在
+					市场上为甲方进行《危险废物经营许可证》范围内的居间服务。经友好协商
+					一致，就居间服务达成协议如下，以兹共同遵照执行：</p>
+				<p>一、委托内容：符合甲方《危险废物经营许可证》资质许可范围内的危险废物的居间服务。</p>
+				<p>二、委托权限：</p>
+				<p>甲方授权乙方以甲方代理商的身份与产废单位进行合同谈判、合同签署、危废转移、运输服务等活动。</p>
+				<p>三、甲方的权利与义务</p>
+				<p>1、甲方需获得政府主管部门核发的合法经营的身份，并向乙方提供相应资质证书文件。</p>
+				<p>2、甲方为乙方在合同洽谈、物流转移提供相应的支持服务，及时审核签章。</p>
+				<p>3、由乙方负责代理的客户，在合同执行期间或合同存续过程中，该客户带来权益均归属乙方所有，甲方不得以任何理由变更该权益。</p>
+				<p>4、甲方有义务为乙方相关人员提供相应的培训支持。</p>
+				<p><b>5、甲方应积极配合乙方做好产废企业的危废转移业务，并同意乙方在确保安全的前提下组织多家产废单位共用运输车辆进行危废转移。</b></p>
+				<p>四、乙方的权利与义务</p>
+				<p>1、乙方在服务过程中必须遵守国家的相关规定。</p>
+				<p>2、乙方应及时、定期向甲方通报客户签约情况（包括客户名称、数量、价格等）。</p>
+				<p>3、乙方须将乙方代理签约服务的客户产生的危险废物按危废运输管理的要求全部运到甲方经营地点进行处置，不得以任何理由私自处理。</p>
+				<p><b>4、乙方应根据甲方和由乙方代理服务的产废企业签订的合同，及时履行付款义务，无论产废企业是否支付费用给乙方，乙方都必须按期履行付款义务。</b></p>
+				<p><b>5、乙方应保证在危废转移前，核实所需完成的申报手续，并确保产废企业的危废符合甲方的运输包装要求。</b></p>
+				<p><b>6、乙方同意在合同有效期内在易废网的首页为甲方做免费的广告宣传。</b></p>
+				<p><b>7、乙方每年组织两次行业专家培训，甲方可免费参加。</b></p>
+				<p><b>8、乙方为甲方免费提供江苏省危险废物动态管理信息系统VIP客服专线服务。</b></p>
+				<p>五、费用及结算</p>
+				<p>1、价格：</p>
+				<table>
+					<tr>
+						<td style="width: 100px">样品规格</td>
+						<td style="width: 120px">数量</td>
+						<td style="width: 80px">价格</td>
+						<td>备注</td>
+					</tr>
+					<tr>
+						<td>样品检测正常</td>
+						<td>XX吨及XX吨以内</td>
+						<td>XXXX元/吨</td>
+						<td style="text-align: left">实际处置量不足1吨，按1吨收费，超出一吨不满2吨按2吨收费，以此类推。处置前必须先付款。</td>
+					</tr>
+					<tr>
+						<td>样品检测正常</td>
+						<td>XX吨-XX吨</td>
+						<td>XXXX元/吨</td>
+						<td style="text-align: left">按实际处置量收费</td>
+					</tr>
+					<tr>
+						<td>样品检测正常</td>
+						<td>XX吨以上</td>
+						<td>XXXX元/吨</td>
+						<td style="text-align: left">按实际处置量收费，特殊物料根据物料分析情况作适当调整协商确定</td>
+					</tr>
+				</table>
+				<p>2、结算：</p>
+				<p>2.1乙方代理的客户合同资金约定进行结算。</p>
+				<p>2.2乙方向甲方支付费用时，甲方需提供等额服务费发票。</p>
+				<p>六、保密条款</p>
+				<p>协议双方对本协议履行过程中所接触或获知的对方的任何商业信息均有保密义务。</p>
+				<p>七、其他事项</p>
+				<p>1、乙方代理签约的客户，乙方及时向甲方提供计划代理签约客户，经甲方同意后，由乙方代理甲方与客户洽谈危废处置事宜，乙方提供合同订立的媒介服务、合同订立及转移过程的服务。</p>
+				<p>2、乙方直接与乙方代理签约的客户签订危废运输合同，相关费用由乙方承担。</p>
+				<p>3、本协议一式四份，双方各执二份，具有同等法律效力。</p>
+				<p>4、本协议自甲、乙双方盖章签字之日起生效，有效期XXX年。</p>
+				<br/>
+				<p>甲方(盖章)： </p>
+				<p>代理人：</p>
+				<br/>
+				<p>乙方(盖章)：易废网（乙方）</p>
+				<p>代理人：</p>
+				<p>签订日期：2018年____月____日</p>
+			</div>
+		</div>
+		<span slot="footer" class="dialog-footer">
+			<b>加盟热线：<font color="#0179de">0512-62717018</font></b>
+	   </span>
+	</el-dialog>
+</div>
+<div style="display: none"><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180816150903.html">如何挑选危险废物处置企业大有学问</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180816104558.html">危险废物·乳化液的处置流程工艺</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180809133520.html">危险废物·废活性炭的鉴别、包装贮存、处置</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180802165348.html">如何判断企业内是否存在危险废物</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180723154340.html">"危险废物处置"·易废网为您做的远不止这么多</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180711103352.html">易废网教您建设符合污染控制标准要求的危废贮存仓库</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180627134455.html">易废网对产废单位危险废物的日常管理进行培训指导！ </a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180625153024.html">危险废物的三十个检查及应对措施 </a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180625092917.html">危险废物贮存要点：危险废物警示标识该如何设置？</a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180622153843.html">【危险废物管理】危险废物标识标志标准化管理 </a><a class="infor-item" href="http://www.yifeiwang.com/knowledge/20180622133648.html"> 危险废物标签随便填？不！注意这些细节，否则难过环保督查！</a></div>
+<div class="footer">
+		   <span>COPYRIGHT &nbsp; &copy;  &nbsp; 江苏神彩科技股份有限公司  &nbsp;  www.yifeiwang.com  &nbsp;
+			<a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+</div>
+<script src="main/common/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="app/js/constants.js?2"></script>
+<script src="app/js/util.js?1"></script>
+<script src="main/common/provinces.js?6"></script>
+<script src="main/common/resLoader.js"></script>
+<script src="main/pc/js/carousel-data.js?3"></script>
+<script type="text/javascript">
+    document.write('<script type="text/javascript" src="'+HOME_PRE+'home_activityList.js?'+new Date().getTime()+'"><\/script>');
+    document.write('<script type="text/javascript" src="'+HOME_PRE+'home_entList.js?'+new Date().getTime()+'"><\/script>');
+</script>
+<script src="main/pc/js/index.js?15"></script>
+<script src="main/pc/js/app_new.js?65"></script>
+<script type="text/javascript">
+    $(function(){
+        var timeout=2500;
+		var num = $('.notice_active').find('li').length;
+		if(num > 1){
+			var time=setInterval('timer(".notice_active")',timeout);
+			$('.huadong').mousemove(function(){
+				clearInterval(time);
+			}).mouseout(function(){
+				time = setInterval('timer(".notice_active")',timeout);
+			});
+		}
+    });
+    function timer(opj){
+        $(opj).find('ul').animate({
+            marginTop : "-20px"
+        },500,function(){
+            $(this).css({marginTop : "0"}).find("li:first").appendTo(this);
+        })
+    }
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?f9321d14ee7be2e6cfa26ef6457b6c4e";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+</body>
+
+</html>

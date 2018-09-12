@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.wasteinformation.mapper.WasteInformationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.wasteinformation.entity.WasteInformation">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="context" property="context"/>
+        <result column="text" property="text"/>
+        <result column="fileId" property="fileId"/>
+        <result column="videoFileId" property="videoFileId"/>
+        <result column="type" property="type"/>
+        <result column="clickAmount" property="clickAmount"/>
+        <result column="keyword" property="keyword"/>
+        <result column="htmlSrc" property="htmlSrc"/>
+        <result column="htmlTitle" property="htmlTitle"/>
+        <result column="desc" property="desc"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+    <sql id="wasteInformationCondition">
+        <where>
+            deleteFlag=0
+            <if test='id !=null and id !="" '>
+                and information.id = #{id}
+            </if>
+            <if test='keyword !=null and keyword !="" '>
+                and (information.title like concat('%',#{keyword},'%') or information.context like
+                concat('%',#{keyword},'%'))
+            </if>
+            <if test='startDateTime !=null or endDateTime !=null'>
+                <choose>
+                    <when test="startDateTime !=null and endDateTime !=null ">
+                        AND information.createTime between #{startDateTime} and #{endDateTime}
+                    </when>
+                    <when test="startDateTime !=null ">
+                        AND information.createTime &gt;= #{startDateTime}
+                    </when>
+                    <when test="endDateTime !=null ">
+                        AND information.createTime &lt; #{endDateTime}
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </sql>
+    <select id='countWasteInformation' parameterType="com.mlsc.yifeiwang.wasteinformation.model.WasteInformationParam"
+            resultType="java.lang.Integer">
+        select count(1)
+        from waste_information information
+        <include refid="wasteInformationCondition"/>
+    </select>
+    <select id='getWasteInformationById' parameterType="com.mlsc.yifeiwang.wasteinformation.model.WasteInformationParam"
+            resultType="com.mlsc.yifeiwang.wasteinformation.model.WasteInformationModel">
+        select
+        information.id,information.title,information.clickAmount,information.text,information.context,information.fileid,information.createTime,
+        sysUser.ChineseName as userName,information.videoFileId,codeValue.value as type,
+        information.keyword,information.htmlSrc,information.htmlTitle,information.desc
+        from waste_information information inner join sys_user sysUser on information.createBy = sysUser.userId
+        left join code_value codeValue on codeValue.code = information.type and codeValue.type_code='WASTE_INFO_TYPE'
+        <where>
+            <if test='id !=null and id !="" '>
+                and information.id = #{id}
+            </if>
+        </where>
+
+    </select>
+
+
+    <select id='listWasteInformation' parameterType="com.mlsc.yifeiwang.wasteinformation.model.WasteInformationParam"
+            resultType="com.mlsc.yifeiwang.wasteinformation.model.WasteInformationModel">
+        select
+        information.id,information.title,information.clickAmount,information.text,information.fileid,information.createTime,
+        sysUser.ChineseName as userName,information.videoFileId,codeValue.value as type,
+        information.keyword,information.htmlSrc,information.htmlTitle,information.desc
+        from waste_information information inner join sys_user sysUser on information.createBy = sysUser.userId
+        left join code_value codeValue on codeValue.code = information.type and codeValue.type_code='WASTE_INFO_TYPE'
+        <include refid="wasteInformationCondition"/>
+        <if test="latestNews!=null and latestNews!='' ">
+            order by information.createTime desc
+        </if>
+        <if test="mostRead!=null and mostRead!='' ">
+            order by information.clickAmount desc
+        </if>
+        <if test="(latestNews==null || latestNews=='') and  (mostRead==null || mostRead=='')">
+            order by information.editTime desc
+        </if>
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+
+    </select>
+
+
+    <update id="updateClickAmount">
+		update waste_information
+		set clickAmount = clickAmount+1
+		where id = #{id}
+	</update>
+
+</mapper>

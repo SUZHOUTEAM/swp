@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.operaction.mapper.WebsiteOpertionDisposalEnterpriseMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.operaction.entity.WebsiteOpertionDisposalEnterprise">
+		<id column="id" property="id" />
+		<result column="operationId" property="operationId" />
+		<result column="disposalEnterpriseId" property="disposalEnterpriseId" />
+		<result column="entName" property="entName" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+	</resultMap>
+
+
+	<select id="listDisposalEnterprise" resultType="com.mlsc.yifeiwang.operaction.entity.WebsiteOpertionDisposalEnterprise" parameterType="java.lang.String" >
+		SELECT base.entId as disposalEnterpriseId ,base.entName as entName  ,licence.id as licenceId
+		from sys_enterprise_base base
+		inner join waste_enterprise_type enterpriseType on base.entId = enterpriseType.enterprise_id
+		inner join code_value enterpriseTypeCode on enterpriseType.enterprise_type_id = enterpriseTypeCode.id and enterpriseTypeCode.type_code = 'ENTERPRISE_TYPE' and enterpriseTypeCode.code = 'DISPOSITION'
+		INNER JOIN operation_licence licence ON base.entid = licence.enterprise_id  AND licence.valid = '1'  AND licence.start_date &lt;= SYSDATE() AND licence.end_date &gt;= SYSDATE()
+		<where>
+			<if test="entName !=null ">
+				base.entName like concat(#{entName},'%')
+			</if>
+		</where>
+		group by base.entId
+	</select>
+</mapper>

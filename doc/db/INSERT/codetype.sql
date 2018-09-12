@@ -1,0 +1,4 @@
+INSERT INTO code_type (id, type_code, type_name, splice, status, create_by, create_time, edit_by, edit_time) VALUES ('2fcffddc5f0e48f4bd6ea3b82cceb1bc', 'PENDING_DISPOSTION', '待发布危废处理状态', '1', '1', '100000000000000', '2017-04-19 16:09:15', '100000000000000', '2017-04-19 16:09:15');
+
+INSERT INTO code_value (id, type_id, code, value, create_by, create_time, edit_by, edit_time) VALUES ('af75b21cf3164368926ee2cd854703b0', '2fcffddc5f0e48f4bd6ea3b82cceb1bc', 'ACCEPT', '已确认', '100000000000000', '2017-04-19 16:09:15', '100000000000000', '2017-04-19 16:09:15');
+INSERT INTO code_value (id, type_id, code, value, create_by, create_time, edit_by, edit_time) VALUES ('26887ab95a344601a2b3060a37eb95ca', '2fcffddc5f0e48f4bd6ea3b82cceb1bc', 'SUBMIT', '已提交', '100000000000000', '2017-04-19 16:09:15', '100000000000000', '2017-04-19 16:09:15');

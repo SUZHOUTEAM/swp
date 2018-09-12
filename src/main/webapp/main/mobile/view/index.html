@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<link rel="shortcut icon" href="../../../app/img/favicon.ico">
+	<title>易废网-平台够大，价格够低</title>
+	<script type="text/javascript">
+        document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        window.onresize=function () {
+            document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        }
+	</script>
+	<script type="text/javascript" src="../../common/adaptation.js"></script>
+	<!-- 引入vant样式 -->
+	<link rel="stylesheet" href="../../common/vantui/index.css">
+	<!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+</head>
+<body>
+<div id="main"></div>
+<script src="../../common/jquery.min.js"></script>
+<script src="../../common/elementui/vue.min.js"></script>
+<!-- 引入vant组件 -->
+<script src="../../common/vantui/vant.min.js"></script>
+<script src="../../../app/js/constants.js?1"></script>
+<script src="../js/hashChange.js?21"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<!--<script type="text/javascript">
+    document.write('<script type="text/javascript" src="'+HOME_PRE+'home_activityList.js?'+new Date().getTime()+'"><\/script>');
+    document.write('<script type="text/javascript" src="'+HOME_PRE+'home_entList.js?'+new Date().getTime()+'"><\/script>');
+</script>-->
+<script type="text/javascript">
+    function readCookie(name) {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg)){
+            return unescape(arr[2]);
+        }else{
+            return null;
+        }
+    }
+    function getParam(paraName) {
+        var search = document.location.search,
+            reg = new RegExp("[?&]+" + paraName + "=([^&]+)");
+        if (search && reg.test(search)) {
+            return decodeURIComponent(RegExp['$1']).replace(/\+/g, " ");
+        }
+        return null;
+    }
+    function getFace() {
+        $.ajax({
+            url: "/swp/fileUpload/getFileByBusinessCode",
+            data: {
+                'businessCode': 'c'+localStorage.userId,
+                'ticketId': localStorage.ticketId
+            },
+            type: "POST",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                if (data.status == 1) {
+                    var uploadFileInfo = data.data.uploadFileInfo;
+                    if (uploadFileInfo) {
+                        window.faceUrl=IMG_VIEW_URL + '&fileID='+ uploadFileInfo.fileId
+                    }else{
+                        window.faceUrl='';
+                    }
+                } else {
+                    window.faceUrl='';
+                }
+            },
+            error: function (er) {
+                window.faceUrl='';
+            }
+        });
+    }
+    function collectingUserBehavior(eventCode,remark) {
+        var ticketId=localStorage.ticketId?localStorage.ticketId:'';
+        if(returnCitySN['cip']=='58.210.204.106'){
+            return;
+        }
+        var param={
+            eventCode:eventCode,
+            cid:returnCitySN['cid'],
+            cname:returnCitySN['cname'],
+            cip:returnCitySN['cip']
+        };
+        if(ticketId){
+            param.ticketId=ticketId;
+        }
+        if(remark){
+            param.remark=remark;
+        }
+        $.ajax({
+            url:'/swp/userAction/saveUserAction',
+            type:'post',
+            data:param,
+            async:true,
+            success:function (result) {
+                console.log(result);
+            }
+        })
+    }
+    function checkTicketId(ticketId) {
+        $.ajax({
+            url: "/swp/myenterprise/checkTickedId",
+            data: {
+                'ticketId': ticketId,
+            },
+            type: "POST",
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+                var baseVo=data.data.user;
+                if(!baseVo){
+                    localStorage.ticketId='';
+                }else{
+                    getFace();
+                }
+            }
+        });
+    }
+    $(document).ready(function () {
+        if(localStorage.ticketId&&localStorage.userId){
+            checkTicketId(localStorage.ticketId)
+        }
+    })
+</script>
+</body>
+</html>

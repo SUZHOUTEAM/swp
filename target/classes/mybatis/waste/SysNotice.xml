@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.sms.mapper.SysNoticeMapper">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.sms.entity.SysNotice">
+    <id column="id" property="id"/>
+    <result column="notice_type" property="noticeType"/>
+    <result column="notice_category" property="noticeCategory"/>
+    <result column="rel_id" property="relId"/>
+    <result column="sender_id" property="senderId"/>
+    <result column="receiver_id" property="receiverId"/>
+    <result column="receiver_type" property="receiverType"/>
+    <result column="notice_title" property="noticeTitle"/>
+    <result column="notice_content" property="noticeContent"/>
+    <result column="has_send_msg" property="hasSendMsg"/>
+    <result column="has_read" property="hasRead"/>
+    <result column="create_by" property="createBy"/>
+    <result column="create_time" property="createTime"/>
+    <result column="edit_by" property="editBy"/>
+    <result column="edit_time" property="editTime"/>
+    <result column="valid" property="valid"/>
+  </resultMap>
+
+  <resultMap id="SysNoticeVoMap" type="com.mlsc.yifeiwang.sms.model.SysNoticeVo">
+    <id column="id" property="id"/>
+    <result column="notice_type" property="noticeType"/>
+    <result column="notice_category" property="noticeCategory"/>
+    <result column="rel_id" property="relId"/>
+    <result column="sender_id" property="senderId"/>
+    <result column="receiver_id" property="receiverId"/>
+    <result column="receiver_type" property="receiverType"/>
+    <result column="notice_title" property="noticeTitle"/>
+    <result column="notice_content" property="noticeContent"/>
+    <result column="has_send_msg" property="hasSendMsg"/>
+    <result column="has_read" property="hasRead"/>
+    <result column="create_by" property="createBy"/>
+    <result column="create_time" property="createTime"/>
+    <result column="edit_by" property="editBy"/>
+    <result column="edit_time" property="editTime"/>
+    <result column="valid" property="valid"/>
+    <result column="sender_name" property="senderName"/>
+    <result column="receiver_name" property="receiverName"/>
+    <result column="receiver_type_label" property="receiverTypeLabel"/>
+    <result column="notice_type_label" property="noticeTypeLabel"/>
+    <result column="notice_category_label" property="noticeCategoryLabel"/>
+    <result column="has_read_label" property="hasReadLabel"/>
+  </resultMap>
+
+
+  <sql id="whereCondition">
+    WHERE notice.valid = '1'
+    <if test='receiverId!=null and receiverId!=""'>
+      AND notice.receiver_id = #{receiverId}
+    </if>
+    <if test='hasRead!=null and hasRead!="" '>
+      AND notice.has_read = #{hasRead}
+    </if>
+    <if test='startDate != null'>
+      and notice.create_time &gt;= #{startDate}
+    </if>
+    <if test='endDate != null'>
+      and notice.create_time &lt;= #{endDate}
+    </if>
+    <if test='noticeCategory != null and noticeCategory!="" '>
+      and notice.notice_category = #{noticeCategory}
+    </if>
+    <if test='noticeType != null and noticeType!="" '>
+      and notice.notice_type = #{noticeType}
+    </if>
+  </sql>
+
+  <select id="listSysNotice" parameterType="com.mlsc.yifeiwang.sms.model.SysNoticeQueryParam"
+    resultMap="SysNoticeVoMap">
+    SELECT notice.*,
+    CASE WHEN notice.has_read = '1' THEN '已读' WHEN notice.has_read = '0' THEN '未读' END AS
+    has_read_label,
+    (SELECT value FROM code_value WHERE code = notice.notice_category AND type_code =
+    'NOTICE_CATEGORY') AS notice_category_label,
+    (SELECT ChineseName FROM sys_user WHERE UserId = notice.sender_id) AS sender_name
+    FROM sys_notice AS notice
+    <include refid="whereCondition"></include>
+    order by notice.create_time desc
+    <if test='rows != null and startRowIndex != null '>
+      LIMIT ${startRowIndex} , ${rows}
+    </if>
+  </select>
+
+  <select id="countSysNotice" parameterType="com.mlsc.yifeiwang.sms.model.SysNoticeQueryParam" resultType="int">
+    SELECT COUNT(1) FROM  sys_notice AS notice
+    <include refid="whereCondition"></include>
+  </select>
+</mapper>

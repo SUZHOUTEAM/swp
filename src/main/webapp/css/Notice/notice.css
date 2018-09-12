@@ -1,0 +1,145 @@
+@CHARSET "UTF-8"; 
+
+.margin-top {
+	margin-top: 41px;
+}
+
+.padding {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.icon-envelope-open-color {
+	color: #7bd5f2 !important;
+}
+
+.icon-envelope-color {
+	color: #ff902b;
+}
+
+.panel .panel-heading {
+	display: inline-block;
+}
+
+.mb-mails .mb-mail-subject {
+	font-size: 14px;
+	font-weight: 100;
+}
+
+.mb-mails .mb-mail-from {
+	fopnt-size: 12px;
+	font-weight: 100;
+}
+
+.notice-font14 {
+	font-family: 微软雅黑;
+	font-size: 14px;
+	color: #222222 !important;
+}
+
+.notice-font15 {
+	font-family: 微软雅黑;
+	font-size: 12px;
+	color: #6a7580 !important;
+	display: inline-block;
+	width: 403px;
+}
+
+.notice-fontFrom14 {
+	font-family: 微软雅黑;
+	fopnt-size: 14px;
+	color: #8f8f8f !important;
+}
+
+.mb-boxes .nav>li.active>a {
+	background-color: #26c8e0 !important;
+	color: #fff;
+	width: 198px;
+	height: 40px;
+}
+
+.mb-boxes .nav>li>a {
+	font-size: 16px;
+	color: #3b4966;
+	font-family: 微软雅黑；
+}
+
+.mb-boxes .nav>li>a:hover,.mb-boxes .nav>li>a:focus {
+	background-color: #86dee3;
+}
+
+.label-green {
+	margin-top: 3px;
+}
+
+.publishtime {
+	background-image: url(../app/img/circle/publishtime.png);
+	width: 14px;
+	height: 14px;
+	margin-right: 0px;
+	display: inline-block;
+	background-repeat: no-repeat;
+	position: absolute;
+	margin-top: 2px;
+	margin-left: -24px;
+}
+
+.searchtoolNotice {
+	margin-bottom: 12px;
+	float: right;
+}
+
+.goback {
+	margin-left: 4px !important;
+    width: 56px !important;
+    height: 30px !important;
+    border-color: #ffffff !important;
+    background: url("../../app/img/circle/seek_btn.png") no-repeat;
+    color: #ffffff !important;
+}
+
+.show-unread {
+	border: 1px solid;
+	border-color: #DDE6E9;
+	width: 168px;
+	height: 34px;
+}
+
+input[type="checkbox"] {
+	/* margin: 4px 0 0; */
+	margin-left: 12px;
+	margin-right: 12px;
+	margin-top: 7px;
+	line-height: normal;
+}
+
+.panel-default {
+	border-color: #eeeeee;
+}
+
+.btn {
+	margin-top: -5px
+}
+
+label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-weight: 500;
+}
+
+.moreNotice{
+	font-size: 14px;
+	color:#222222;
+	font-family: 微软雅黑；
+}
+
+.noticeMessage{
+	font-size: 12px;
+	color:#6a7580;
+	font-family: 微软雅黑；
+}
+
+.list-group {
+  width: 450px;
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.discusstag.mapper.DiscussTagMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.discusstag.entity.DiscussTag">
+		<result column="id" property="id" />
+		<result column="releaseId" property="releaseId" />
+		<result column="entId" property="entId" />
+		<result column="comments" property="comments" />
+		<result column="contacts" property="contacts" />
+		<result column="contactsTel" property="contactsTel" />
+		<result column="sampleDate" property="sampleDate" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="tagType" property="tagType" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+	</resultMap>
+	<select id="listTagListByReleaseId" resultType="com.mlsc.yifeiwang.discusstag.entity.DiscussTag" >
+		select tag.id,tag.releaseId,tag.comments,tag.contacts,tag.contactsTel,tag.sampleDate,tag.tagType,tag.busiStatus,sysUser.ChineseName as createBy,tag.createTime
+		from discuss_tag tag left join sys_user sysUser on tag.createBy = sysUser.userId
+		where deleteFlag = 0
+		<if test='releaseId !=null and releaseId !="" '>
+			and tag.releaseId = #{releaseId}
+		</if>
+		<if test='entId !=null and entId !="" '>
+			and tag.entId = #{entId}
+		</if>
+		order by tag.createTime desc;
+	</select>
+</mapper>

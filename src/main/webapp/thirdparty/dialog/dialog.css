@@ -1,0 +1,133 @@
+.dialog_bg{
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+    z-index: 100;
+}
+.dialog{
+	width: 400px;
+	margin: 30px auto;
+	border-top:2px solid #a5b8c8;
+	border-radius:3px ;
+	padding: 0 0 32px;
+	box-shadow: 0 0 2px #a5b8c8;
+	background-color:#FFFFFF ;
+}
+.dialog_body{
+	max-height: 300px;
+	overflow-y: auto;
+}
+.dialog.dialog_table{
+	width: 600px;
+}
+.dialogClose{
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background: url(img/close.png) center center no-repeat;
+	background-size:100% 100%;
+	margin-left: 366px;
+	margin-top: 18px;
+	cursor: pointer;
+}
+.dialog.dialog_table .dialogClose{
+	margin-left: 566px;
+}
+.dialogMessage{
+	margin: 32px auto 18px;
+	padding-left: 10px;
+	font-size: 16px;
+	color: #333333;
+	display: inline-block;
+    max-width: 300px;
+}
+.dialogMessage .icon{
+	    float: left;
+	width: 28px;
+	height: 28px;
+	background: url(img/success.png) center center no-repeat;
+	background-size:100% 100%;
+    margin-top: -4px;
+}
+.dialogMessage >span{
+	margin-left: 10px;
+}
+.dialogMessage .icon.success{
+	background: url(img/success.png) center center no-repeat;
+	background-size:100% 100%;
+}
+.dialogMessage .icon.info{
+	background: url(img/info.png) center center no-repeat;
+	background-size:100% 100%;
+}
+.dialogMessage .icon.danger{
+	background: url(img/danger.png) center center no-repeat;
+	background-size:100% 100%;
+}
+.dialogTip{
+	font-size: 14px;
+	color: #87A0B5;
+}
+.dialog.dialog_table td,.dialog.dialog_table th{
+	padding: 0;
+	height: 40px;
+	line-height: 40px;
+	width: 25%;
+	border-left:0 !important ;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    font-size: 14px;
+    color: #333333;
+}
+.dialog.dialog_table td.total >span{
+	float: left;
+	width: 50%;
+    line-height: 40px;
+    height: 40px;
+    text-align: center;
+    color: #87A0B5;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+.dialog.dialog_table td.total >span label{
+	color: #333333;
+	margin-left: 26px;
+}
+.dialog.dialog_table td.total{
+	border-top:1px solid #a0b5c6 ;
+	border-bottom:1px solid #a0b5c6 ;
+	width: 100%;
+}
+.dialog.dialog_table .dialogtitle{
+	color: #333333;
+	font-size: 16px;
+	margin: 18px auto 14px;
+}
+.dialog.dialog_table .dialogBtn{
+	margin: 20px auto 0;
+}
+.dialog.dialog_table .dialogBtn .btn{
+    width: 100px;
+    height: 30px;
+    padding: 0;
+    line-height: 30px;
+    color: #ffffff;
+    font-size: 14px;
+    border: 0;
+}
+.dialog.dialog_table .dialogBtn .btn.btn-cancel{
+	background-color:#b5c5d5 ;
+	margin-right: 10px;
+}
+.dialog.dialog_table .dialogBtn .btn.btn-sure{
+	background-color:#006BD6 ;
+}

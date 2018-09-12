@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.wasterealase.mapper.EntReleaseDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.wasterealase.entity.EntReleaseDetail">
+		<id column="id" property="id" />
+		<result column="releaseId" property="releaseId" />
+		<result column="entWasteId" property="entWasteId" />
+		<result column="releaseAmount" property="releaseAmount" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+		<result column="entReleaseDetailId" property="entReleaseDetailId" />
+	</resultMap>
+	<select id="listWasteEntReleaseDetail"
+			resultType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseDetailModel"
+			parameterType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseParam">
+		SELECT
+		detail.id as detailId,waste.code as wasteCode , entWaste.id as entWasteId,
+		entWaste.wasteName as wasteName,detail.releaseAmount as wasteAmount,unitCode.`value` as unitValue
+		<if test=' licenceId!=null and  licenceId!="" '>
+			,
+			case when licenceDetail.id is not null then true
+			else FALSE
+			END AS disposable
+		</if>
+		from ent_release_detail detail
+		inner join ent_waste entWaste on detail.entWasteId = entWaste.id
+		inner join waste on entWaste.wasteId = waste.id
+		inner join code_value unitCode on entWaste.unitCode =  unitCode.`code` and unitCode.type_code = 'UNIT_TYPE'
+		<if test=' licenceId!=null and  licenceId!="" '>
+			LEFT JOIN operation_licence_detail licenceDetail ON entWaste.wasteId = licenceDetail.waste_id AND licenceDetail.licence_id = #{licenceId}
+		</if>
+
+		<where>
+			<if test='releaseId !=null  and releaseId !="" '>
+				detail.releaseId = #{releaseId}
+			</if>
+		</where>
+		group by detail.id
+		<if test=' licenceId!=null and  licenceId!="" '>
+			order by disposable desc
+		</if>
+	</select>
+
+	<select id="initInquiryList"
+			resultType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseDetailModel"
+			parameterType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseParam">
+		SELECT
+		detail.id as detailId,waste.code as wasteCode , entWaste.id as entWasteId,
+		entWaste.wasteName as wasteName,detail.releaseAmount as wasteAmount,unitCode.`value` as unitValue
+		<if test='licenceId !=null  and licenceId !="" '>
+			,
+			case when licenceDetail.id is not null then true
+			else FALSE
+			END AS disposable
+		</if>
+		from ent_release_detail detail
+		inner join ent_waste entWaste on detail.entWasteId = entWaste.id
+		inner join waste on entWaste.wasteId = waste.id
+		inner join code_value unitCode on entWaste.unitCode =  unitCode.`code` and unitCode.type_code = 'UNIT_TYPE'
+		<if test='licenceId !=null  and licenceId !="" '>
+			inner JOIN operation_licence_detail licenceDetail ON entWaste.wasteId = licenceDetail.waste_id AND licenceDetail.licence_id = #{licenceId}
+		</if>
+		<where>
+			<if test='releaseId !=null  and releaseId !="" '>
+				detail.releaseId = #{releaseId}
+			</if>
+		</where>
+		group by detail.id
+		<if test='licenceId !=null  and licenceId !="" '>
+			order by disposable desc
+		</if>
+
+	</select>
+
+
+	<select id="countDisposabledWasteAmountReleaseDetail"
+			resultType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseDetailModel"
+			parameterType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseParam">
+		SELECT
+		sum(detail.releaseAmount) AS wasteAmount,
+		unitCode.`value` AS unitValue
+		FROM
+		ent_release_detail detail
+		INNER JOIN ent_waste entWaste ON detail.entWasteId = entWaste.id
+		INNER JOIN waste ON entWaste.wasteId = waste.id
+		INNER JOIN code_value unitCode ON entWaste.unitCode = unitCode.`code`
+		AND unitCode.type_code = 'UNIT_TYPE'
+		<where>
+			<if test='releaseId !=null  and releaseId !="" '>
+				detail.releaseId = #{releaseId}
+			</if>
+			<if test='licenceId !=null  and licenceId !="" '>
+				and exists (
+					select * from operation_licence_detail licenceDetail where entWaste.wasteId = licenceDetail.waste_id AND
+					licenceDetail.licence_id = #{licenceId}
+				)
+			</if>
+		</where>
+		group by unitValue
+	</select>
+</mapper>

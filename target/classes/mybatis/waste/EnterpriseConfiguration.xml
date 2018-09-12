@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.enterprise.entity.EnterpriseConfiguration">
+        <id column="id" property="id"/>
+        <result column="entId" property="entId"/>
+        <result column="cantonCode" property="cantonCode"/>
+        <result column="section" property="section"/>
+        <result column="weight" property="weight"/>
+        <result column="page" property="page"/>
+        <result column="index" property="index"/>
+        <result column="national" property="national"/>
+        <result column="watseType" property="watseType"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+    <select id="listEnterpriseInfoBySection" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam"
+            resultType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationModel">
+        select enterpriseBase.entId,enterpriseBase.entAddress,licence.id as licenceId,licence.licence_no as
+        licenceNo,enterpriseBase.entName,configuration.wasteType ,group_concat(' ',dispositionType.code,'-',dispositionType.value) as dispositionType ,uploadFile.file_id as fileId
+        FROM sys_enterprise_base enterpriseBase INNER JOIN enterprise_configuration configuration ON enterpriseBase.entId = configuration.entId
+        LEFT JOIN operation_licence licence ON enterpriseBase.entid = licence.enterprise_id AND licence.valid = '1' AND   licence.start_date &lt;= SYSDATE() AND licence.end_date &gt;= SYSDATE()
+        LEFT JOIN CODE_VALUE licene_code ON licence.audit_status = licene_code.id AND licene_code.code= 'PASS'
+        LEFT JOIN OPERATION_LICENCE_ITEM liceneitem ON liceneitem.licence_id = licence.id
+        LEFT JOIN CODE_VALUE dispositionType   ON liceneitem.disposition_type = dispositionType.id
+        LEFT JOIN upload_file uploadFile ON enterpriseBase.entId = uploadFile.reference_id and uploadFile.file_type='a'
+        WHERE configuration.startDate &lt;= SYSDATE() AND configuration.endDate &gt;= SYSDATE() and configuration.deleteFlag = 0
+        <if test="page!=null and page!= '' ">
+            and configuration.page = #{page}
+        </if>
+        <if test="section!=null and section!= '' ">
+            and configuration.section = #{section}
+        </if>
+        <if test="cantonCode!=null and cantonCode!= '' ">
+            and configuration.cantonCode = #{cantonCode}
+        </if>
+        <if test="national!=null and national!= '' ">
+            and configuration.national = #{national}
+        </if>
+        group by enterpriseBase.entId
+        order by configuration.index asc
+    </select>
+
+
+
+
+
+    <select id="countEnterpriseInfoBySection" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam"
+            resultType="java.lang.Integer">
+        select count(DISTINCT(enterpriseBase.entId))
+        from sys_enterprise_base enterpriseBase inner join enterprise_configuration configuration
+        on enterpriseBase.entId = configuration.entId
+        LEFT JOIN operation_licence licence ON enterpriseBase.entid = licence.enterprise_id AND licence.valid = '1' AND licence.start_date &lt;= SYSDATE() AND licence.end_date &gt;= SYSDATE()
+        LEFT JOIN CODE_VALUE licene_code ON licence.audit_status = licene_code.id and licene_code.code= 'PASS'
+        LEFT JOIN upload_file uploadFile on enterpriseBase.entId = uploadFile.reference_id and uploadFile.file_type='a'
+        where configuration.startDate &lt;= SYSDATE() AND configuration.endDate &gt;= SYSDATE() and  configuration.deleteFlag = 0
+        <if test="section!=null and section!= '' ">
+            and configuration.section = #{section}
+        </if>
+        <if test="cantonCode!=null and cantonCode!= '' ">
+            and configuration.cantonCode = #{cantonCode}
+        </if>
+        <if test="page!=null and page!= '' ">
+            and configuration.page = #{page}
+        </if>
+        <if test="national!=null and national!= '' ">
+            and configuration.national = #{national}
+        </if>
+    </select>
+
+
+    <select id="getMaxPageBySection" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam"
+            resultType="java.lang.String">
+        select max(configuration.page)
+        from sys_enterprise_base enterpriseBase inner join enterprise_configuration configuration
+        on enterpriseBase.entId = configuration.entId
+        where configuration.startDate &lt;= SYSDATE() AND configuration.endDate &gt;= SYSDATE() and configuration.deleteFlag = 0
+        <if test="section!=null and section!= '' ">
+            and configuration.section = #{section}
+        </if>
+        <if test="cantonCode!=null and cantonCode!= '' ">
+            and configuration.cantonCode = #{cantonCode}
+        </if>
+        <if test="national!=null and national!= '' ">
+            and configuration.national = #{national}
+        </if>
+    </select>
+
+
+    <select id="listEnterpriseInfo" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam"
+            resultType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationModel">
+        select configuration.id as configId,enterpriseBase.entId,enterpriseBase.entName,configuration.wasteType,
+        configuration.cantonCode as cantonCode ,canton.CantonName as cantonName,configuration.startDate,configuration.endDate,configuration.page,configuration.index,
+        sectionCode.value as sectionValue,configuration.section
+        from sys_enterprise_base enterpriseBase inner join enterprise_configuration configuration
+        on enterpriseBase.entId = configuration.entId
+        left join sys_canton canton on concat(configuration.cantonCode,'0000') = canton.CantonCode
+        inner join code_value sectionCode on sectionCode.code = configuration.section and sectionCode.type_code = 'SECTION'
+        where configuration.deleteFlag = 0
+        <if test="id!=null and id!= '' ">
+            and configuration.id = #{id}
+        </if>
+        <if test="section!=null and section!= '' ">
+            and configuration.section = #{section}
+        </if>
+        <if test="cantonCode!=null and cantonCode!= '' ">
+            and configuration.cantonCode = #{cantonCode}
+        </if>
+        order by configuration.editTime desc
+        LIMIT ${startRowIndex} , ${rows}
+    </select>
+
+
+    <select id="countEnterpriseInfo" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam" resultType="java.lang.Integer">
+        select count(1)
+        from sys_enterprise_base enterpriseBase inner join enterprise_configuration configuration
+        on enterpriseBase.entId = configuration.entId
+        left join sys_canton canton on configuration.cantonCode = canton.CantonCode
+        inner join code_value sectionCode on sectionCode.code = configuration.section and sectionCode.type_code = 'SECTION'
+        where configuration.deleteFlag = 0
+        <if test="section!=null and section!= '' ">
+            and configuration.section = #{section}
+        </if>
+    </select>
+
+    <select id="listEnterpriseInfoByCantonCode" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam"
+            resultType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationModel">
+        select enterpriseBase.entId,enterpriseBase.entAddress,licence.id as licenceId,licence.licence_no as
+        licenceNo,enterpriseBase.entName,configuration.wasteType ,group_concat(dispositionType.code,'-',dispositionType.value) as dispositionType ,uploadFile.file_id as fileId,
+        DATE_FORMAT( licence.end_date, '%Y-%m-%d' ) as licenceEndDate
+        FROM sys_enterprise_base enterpriseBase INNER JOIN enterprise_configuration configuration ON enterpriseBase.entId = configuration.entId
+        LEFT JOIN operation_licence licence ON enterpriseBase.entid = licence.enterprise_id AND licence.valid = '1' AND   licence.start_date &lt;= SYSDATE() AND licence.end_date &gt;= SYSDATE()
+        LEFT JOIN CODE_VALUE licene_code ON licence.audit_status = licene_code.id AND licene_code.code= 'PASS'
+        LEFT JOIN OPERATION_LICENCE_ITEM liceneitem ON liceneitem.licence_id = licence.id
+        LEFT JOIN CODE_VALUE dispositionType   ON liceneitem.disposition_type = dispositionType.id
+        LEFT JOIN upload_file uploadFile ON enterpriseBase.entId = uploadFile.reference_id and uploadFile.file_type='a'
+        WHERE configuration.startDate &lt;= SYSDATE() AND configuration.endDate &gt;= SYSDATE() and configuration.deleteFlag = 0
+        <if test="page!=null and page!= '' ">
+            and configuration.page = #{page}
+        </if>
+        <if test="section!=null and section!= '' ">
+            and configuration.section = #{section}
+        </if>
+        <if test="cantonCode!=null and cantonCode!= '' ">
+            and configuration.cantonCode = #{cantonCode}
+        </if>
+        <if test="national!=null and national!= '' ">
+            and configuration.national = #{national}
+        </if>
+        group by enterpriseBase.entId
+        ORDER BY configuration.section,configuration.page,configuration.index
+        LIMIT ${startRowIndex} , ${rows}
+    </select>
+
+
+    <select id="listEnterpriseInfoByWeight" parameterType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationParam"
+            resultType="com.mlsc.yifeiwang.enterprise.mapper.EnterpriseConfigurationModel">
+        select enterpriseBase.entId,enterpriseBase.entName,enterpriseBase.entAddress,licence.id as licenceId,licence.licence_no as
+        licenceNo,enterpriseBase.entName,group_concat(dispositionType.code,'-',dispositionType.value) as dispositionType ,uploadFile.file_id as fileId,
+        DATE_FORMAT( licence.end_date, '%Y-%m-%d' ) as licenceEndDate
+        FROM sys_enterprise_base enterpriseBase
+        LEFT JOIN operation_licence licence ON enterpriseBase.entid = licence.enterprise_id AND licence.valid = '1' AND   licence.start_date &lt;= SYSDATE() AND licence.end_date &gt;= SYSDATE()
+        LEFT JOIN CODE_VALUE licene_code ON licence.audit_status = licene_code.id AND licene_code.code= 'PASS'
+        LEFT JOIN OPERATION_LICENCE_ITEM liceneitem ON liceneitem.licence_id = licence.id
+        LEFT JOIN CODE_VALUE dispositionType   ON liceneitem.disposition_type = dispositionType.id
+        LEFT JOIN upload_file uploadFile ON enterpriseBase.entId = uploadFile.reference_id and uploadFile.file_type='a'
+        WHERE enterpriseBase.weight>0
+        <if test="cantonCode!=null and cantonCode!= '' ">
+            and enterpriseBase.cantonCode like concat(#{cantonCode},'%')
+        </if>
+        group by enterpriseBase.entId
+        ORDER BY enterpriseBase.weight desc
+        LIMIT ${rows}
+    </select>
+
+
+
+
+
+
+</mapper>

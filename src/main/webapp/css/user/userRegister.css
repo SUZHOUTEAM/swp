@@ -1,0 +1,140 @@
+@CHARSET "UTF-8";
+.header{
+    position: relative;
+}
+.form-horizontal .control-label {
+    margin-bottom: 0;
+    padding-top: 7px;
+    font-weight:normal;
+  }
+  
+  .identify-form-control {
+    width:62% ;
+    display:inline-block;
+  }
+  
+  .identify-form-control-feedback {
+    right:38% !important;
+    top:26px;
+  }
+  
+  .div-display-block {
+    display:block;
+  }
+  
+  .btn_padding {
+    padding-left:23px;
+  }
+  
+  label {
+    font-weight:initial !important;
+    max-width:none;
+  }
+  
+  .fontWeight {
+    font-weight: bold;
+  }
+  
+  .fontSize {
+    font-size: 20px;
+  }
+  
+  .uk-notify-top-center {
+      left: 50%;
+      margin-left: -175px;
+      top: 0px;
+  }
+  /*
+   * 步骤样式
+   */
+  
+    .sign{
+        width: 100%;
+        margin:0 auto;
+        position: relative;
+        text-align: center;
+        z-index: 123;
+        color: #2b7de1;
+        font-family:"microsoft yahei";
+        height:60px;
+    }
+    .sign p.step{
+        display: inline-block;
+        text-align: center;
+    }
+    .sign p.progress{
+        width: 30%;
+        display: inline-block;
+        text-align: center;
+        height: 3px;
+        margin-bottom: 3px;
+        border-radius: 3px;
+        background: linear-gradient(to right,#2b7de1 51%,#d0d4e6 49%);
+        filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#2b7de1',endColorStr='#d0d4e6',gradientType='1');
+    }
+    .sign .cir{
+        width: 20px;
+        height: 20px;
+        background-color:#2b7de1;
+        text-align: center;
+        border-radius:50% ;
+        color: #FFFFFF;
+        display: block;
+        margin: 0 auto;
+        line-height: 20px;
+    }
+    .step1 .cir.circle2,.step1 .cir.circle3,.step1 .progress.progress2{
+        background: #d0d4e6;
+        filter:none;
+    }
+    .step1 .signtext2,.step1 .signtext3{
+        color: #d0d4e6;
+    }
+    .step2 .progress.progress1{
+        background: #2b7de1;
+    }
+    .step2 .circle3{
+        background: #d0d4e6;
+    }
+    .step2 .signtext3{
+        color: #d0d4e6;
+    }
+    .step3 .progress.progress1,.step3 .progress.progress2{
+        background: #2b7de1;
+    }
+    .sign .signtext{
+        position: absolute;
+        margin-left: -25px;
+        margin-top: 4px;
+        font-size: 80%;
+    }
+    #btnRegister,#btnRegisterFinish,#toWasteBusiness{
+        background-color: #1171d1;
+        border-color: #1171d1;
+        font-family: "microsoft yahei";
+        color:#ffffff;
+    }
+    #btnRegister:hover,#btnRegisterFinish:hover,#toWasteBusiness:hover{
+        background-color:#1171d1;
+    }
+    .sign.step3{
+        margin-top:10px;
+    }
+     .successlogo{
+        width: 62px;
+        margin: 0 auto;
+    } 
+    .successlogo img{
+        width:100%;
+    }
+    .lead{
+        font-size: 109%;
+        color: #222222;
+        margin-top:20px;
+    }
+    @media (max-width:736px){
+        .content-wrapper{
+            padding:0;
+        }
+    }
+  

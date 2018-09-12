@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>易废网直播</title>
+    <meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+    <link rel="stylesheet" href="../css/common.css?11" />
+    <script src="../../common/liveAdaptation.js"></script>
+    <!--<link rel="stylesheet" href="../../../thirdparty/dialog/dialog.css" />-->
+    <!--<script src="../../../thirdparty/dialog/dialog.js"></script>-->
+    <!-- nePlayer CSS -->
+    <link href="../../common/nep/nep.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../common/elementui/index.css" />
+    <link rel="stylesheet" href="../css/live.css?2" />
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/swp/index.html" tag="0" title="易废网"> <img src="../img/logo_short.png" alt="易废网 logo"> </a>
+            </div>
+            <div class="headerAction">
+                <span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+                <span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+            </div>
+            <a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+            <ul>
+                <li>
+                    <a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+                </li>
+                <li class="active">
+                    <a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+                </li>
+                <li>
+                    <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="breadcrumb-div"><span class="text-muted">当前位置：</span> <div aria-label="Breadcrumb" role="navigation" class="el-breadcrumb"><span class="el-breadcrumb__item" onclick="$('#menu-information').click()"><span role="link" class="el-breadcrumb__inner">危废小课堂</span><i class="el-breadcrumb__separator el-icon-arrow-right"></i></span> <span class="el-breadcrumb__item" aria-current="page"><span role="link" class="el-breadcrumb__inner">直播</span><i class="el-breadcrumb__separator el-icon-arrow-right"></i></span></div></div>
+    <div class="live-container">
+        <div class="live-title"><span style="margin-right: 20px">【<b id="liveStatus">未开始</b>】易废网提醒您产废单位这些行为将受到行政处罚</span>(当前人数：<span id="count">0</span>)
+            <a href="javascript:" class="full-screen" title="全屏" onclick="neplayer('my-video').enterFullscreen()"></a></div>
+        <div class="container-total">
+            <div class="container-left">
+                <video id="my-video" class="video-js vjs-fluid vjs-big-play-centered" x-webkit-airplay="allow" webkit-playsinline controls poster="../img/video-bg10.png" preload="auto" data-setup="{}">
+                    <!--<source src="demo.mp4" type="video/mp4">-->
+                    <source src="http://flvc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df.flv?netease=flvc2dcb30a.live.126.net" type="video/x-flv">
+                    <source src="http://pullhlsc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df/playlist.m3u8" type="application/x-mpegURL">
+                    <source src="rtmp://vc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df" type="rtmp/flv">
+                </video>
+            </div>
+            <div class="container-right">
+                <div class="messageList" id="content">
+                    欢迎来到易废网!<br/>
+                </div>
+                <div style="position: relative">
+                    <input type="text" class="messageInput" id="message" placeholder="请输入..."/>
+                    <a href="javascript:" class="sendBtn" onclick="sendMessage();" title="发送">发送</a>
+                </div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+<!-- html5 video tag -->
+
+<!-- nePlayer Js -->
+<script src="../../common/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="../js/detailInit.js?16"></script>
+<script src="../../common/nep/nep.min.js"></script>
+<script src="../../../app/js/util.js"></script>
+<script type="text/javascript">
+    var websocket=null,appPath='/swp';
+    var activityId,ticketId;
+    var account;
+    $(document).ready(function () {
+        /*activityId=getParam('activityId');
+        ticketId=getParam('ticketId');
+        if(!activityId||!ticketId){
+            jqueryDialog.alert({'msg':'用户信息验证失败','timeout':2000,'type':'info'});
+            $('.live-container').hide();
+            return;
+        }
+        var busiStatus=checkEnrollStatus();
+        if(!busiStatus){
+            jqueryDialog.alert({'msg':'你未报名，还不能观看直播','timeout':2000,'type':'info'});
+            $('.live-container').hide();
+            return;
+        }
+        if(busiStatus=='SUBMIT'){
+            jqueryDialog.alert({'msg':'你的企业未完成付款，暂时不能观看直播','timeout':2000,'type':'info'});
+            $('.live-container').hide();
+            return;
+        }*/
+        account=readCookie('nickName');
+        if(!account){
+            account=generateAccount(6);
+        }
+        if('WebSocket' in window) {
+//            websocket = new WebSocket("ws://yifeiwang.com:5000");
+            websocket = new WebSocket("ws://"+window.location.host+"/swp/websocket/channel01/"+account);
+            websocket.onopen = function() {};
+            websocket.onmessage = function(event) {
+                var obj=JSON.parse(event.data);
+                if(typeof obj=='number'){
+                    $('#count').html(event.data);
+                    return;
+                }
+                $('#content').append('<div class="sayItem">'+obj.account+'<br/><span class="pao"><span class="bot"></span><span class="top"></span>'+obj.message+'</span></div>');
+                $('#content')[0].scrollTop = $('#content')[0].scrollHeight;
+            };
+            websocket.onerror = function() {};
+        } else {
+            alert('当前浏览器 Not support websocket')
+        }
+        var startTime=new Date('2018-08-16 14:00:00'.replace(new RegExp("-","gm"),"/")).getTime();
+        var currentTime=new Date().getTime();
+        if(startTime>currentTime){
+            $('#liveStatus').html('未开始');
+        }else{
+            $('#liveStatus').html('直播中');
+        }
+    });
+    window.onbeforeunload = function() {
+        closeWebSocket();
+    };
+    window.onunload = function() {
+        closeWebSocket();
+    };
+    function sendMessage() {
+        var message=$('#message').val();
+        websocket.send(message);
+//        var str = "{name:'" + account + "',msg:'" + message + "'}";
+//        console.log("发送", str);
+//        websocket.send(str);
+        $('#message').val('');
+    }
+    function generateAccount(l) {
+        var  x="0123456789";
+        var  tmp="";
+//            var timestamp = new Date().getTime();
+        for(var  i=0;i<l;i++)  {
+            tmp+=x.charAt(Math.ceil(Math.random()*100000000)%x.length);
+        }
+        return  '游客'+tmp;
+    }
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+    function goActivityList() {
+        window.location.href = "activityList.html"
+    }
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e && e.keyCode==13){ // enter 键
+            var message = document.getElementById('message');
+            if (message == document.activeElement) {
+                sendMessage();
+            }
+        }
+    };
+    function checkEnrollStatus() {
+        var busiStatus='';
+        ajax({
+            url:'/wasteActivityEnroll/checkEnrollStatus.htm?ticketId='+ticketId,
+            data:JSON.stringify({
+                activityId:activityId
+            }),
+            contentType:'application/json',
+            dataType:'json',
+            type:'post',
+            async:false,
+            success:function (result) {
+                if(result.status==1&&result.data){
+                    busiStatus=result.data.busiStatus;
+//                    if(result.data.busiStatus=='PAYMENTSUCCESS'){
+//                        flag=true;
+//                    }
+                }
+            }
+        });
+        return busiStatus;
+    }
+</script>
+</body>
+</html>

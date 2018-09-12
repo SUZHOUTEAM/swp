@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.wasterealase.mapper.WasteReferencePriceDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.wasterealase.entity.WasteReferencePriceDetail">
+		<id column="id" property="id" />
+		<id column="parent_Id" property="parentId" />
+		<result column="start_amount" property="startAmount" />
+		<result column="ent_amount" property="entAmount" />
+		<result column="price" property="price" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+	</resultMap>
+
+	<select id="getPriceByDefaultDispositionType" resultType="com.mlsc.yifeiwang.wasterealase.model.WasteReferencePriceModel" parameterType="com.mlsc.yifeiwang.wasterealase.model.WasteReferencePriceParam">
+		select dispositionType.refer_id id,dispositionType.id dispositionId,dispositionType.price_id priceId,priceDetail.price
+        from waste_reference_disposition_type dispositionType
+        inner join waste_reference_price_detail priceDetail
+        on dispositionType.price_id = priceDetail.parent_Id
+		<where>
+			<if test="id!=null and  id!='' ">
+				and dispositionType.refer_id = #{id}
+			</if>
+			<if test="dispositionType!=null and  dispositionType!='' ">
+				and dispositionType.disposition_type = #{dispositionType}
+			</if>
+			<if test="amount!=null  ">
+				and #{amount} BETWEEN priceDetail.start_amount and priceDetail.ent_amount
+			</if>
+
+		</where>
+
+	</select>
+
+	<select id="getPriceByParentAndAmount" resultType="com.mlsc.yifeiwang.wasterealase.model.WasteReferencePriceModel" parameterType="com.mlsc.yifeiwang.wasterealase.model.WasteReferencePriceParam">
+		select priceDetail.price
+		from waste_reference_price_detail priceDetail
+		<where>
+			<if test="priceId!=null and  priceId!='' ">
+				and priceDetail.parent_Id = #{priceId}
+			</if>
+
+			<if test="amount!=null  ">
+				and #{amount} BETWEEN priceDetail.start_amount and priceDetail.ent_amount
+			</if>
+
+		</where>
+
+	</select>
+</mapper>

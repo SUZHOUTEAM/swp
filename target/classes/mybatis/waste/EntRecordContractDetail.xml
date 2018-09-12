@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.recordcontract.mapper.EntRecordContractDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.recordcontract.entity.EntRecordContractDetail">
+		<id column="id" property="id" />
+		<result column="recordId" property="recordId" />
+		<result column="orderId" property="orderId" />
+		<result column="orderDetailId" property="orderDetailId" />
+		<result column="releaseDetailId" property="releaseDetailId" />
+		<result column="inquiryDetailId" property="inquiryDetailId" />
+		<result column="price" property="price" />
+		<result column="totalPrice" property="totalPrice" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+	</resultMap>
+	<select id="listContractDetailByRecordId" resultType="com.mlsc.yifeiwang.recordcontract.model.EntRecordContractDetailModel" parameterType="java.lang.String" >
+		SELECT
+		contractDetail.id ,
+		entWaste.wasteCode,
+		entWaste.wasteName,
+		releaseDetail.releaseAmount as amount,
+		unitCode.`value` as unitValue,
+		contractDetail.price,
+		contractDetail.totalPrice AS wasteTotalPrice,
+		orderDetail.totalPrice as orderWasteTotalPrice
+		FROM  ent_record_contract_detail contractDetail
+		INNER JOIN ent_order_detail orderDetail on contractDetail.orderDetailId = orderDetail.id
+		INNER JOIN ent_release_detail releaseDetail ON contractDetail.releaseDetailId = releaseDetail.id
+		INNER JOIN ent_waste entWaste ON releaseDetail.entWasteId = entWaste.id
+		INNER JOIN code_value unitCode ON entWaste.unitCode = unitCode.`code` AND unitCode.type_code = 'UNIT_TYPE'
+		<where>
+			<if test ="recordId!= null">
+				contractDetail.recordId = #{recordId}
+			</if>
+		</where>
+	</select>
+</mapper>

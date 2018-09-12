@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.licence.mapper.OperationLicenceDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.licence.entity.OperationLicenceDetail">
+		<id column="id" property="id" />
+		<result column="licence_id" property="licenceId" />
+		<result column="operation_item_id" property="operationItemId" />
+		<result column="waste_type" property="wasteType" />
+		<result column="waste_name_id" property="wasteNameId" />
+		<result column="waste_id" property="wasteId" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_by" property="editBy" />
+		<result column="edit_time" property="editTime" />
+		<result column="valid" property="valid" />
+	</resultMap>
+
+	<select id="listWasteInfoByLicenceId"	resultType="com.mlsc.yifeiwang.entwaste.model.EntWasteModel" >
+		SELECT
+		waste.id as wasteId ,waste.code as wasteCode ,entWaste.wasteName wasteName
+		from operation_licence_detail licenceDetail
+		inner join waste on waste.id = licenceDetail.waste_id
+		inner join  ent_waste entWaste on entWaste.wasteId = waste.id
+		<where>
+			<if test='entId !=null  and entId !="" '>
+				entWaste.entId = #{entId}
+			</if>
+			<if test='licenceId !=null  and licenceId !="" '>
+				and licenceDetail.licence_id =  #{licenceId}
+			</if>
+		</where>
+		group by waste.id
+	</select>
+</mapper>

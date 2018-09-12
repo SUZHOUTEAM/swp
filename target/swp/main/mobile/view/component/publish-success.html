@@ -1,0 +1,158 @@
+<link rel="stylesheet" href="../css/publish-success.css?1" />
+<div id="app" style="padding-bottom: 4rem;">
+    <van-nav-bar
+            title="系统参考报价"
+            left-text=""
+            left-arrow
+            @click-left="onClickLeft"
+    ></van-nav-bar>
+    <div class="success-title" v-if="systemInquiry"><i class="success-icon"></i>感谢你的询价，系统给出的参考报价为:</div>
+    <div class="success-title" v-else><i class="info-icon"></i>您发布的危废暂未匹配到合适的报价，工作人员将在2小时内为您提供人工报价，请耐心等待！</div>
+    <div class="noInquiry" v-if="!systemInquiry"></div>
+    <div class="total-container" v-if="systemInquiry">
+        <van-row>
+            <van-col span="12" align="left" class="totalAmount"><em>总量：</em><b>{{getQualityTextBySelection}}</b></van-col>
+            <van-col span="12" align="right" class="totalPrice"><em>总额：</em><b>￥{{systemInquiry.totalPriceStr}}</b></van-col>
+        </van-row>
+    </div>
+    <div class="split" v-if="systemInquiry"></div>
+    <div class="release-container" v-if="systemInquiry&&systemInquiry.inquiryDetail" v-for="(item,index) in systemInquiry.inquiryDetail">
+        <van-row>
+            <van-col span="12" class="waste-name">{{item.wasteName}}</van-col>
+            <van-col span="12" class="waste-price totalPrice" align="right"><em>单价：</em><b>￥{{item.price}}{{isWeightUnit(item.unitValue)?'/吨':''}}</b></van-col>
+        </van-row>
+        <van-row>
+            <van-col span="12" class="waste-code">{{item.wasteCode}}</van-col>
+            <van-col span="12" align="right" class="totalAmount"><em>数量：</em><b>{{parseFloat(item.amount)+item.unitValue}}</b></van-col>
+        </van-row>
+        <van-row>
+            <van-col span="12" class="dispositionType">{{item.dispositionType||'--'}}</van-col>
+            <van-col span="12" align="right" class="totalPrice"><em>单项总价：</em><b>{{isWeightUnit(item.unitValue)?('￥'+item.price*item.amount):'--'}}</b></van-col>
+        </van-row>
+
+    </div>
+    <div class="desc" v-if="systemInquiry">
+        <p>说明：</p>
+        <p>
+            1、询价后，危废处置工程师将在2小时内与您联系并安排后续取样，报价等事宜。<br/>
+            2、此报价不是最终报价，最终报价需参考化验结果,由最终危废处置合同为准。<br/>
+            3、如有疑问请拨打客服热线：<a href="tel:051262717018" style="text-decoration: underline;font-size: .3rem">0512-62717018</a><br/>
+        </p>
+    </div>
+</div>
+<script src="../../../thirdparty/la-number/la-number.js"></script>
+<script type="text/javascript">
+    var vue=new Vue({
+        el:'#app',
+        data:{
+            ticketId:localStorage.ticketId||'',
+            systemInquiry:'',
+            releaseId:getParam('releaseId')||''
+        },
+        created:function () {
+            this.getSystemInquiry();
+        },
+        mounted:function(){
+        },
+        computed:{
+            getQualityTextBySelection:function () {
+                var arr=this.systemInquiry.inquiryDetail;
+                var obj = {};
+                var laNumber = new $.LaNumber();
+                for(var i in arr) {
+                    var key = arr[i]['unitValue'];
+                    var value = parseFloat(arr[i]['amount']);
+                    if(key=='吨'||key=='千克'||key=='克'){
+                        switch (key){
+                            case '千克':
+                                value=laNumber.div(value,1000);
+                                break;
+                            case '克':
+                                value=laNumber.div(value,1000000);
+                                break;
+                        }
+                        if(obj['吨']){
+                            obj['吨']=laNumber.add(obj['吨'],value);
+                        }else{
+                            obj['吨']=value;
+                        }
+                    }else{
+                        if(obj[key]) {
+                            obj[key] =laNumber.add(obj[key],value) ;
+                        } else {
+                            obj[key] = value;
+                        }
+                    }
+                }
+                var str='';
+                for (var prop in obj) {
+                    str+=obj[prop]+prop+'，';
+                }
+                str=str.substring(0,str.length-1);
+                return str;
+            }
+        },
+        methods:{
+            isWeightUnit:function (unitCode) {
+                return ['吨','千克','克'].indexOf(unitCode)>-1;
+            },
+            onClickLeft:function () {
+                window.location='#publish';
+            },
+            getSystemInquiry:function () {
+//                debugger;
+                $.ajax({
+                    url:'/swp/entInquiry/getSystemInquiryByReleaseId.htm',
+                    data:{
+                        releaseId:this.releaseId,
+                        ticketId:localStorage.ticketId
+                    },
+                    type:'post',
+                    dataType:'json',
+                    success:function (result) {
+                        if(result.status==1&&result.data){
+                            vue.systemInquiry=result.data.entInquiryModel;
+                        }else if(result.status==-1){
+                            localStorage.ticketId='';
+                            window.location='/swp/login.jsp';
+                        }
+                    }
+                });
+            },
+        }
+    });
+</script>
+<script>
+    function resizeRoot(){
+        var deviceWidth = document.documentElement.clientWidth,                 //计算根节点HTML的字体大小
+            num = 750,
+            num1 = num / 100;
+        if(deviceWidth > num){
+            deviceWidth = num;
+        }
+        document.documentElement.style.fontSize = deviceWidth / num1 + "px";
+    }
+    resizeRoot();                                                               //根节点HTML的字体大小初始化
+    window.onresize = function(){
+        resizeRoot();
+    };
+    Date.prototype.format = function(format)
+    {
+        var o = {
+            "M+" : this.getMonth()+1, //month
+            "d+" : this.getDate(),    //day
+            "h+" : this.getHours(),   //hour
+            "m+" : this.getMinutes(), //minute
+            "s+" : this.getSeconds(), //second
+            "q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+            "S" : this.getMilliseconds() //millisecond
+        }
+        if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+            (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)if(new RegExp("("+ k +")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length==1 ? o[k] :
+                    ("00"+ o[k]).substr((""+ o[k]).length));
+        return format;
+    }
+</script>

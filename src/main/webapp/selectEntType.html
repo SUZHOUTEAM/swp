@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta name="description" content="Bootstrap Admin App + jQuery">
+    <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin">
+    <link rel="shortcut icon" href="./app/img/favicon.ico">
+    <title>注册-易废网</title>
+    <meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+    <meta name="description" content="易废网,危废处置,危废询价,处置危废,提供一站式固废解决方案">
+    <link rel="stylesheet" href="./thirdparty/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./thirdparty/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="./thirdparty/animate.css/animate.min.css">
+    <link rel="stylesheet" href="./thirdparty/whirl/dist/whirl.css">
+    <link rel="stylesheet" href="./thirdparty/sweetalert/dist/sweetalert.css">
+    <link rel="stylesheet" href="./app/css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="./app/css/app.css?1" id="maincss">
+    <link rel="stylesheet" href="./css/main.css?1">
+    <link rel="stylesheet" href="./main/pc/css/common.css?11" />
+    <link rel="stylesheet" href="./css/user/loginCommon.css?2">
+    <link rel="stylesheet" href="./css/user/userRegister.css?1">
+    <script type="text/javascript" charset="utf8" src="./resources/static/js/jquery1x.js"></script>
+    <script src="./thirdparty/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="./thirdparty/jQuery-Storage-API/jquery.storageapi.js"></script>
+    <script src="./app/js/app.js"></script>
+    <script src="./thirdparty/layui/layer-v3.0.1/layer/layer.js"></script>
+    <script src="./app/js/page.js"></script>
+    <script src="./app/js/util.js"></script>
+    <!--[if lt IE 9]>
+    <script src="./resources/static/js/html5shiv.js"></script>
+    <script src="./resources/static/js/respond.js"></script>
+    <script defer="defer" src="./resources/static/js/placeholder.js"></script>
+    <![endif]-->
+    <!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+    <style type="text/css">
+        .list{
+            /*width: 552px;*/
+            margin: 0 auto;
+            text-align: center;
+        }
+        .item{
+            width: 300px;
+            display: inline-block;
+            background-color: #f5f6fa;
+            border-radius: 4px;
+            padding: 50px 0 20px;
+        }
+        .item_logo{
+            margin-bottom: 30px;
+        }
+        .item_name{
+            font-size: 20px;
+            color: #1c2438;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .item_text{
+            color: #1c2438;
+            font-size: 14px;
+            width: 240px;
+            margin: 0 auto 31px;
+        }
+        a.item_btn{
+            width: 200px;
+            height: 40px;
+            display: inline-block;
+            color: #0179de;
+            font-size: 14px;
+            border: 1px solid #0179de;
+            border-radius: 4px;
+            line-height: 40px;
+            text-decoration: none;
+        }
+        a.item_btn:hover{
+            background-color: #0179de;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="layout-h">
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            <a href="/swp/index.html" tag="0" title="易废网"><img src="main/pc/img/logo_short.png" alt="易废网 logo"></a>
+        </div>
+        <div class="headerAction" >
+            <span class="no-login">易废网欢迎你！
+					请<a href="login.jsp" class="login-btn">登录</a>
+				</span>
+        </div>
+        <ul>
+            <li class="active">
+                <a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+            </li>
+            <li>
+                <a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+            </li>
+            <li>
+                <a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+            </li>
+            <li>
+                <a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+            </li>
+            <li>
+                <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper middleDiv">
+    <div class="content-wrapper" style="padding-bottom: 69px;border-top: 0">
+        <div class="block-center mt-xl wd-xl" style="width:1200px">
+            <div class="panel panel-dark panel-flat">
+                <div class="panel-body" id="registerBody">
+                    <p class="text-center pv panel-title">用户注册</p>
+                    <div class="list">
+                        <div class="item">
+                            <p class="item_logo"><img src="./main/pc/img/production_logo.png"></p>
+                            <p class="item_name">我是产废企业</p>
+                            <p class="item_text">产生危险废物需要处置</p>
+                            <a class="item_btn" href="register.jsp">注册帐号</a>
+                        </div>
+                        <div class="item" style="margin:0 30px">
+                            <p class="item_logo"><img src="./main/pc/img/disposition_logo.png"></p>
+                            <p class="item_name">我是处置企业</p>
+                            <p class="item_text">处置利用危险废物的持证单位</p>
+                            <a class="item_btn" href="register.jsp">注册帐号</a>
+                        </div>
+                        <div class="item">
+                            <p class="item_logo"><img src="./main/pc/img/service_logo.png"></p>
+                            <p class="item_name">我是处置服务代理商</p>
+                            <p class="item_text">提供危险废物的处置服务代理商</p>
+                            <a class="item_btn" href="register.jsp">注册帐号</a>
+                        </div>
+                        <!--<div class="item">-->
+                            <!--<p class="item_logo"><img src="./main/pc/img/service_logo.png"></p>-->
+                            <!--<p class="item_name">我是服务网点</p>-->
+                            <!--<p class="item_text">易废网区间服务网点</p>-->
+                            <!--<a class="item_btn" href="register.jsp">注册帐号</a>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <div class="panel-body assistInfo text-center">
+                    <p class="pv btn-text">已有易废网账号？</p>
+                    <a href="./login.jsp" class="btn btn-block btn-default" style="width: 292px;margin: 0 auto">登录</a>
+                </div>
+                <div class="assistInfo" style="padding-bottom: 20px">
+                    <p class="text-center pv btn-text">如需帮助，请联系客服  <span class="fontWeight">0512-62717018</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p><a href="http://www.miibeian.gov.cn" target="_blank">苏ICP备16051104号</a><span> 江苏神彩科技股份有限公司，版权所有©2018</span></p>
+    </div>
+</div>
+
+<script src="./thirdparty/parsleyjs/dist/parsley.min.js"></script>
+<script src="./app/js/notify.js"></script>
+<script src="./app/js/constants.js"></script>
+<script src="./app/js/RSA.js"></script>
+<script src="./main/pc/js/index.js?15"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+
+<script type="text/javascript">
+    
+</script>
+</body>

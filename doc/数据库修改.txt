@@ -1,0 +1,11 @@
+2017-07-03  增加用户留言的表
+    id
+    fromEntId 留言的企业id
+    fromUserId 留言的用户 id
+    toEntId    被留言的企业id
+    context    留言的内容
+    createrID  
+    createTime
+    updaterID
+    updateTime
+    status    状态

@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.operaction.mapper.WebsiteOperationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.operaction.entity.WebsiteOperation">
+        <id column="id" property="id"/>
+        <result column="operationName" property="operationName"/>
+        <result column="operationCode" property="operationCode"/>
+        <result column="areaCode" property="areaCode"/>
+        <result column="applyType" property="applyType"/>
+        <result column="wasteType" property="wasteType"/>
+        <result column="hasPlan" property="hasPlan"/>
+        <result column="startAmount" property="startAmount"/>
+        <result column="endAmount" property="endAmount"/>
+        <result column="qualificationMatch" property="qualificationMatch"/>
+        <result column="startTime" property="startTime"/>
+        <result column="endTime" property="endTime"/>
+        <result column="cronJob" property="cronJob"/>
+        <result column="smsTemplate" property="smsTemplate"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+
+
+    <sql id="listNoAnnualPlanCondition">
+        <if test="qualificationMatch == 1 and licenceIdList != null ">
+            and licenceDetail.licence_id in
+            <foreach collection="licenceIdList" index="index" item="licenceId" open="("
+                     separator="," close=")">
+                #{licenceId}
+            </foreach>
+        </if>
+        <if test="planStartAmount != null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount BETWEEN #{planStartAmount} and #{planEndAmount}
+        </if>
+        <if test="planStartAmount != null and planEndAmount ==null ">
+            and managementPlan.yearPlanAmount &gt;= #{planStartAmount}
+        </if>
+        <if test="planStartAmount == null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount &lt;= #{planEndAmount}
+        </if>
+        <choose>
+            <when test="outSourceDisposalEnterName != null ">
+                <if test="detailStartAmount != null and detailEndAmount !=null ">
+                    and disposal.disposalAmount BETWEEN #{detailStartAmount} and #{detailEndAmount}
+                </if>
+                <if test="detailStartAmount != null and detailEndAmount ==null ">
+                    and disposal.disposalAmount &gt;= #{detailStartAmount}
+                </if>
+                <if test="detailStartAmount == null and detailEndAmount !=null ">
+                    and disposal.disposalAmount &lt;= #{detailEndAmount}
+                </if>
+            </when>
+            <otherwise>
+                <if test="detailStartAmount != null and detailEndAmount !=null ">
+                    and planDetail.yearPlanAmount BETWEEN #{detailStartAmount} and #{detailEndAmount}
+                </if>
+                <if test="detailStartAmount != null and detailEndAmount ==null ">
+                    and planDetail.yearPlanAmount &gt;= #{detailStartAmount}
+                </if>
+                <if test="detailStartAmount == null and detailEndAmount !=null ">
+                    and planDetail.yearPlanAmount &lt;= #{detailEndAmount}
+                </if>
+
+
+            </otherwise>
+        </choose>
+
+        <if test='cantonCodes != null'>
+            and (
+            <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+            </foreach>
+            )
+        </if>
+        <if test='wasteTypes != null and wasteTypes.size() >0 '>
+            and (
+            <foreach collection="wasteTypes" item="wasteType" separator="or">
+                planDetail.wasteCode LIKE concat('%',#{wasteType})
+            </foreach>
+            )
+        </if>
+        <if test="outSourceDisposalEnterName != null">
+            and disposal.disposalEnterName in
+            <foreach collection="outSourceDisposalEnterName" index="index" item="entName" open="("
+                     separator="," close=")">
+                #{entName}
+            </foreach>
+        </if>
+    </sql>
+    <select id="countNoAnnualPlan" resultType="java.lang.Integer"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        select count(distinct base.entId)
+        from sys_enterprise_base base
+        inner join  annual_management_plan managementPlan on base.entId = managementPlan.entId  and base.entType = 'PRODUCTION'
+        inner join annual_management_plan_detail planDetail on managementPlan.id = planDetail.planId
+        left join outsourcing_disposal disposal on managementPlan.id = disposal.planId
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName == null">
+            inner join waste waste on waste.code = planDetail.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName != null">
+            inner join waste waste on waste.code = disposal.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        WHERE managementPlan.planYear &lt;&gt; DATE_FORMAT( SYSDATE() ,'%Y' ) and base.contactsTel is not null
+        and not exists (select * from annual_management_plan cur_plan where cur_plan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' ) and cur_plan.entId = managementPlan.entId)
+        <include refid="listNoAnnualPlanCondition"></include>
+
+    </select>
+    <select id="listNoAnnualPlan" resultType="com.mlsc.yifeiwang.enterprise.entity.SysEnterpriseBase"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        select distinct base.entId,base.entName,base.contacts,base.contactsTel
+        from sys_enterprise_base base
+        inner join  annual_management_plan managementPlan on base.entId = managementPlan.entId  and base.entType = 'PRODUCTION'
+        inner join annual_management_plan_detail planDetail on managementPlan.id = planDetail.planId
+        left join outsourcing_disposal disposal on managementPlan.id = disposal.planId
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName == null">
+            inner join waste waste on waste.code = planDetail.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName != null">
+            inner join waste waste on waste.code = disposal.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        WHERE managementPlan.planYear &lt;&gt; DATE_FORMAT( SYSDATE() ,'%Y' ) and base.contactsTel is not null
+        and not exists (select * from annual_management_plan cur_plan where cur_plan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' ) and cur_plan.entId = managementPlan.entId)
+        <include refid="listNoAnnualPlanCondition"></include>
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+    </select>
+
+
+    <sql id="HasAnnualPlanCondition">
+        <if test="qualificationMatch == 1 and licenceIdList != null ">
+            and licenceDetail.licence_id in
+            <foreach collection="licenceIdList" index="index" item="licenceId" open="("
+                     separator="," close=")">
+                #{licenceId}
+            </foreach>
+        </if>
+        <if test="planStartAmount != null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount BETWEEN #{planStartAmount} and #{planEndAmount}
+        </if>
+        <if test="planStartAmount != null and planEndAmount ==null ">
+            and managementPlan.yearPlanAmount &gt;= #{planStartAmount}
+        </if>
+        <if test="planStartAmount == null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount &lt;= #{planEndAmount}
+        </if>
+
+        <choose>
+            <when test="outSourceDisposalEnterName != null ">
+                <if test="detailStartAmount != null and detailEndAmount !=null ">
+                    and disposal.disposalAmount BETWEEN #{detailStartAmount} and #{detailEndAmount}
+                </if>
+                <if test="detailStartAmount != null and detailEndAmount ==null ">
+                    and disposal.disposalAmount &gt;= #{detailStartAmount}
+                </if>
+                <if test="detailStartAmount == null and detailEndAmount !=null ">
+                    and disposal.disposalAmount &lt;= #{detailEndAmount}
+                </if>
+            </when>
+            <otherwise>
+
+                <if test="detailStartAmount != null and detailEndAmount !=null ">
+                    and planDetail.yearPlanAmount BETWEEN #{detailStartAmount} and #{detailEndAmount}
+                </if>
+                <if test="detailStartAmount != null and detailEndAmount ==null ">
+                    and planDetail.yearPlanAmount &gt;= #{detailStartAmount}
+                </if>
+                <if test="detailStartAmount == null and detailEndAmount !=null ">
+                    and planDetail.yearPlanAmount &lt;= #{detailEndAmount}
+                </if>
+            </otherwise>
+        </choose>
+
+        <if test='cantonCodes != null'>
+            and (
+            <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+            </foreach>
+            )
+        </if>
+        <if test='wasteTypes != null and wasteTypes.size() >0 '>
+            and (
+            <foreach collection="wasteTypes" item="wasteType" separator="or">
+                planDetail.wasteCode LIKE concat('%',#{wasteType})
+            </foreach>
+            )
+        </if>
+        <if test="outSourceDisposalEnterName != null">
+            and disposal.disposalEnterName in
+            <foreach collection="outSourceDisposalEnterName" index="index" item="entName" open="("
+                     separator="," close=")">
+                #{entName}
+            </foreach>
+        </if>
+    </sql>
+    <select id="countHasAnnualPlan" resultType="java.lang.Integer"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        select count(distinct base.entId)
+        from sys_enterprise_base base
+        inner join  annual_management_plan managementPlan on base.entId = managementPlan.entId  and base.entType = 'PRODUCTION'
+        inner join annual_management_plan_detail planDetail on managementPlan.id = planDetail.planId
+        left join outsourcing_disposal disposal on managementPlan.id = disposal.planId
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName == null">
+            inner join waste waste on waste.code = planDetail.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName != null">
+            inner join waste waste on waste.code = disposal.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+
+        WHERE managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' ) and base.contactsTel is not null
+        <include refid="listNoAnnualPlanCondition"></include>
+
+    </select>
+    <select id="listHasAnnualPlan" resultType="com.mlsc.yifeiwang.enterprise.entity.SysEnterpriseBase"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        select distinct base.entId,base.entName,base.contacts,base.contactsTel
+        from sys_enterprise_base base
+        inner join  annual_management_plan managementPlan on base.entId = managementPlan.entId  and base.entType = 'PRODUCTION'
+        inner join annual_management_plan_detail planDetail on managementPlan.id = planDetail.planId
+        left join outsourcing_disposal disposal on managementPlan.id = disposal.planId
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName == null">
+            inner join waste waste on waste.code = planDetail.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        <if test="qualificationMatch == 1  and outSourceDisposalEnterName != null">
+            inner join waste waste on waste.code = disposal.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+
+        WHERE managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' ) and base.contactsTel is not null
+        <include refid="HasAnnualPlanCondition"></include>
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+    </select>
+
+
+    <select id="initOutSouringWasteEnterprise" resultType="com.mlsc.yifeiwang.enterprise.entity.SysEnterpriseBase"
+            parameterType="java.lang.String">
+        SELECT distinct disposalEnterName as entName
+        from outsourcing_disposal
+        where length(trim(disposalEnterName))&lt;&gt; 0
+        <if test="entName != null">
+            and UPPER(disposalEnterName) like UPPER(concat('%',#{entName},'%'))
+        </if>
+        limit 10
+    </select>
+
+    <select id="countOutSouringWasteEnterprise" resultType="java.lang.Integer"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        SELECT count(DISTINCT(base.entId))
+        from sys_enterprise_base base
+        inner join outsourcing_disposal disposal on base.entId = disposal.entId
+        <if test="qualificationMatch == 1 ">
+            inner join waste waste on waste.code = disposal.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+
+        <if test="planStartAmount != null or planEndAmount !=null  ">
+            inner join annual_management_plan managementPlan on managementPlan.entId = base.entId and managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' )
+        </if>
+
+        <where>
+            <if test="outSourceDisposalEnterName != null">
+                disposal.disposalEnterName in
+                <foreach collection="outSourceDisposalEnterName" index="index" item="entName" open="("
+                         separator="," close=")">
+                    #{entName}
+                </foreach>
+            </if>
+            <if test='cantonCodes != null'>
+                and (
+                <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                    base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+                </foreach>
+                )
+            </if>
+            <if test="qualificationMatch == 1 and licenceIdList != null ">
+                and licenceDetail.licence_id in
+                <foreach collection="licenceIdList" index="index" item="licenceId" open="("
+                         separator="," close=")">
+                    #{licenceId}
+                </foreach>
+            </if>
+            <if test="planStartAmount != null and planEndAmount !=null ">
+                and managementPlan.yearPlanAmount BETWEEN #{planStartAmount} and #{planEndAmount}
+            </if>
+            <if test="planStartAmount != null and planEndAmount ==null ">
+                and managementPlan.yearPlanAmount &gt;= #{planStartAmount}
+            </if>
+            <if test="planStartAmount == null and planEndAmount !=null ">
+                and managementPlan.yearPlanAmount &lt;= #{planEndAmount}
+            </if>
+        </where>
+    </select>
+    <select id="listOutSouringWasteEnterprise" resultType="com.mlsc.yifeiwang.enterprise.entity.SysEnterpriseBase"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        SELECT distinct base.entId,base.entName,base.contacts,base.contactsTel
+        from sys_enterprise_base base
+        inner join outsourcing_disposal disposal on base.entId = disposal.entId
+        <if test="qualificationMatch == 1 ">
+            inner join waste waste on waste.code = disposal.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+
+        <if test="planStartAmount != null or planEndAmount !=null  ">
+            inner join annual_management_plan managementPlan on managementPlan.entId = base.entId and managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' )
+        </if>
+
+        <where>
+            <if test="outSourceDisposalEnterName != null">
+                disposal.disposalEnterName in
+                <foreach collection="outSourceDisposalEnterName" index="index" item="entName" open="("
+                         separator="," close=")">
+                    #{entName}
+                </foreach>
+            </if>
+            <if test='cantonCodes != null'>
+                and (
+                <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                    base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+                </foreach>
+                )
+            </if>
+            <if test="planStartAmount != null and planEndAmount !=null ">
+                and managementPlan.yearPlanAmount BETWEEN #{planStartAmount} and #{planEndAmount}
+            </if>
+            <if test="planStartAmount != null and planEndAmount ==null ">
+                and managementPlan.yearPlanAmount &gt;= #{planStartAmount}
+            </if>
+            <if test="planStartAmount == null and planEndAmount !=null ">
+                and managementPlan.yearPlanAmount &lt;= #{planEndAmount}
+            </if>
+            <if test="qualificationMatch == 1 and licenceIdList != null ">
+                and licenceDetail.licence_id in
+                <foreach collection="licenceIdList" index="index" item="licenceId" open="("
+                         separator="," close=")">
+                    #{licenceId}
+                </foreach>
+            </if>
+        </where>
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+    </select>
+
+    <select id="countNoPlanWasteEnterprise" resultType="java.lang.Integer"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        SELECT count(DISTINCT(base.entId))
+        from sys_enterprise_base base
+        <if test='wasteTypes != null and wasteTypes.size() >0 '>
+            inner join ent_waste entWaste on entWaste.entId = base.entId and (
+            <foreach collection="wasteTypes" item="wasteType" separator="or">
+                entWaste.wasteCode LIKE concat('%',#{wasteType})
+            </foreach>
+            )
+        </if>
+        where base.contactsTel is not null and base.entType = 'PRODUCTION' and
+        not exists (
+        select 1
+        from annual_management_plan managementPlan
+        where managementPlan.entId = base.entId and managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' )
+        )
+        <if test='cantonCodes != null'>
+            and (
+            <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+            </foreach>
+            )
+        </if>
+
+    </select>
+
+    <select id="listNoPlanWasteEnterprise" resultType="com.mlsc.yifeiwang.enterprise.entity.SysEnterpriseBase"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        SELECT distinct base.entId,base.entName,base.contacts,base.contactsTel
+        from sys_enterprise_base base
+        <if test='wasteTypes != null and wasteTypes.size() >0 '>
+            inner join ent_waste entWaste on entWaste.entId = base.entId and (
+            <foreach collection="wasteTypes" item="wasteType" separator="or">
+                entWaste.wasteCode LIKE concat('%',#{wasteType})
+            </foreach>
+            )
+        </if>
+        where base.contactsTel is not null and base.entType = 'PRODUCTION' and
+        not exists (
+        select 1
+        from annual_management_plan managementPlan
+        where managementPlan.entId = base.entId and managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' )
+        )
+        <if test='cantonCodes != null and cantonCodes.size() >0'>
+            and (
+            <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+            </foreach>
+            )
+        </if>
+
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+    </select>
+    <select id="countNoTransferWasteEnterprise" resultType="java.lang.Integer"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        SELECT count(DISTINCT(base.entId))
+        from sys_enterprise_base base
+        inner join annual_management_plan managementPlan on managementPlan.entId = base.entId and managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' )
+        <if test="qualificationMatch == 1 ">
+            inner join annual_management_plan_detail planDetail ON planDetail.planId = managementPlan.id
+            inner join waste waste on waste.code = planDetail.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        where base.contactsTel is not null and base.entType = 'PRODUCTION' and
+        not exists (
+        select wasteTransfer.entId
+        from waste_transfer wasteTransfer
+        where wasteTransfer.entId = base.entId
+        )
+        <if test="qualificationMatch == 1 and licenceIdList != null ">
+            and licenceDetail.licence_id in
+            <foreach collection="licenceIdList" index="index" item="licenceId" open="("
+                     separator="," close=")">
+                #{licenceId}
+            </foreach>
+        </if>
+        <if test="planStartAmount != null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount BETWEEN #{planStartAmount} and #{planEndAmount}
+        </if>
+        <if test="planStartAmount != null and planEndAmount ==null ">
+            and managementPlan.yearPlanAmount &gt;= #{planStartAmount}
+        </if>
+        <if test="planStartAmount == null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount &lt;= #{planEndAmount}
+        </if>
+        <if test='cantonCodes != null'>
+            and (
+            <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="listNoTransferWasteEnterprise" resultType="com.mlsc.yifeiwang.enterprise.entity.SysEnterpriseBase"
+            parameterType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationParam">
+        SELECT distinct base.entId,base.entName,base.contacts,base.contactsTel
+        from sys_enterprise_base base
+        inner join annual_management_plan managementPlan on managementPlan.entId = base.entId and managementPlan.planYear = DATE_FORMAT( SYSDATE() ,'%Y' )
+        <if test="qualificationMatch == 1 ">
+            inner join annual_management_plan_detail planDetail ON planDetail.planId = managementPlan.id
+            inner join waste waste on waste.code = planDetail.wasteCode
+            inner join operation_licence_detail licenceDetail on licenceDetail.waste_id = waste.id
+        </if>
+        where base.contactsTel is not null and base.entType = 'PRODUCTION' and
+        not exists (
+        select 1
+        from waste_transfer wasteTransfer
+        where wasteTransfer.entId = base.entId and DATE_FORMAT(wasteTransfer.editTime,'%Y') = DATE_FORMAT(NOW(), '%Y')
+        )
+        <if test="qualificationMatch == 1 and licenceIdList != null ">
+            and licenceDetail.licence_id in
+            <foreach collection="licenceIdList" index="index" item="licenceId" open="("
+                     separator="," close=")">
+                #{licenceId}
+            </foreach>
+        </if>
+        <if test="planStartAmount != null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount BETWEEN #{planStartAmount} and #{planEndAmount}
+        </if>
+        <if test="planStartAmount != null and planEndAmount ==null ">
+            and managementPlan.yearPlanAmount &gt;= #{planStartAmount}
+        </if>
+        <if test="planStartAmount == null and planEndAmount !=null ">
+            and managementPlan.yearPlanAmount &lt;= #{planEndAmount}
+        </if>
+        <if test='cantonCodes != null'>
+            and (
+            <foreach collection="cantonCodes" item="cantonCodeItem" separator="or">
+                base.CantonCode LIKE concat(#{cantonCodeItem},'%')
+            </foreach>
+            )
+        </if>
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+    </select>
+
+
+    <select id="countWebSiteOperationInfo" resultType="java.lang.Integer">
+        SELECT count(1)
+        from website_operation
+        where deleteFlag = 0
+    </select>
+
+
+    <select id="listWebSiteOperationInfo" resultType="com.mlsc.yifeiwang.operaction.model.WebsiteOperationModel"
+            parameterType="com.mlsc.epdp.common.base.entity.PagingParameter">
+        SELECT
+        operation.id,operation.operationName,operation.startTime,operation.endTime,operation.operationCode,operationStatus.value as busiStatus,
+        operation.startAmount,operation.endAmount,operation.qualificationMatch,operation.applyType,operation.hasPlan,operation.areaCode,
+        (select count(1) from website_operation_contacts contacts where contacts.operationId = operation.id ) as
+        totalEntCount,
+        (select count(1) from website_operation_contacts contacts where contacts.operationId = operation.id and
+        contacts.busiStatus = 'read' ) as readEntCount
+        from website_operation operation
+        inner join code_value operationStatus on operation.busiStatus = operationStatus.code and operationStatus.type_code = 'OperationStatus'
+        where deleteFlag = 0
+        <if test='start!=null and limit!=null and limit!=0 '>
+            LIMIT ${start} , ${limit}
+        </if>
+    </select>
+
+
+    <resultMap id="websiteOperationModelResult" type="com.mlsc.yifeiwang.operaction.model.WebsiteOperationModel">
+        <result column="id" property="id"/>
+        <result column="operationName" property="operationName"/>
+        <result column="operationCode" property="operationCode"/>
+        <result column="areaCode" property="areaCode"/>
+        <result column="applyType" property="applyType"/>
+        <result column="hasPlan" property="hasPlan"/>
+        <result column="cronJob" property="cronJob"/>
+        <result column="wasteType" property="wasteType"/>
+        <result column="startAmount" property="startAmount"/>
+        <result column="endAmount" property="endAmount"/>
+        <result column="qualificationMatch" property="qualificationMatch"/>
+        <result column="startTime" property="startTime"/>
+        <result column="endTime" property="endTime"/>
+        <!--<collection property="operationContactsList" ofType="com.mlsc.entity.WebsiteOperationContacts" column="operationId" >-->
+        <!--<result column="contactId" property="id" />-->
+        <!--<result column="contactsEntId" property="entId" />-->
+        <!--<result column="contactsEntName" property="entName" />-->
+        <!--<result column="contactsName" property="contactsName" />-->
+        <!--<result column="contactsTel" property="contactsTel" />-->
+        <!--</collection>-->
+        <collection property="disposalEnterpriseList" ofType="com.mlsc.yifeiwang.operaction.entity.WebsiteOpertionDisposalEnterprise"
+                    column="operationId">
+            <result column="disposalId" property="id"/>
+            <result column="id" property="operationId"/>
+            <result column="disposalEnterpriseId" property="disposalEnterpriseId"/>
+            <result column="disposalEntName" property="entName"/>
+        </collection>
+        <collection property="outsourcingDisposalEnterpriseList"
+                    ofType="com.mlsc.yifeiwang.operaction.entity.WebsiteOutsourcingDisposalEnterprise" column="operationId">
+            <result column="outsouringDisposalId" property="id"/>
+            <result column="id" property="operationId"/>
+            <result column="outsourcingDisposalName" property="outsourcingDisposalName"/>
+        </collection>
+    </resultMap>
+
+    <select id="getWebSiteOperationInfo" resultMap="websiteOperationModelResult">
+        SELECT operation.id,operation.operationName,operation.operationCode,
+        operation.areaCode,operation.applyType,operation.cronJob,
+        operation.startAmount,operation.endAmount,operation.qualificationMatch,operation.startTime,operation.endTime,
+        operation.hasPlan,operation.wasteType,
+        /*contacts.id contactId,contacts.entId contactsEntId,contacts.entName contactsEntName,contacts.contactsName
+        contactsName,contacts.contactsTel contactsTel,*/
+        disposalEnt.id disposalId,disposalEnt.disposalEnterpriseId,disposalEnt.entName
+        disposalEntName,outsourcingDisposal.id outsouringDisposalId,outsourcingDisposal.outsourcingDisposalName
+        from website_operation operation
+        -- inner join website_operation_contacts contacts on operation.id = contacts.operationId
+        left join website_opertion_disposal_enterprise disposalEnt on operation.id = disposalEnt.operationId
+        left join website_outsourcing_disposal_enterprise outsourcingDisposal on operation.id =
+        outsourcingDisposal.operationId
+        where operation.deleteFlag = 0
+        <if test="id != null">
+            and operation.id = #{id}
+        </if>
+    </select>
+
+    <select id="listStartWebSiteOperationInfo" resultType="com.mlsc.yifeiwang.operaction.entity.WebsiteOperation">
+        SELECT operation.id,operation.cronJob
+        from website_operation operation
+        where operation.deleteFlag = 0 and operation.busiStatus = 'START'
+        and  DATE_FORMAT(operation.startTime,'%m-%d-%Y') &lt;= DATE_FORMAT(NOW(),'%m-%d-%Y')
+        and DATE_FORMAT(operation.endTime,'%m-%d-%Y') &gt;= DATE_FORMAT(NOW(),'%m-%d-%Y')
+        order by operation.editTime desc
+    </select>
+
+    <select id="listStopWebSiteOperationInfo" resultType="com.mlsc.yifeiwang.operaction.entity.WebsiteOperation">
+        SELECT operation.id,operation.cronJob
+        from website_operation operation
+        where operation.deleteFlag = 0
+        and   DATE_FORMAT(operation.endTime,'%m-%d-%Y') &lt; DATE_FORMAT(NOW(),'%m-%d-%Y') and busiStatus = 'RUNNING'
+        order by operation.editTime desc
+    </select>
+
+
+    <select id="listEntWasteByEntId"
+            resultType="com.mlsc.yifeiwang.entwaste.model.EntWasteModel">
+        SELECT
+        DISTINCT( planDetail.wasteCode) AS wasteCode,
+        planDetail.wasteName
+        FROM
+        annual_management_plan plan
+        INNER JOIN annual_management_plan_detail planDetail ON plan.id = planDetail.planId
+        and planDetail.wasteCode is not null
+        <if test=" entId !=null and entId !='' ">
+            and plan.entId = #{entId}
+        </if>
+        order by plan.editTime desc
+    </select>
+
+</mapper>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>支付成功</title>
+    <meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+    <link rel="stylesheet" href="../css/common.css?11" />
+    <link rel="stylesheet" href="../css/enterSuccess.css" />
+    <link rel="stylesheet" href="../../../thirdparty/dialog/dialog.css" />
+    <script src="../../../thirdparty/dialog/dialog.js"></script>
+    <link rel="stylesheet" href="../css/feeActivityDetail.css"/>
+    <!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            <a href="#" tag="0" title="易废网"> <img src="../img/logo_short.png" alt="易废网 logo"> </a>
+        </div>
+        <div class="headerAction">
+           <span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+            <span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈</a></span>
+        </div>
+        <a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+        <ul>
+            <li class="active">
+                <a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+            </li>
+            <li>
+                <a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+            </li>
+            <li>
+                <a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+            </li>
+            <li>
+                <a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+            </li>
+            <li>
+                <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="body">
+    <div class="container">
+        <div class="status-container">
+            <div class="status-row">
+                <span class="circle active">1</span><span class="line active"></span><span class="line"></span><span class="circle">2</span>
+            </div>
+            <div class="status-row" style="margin-top: 12px">
+                <span class="status-text align-left active">报名成功</span><span class="status-text align-right">线下付款</span>
+            </div>
+        </div>
+        <div class="message-container">
+            <p><b>企业名称：</b><em id="entName">GUEST123</em></p>
+            <p><b>课程名称：</b><em id="activityName">【环境税解读】直播课</em></p>
+            <p><b>购买金额：</b><em><span id="price">￥99.00</span>元</em></p>
+            <p class="message-tip">您已成功报名该课程，请在24小时内完成支付！支付剩余时间：<span id="time">24:00:00</span></p>
+        </div>
+        <div class="message-container">
+            <p><b>支付方式：</b><em>企业账户转账</em></p>
+            <p class="pay-tip"> 收款方为神彩科技股份有限公司企业账户，您可通过转账方式支付，支付成功后易废网会在第一时间核实并更新购买状态，请您耐心等待。账户信息已经通过<em>短信</em>方式发送到您<b id="phoneNo">139*****89</b>的手机号，请注意查收。</p>
+        </div>
+        <div class="tip">如有疑问请拨打客服电话：0512-62717018</div>
+    </div>
+</div>
+<div class="footer">
+   <span>COPYRIGHT &nbsp; ©  &nbsp; 江苏神彩科技股份有限公司  &nbsp;  www.yifeiwang.com  &nbsp;
+    <a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+</div>
+<script src="../../common/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="../js/detailInit.js?16"></script>
+<script src="../../../app/js/util.js?1"></script>
+<script src="../../../app/js/constants.js"></script>
+<!--<script src="../js/feeActivityDetail.js"></script>-->
+<script src="../../../app/js/notify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       var timer=setInterval(function () {
+           var activityName=getParam('activityName');
+           var price=getParam('price');
+           $('#activityName').html(activityName);
+           $('#price').html(price);
+           if(index.enterpriseName){
+                clearInterval(timer);
+                $('#entName').html(index.enterpriseName);
+                var phoneNo = index.phoneNo.substr(0, 3) + '****' + index.phoneNo.substr(7);
+                $('#phoneNo').html(phoneNo);
+           }
+       });
+        var dateSub =86400000;
+        var longTime=new Date('2018-03-02 14:18:00'.replace(new RegExp("-","gm"),"/")).getTime();
+        var startDate=new Date('2018-03-03 14:18:00'.replace(new RegExp("-","gm"),"/")).getTime();
+       setInterval(function(){
+           longTime+=1000;
+           countDown(startDate,longTime);
+       },1000);
+    });
+    function countDown(dateFinal,dateNow){
+        var dateSub = dateFinal - dateNow;  //计算差值，单位毫秒
+        var day , hour , minute, second ,dayBase , hourBase, minuteBase, secondBase;
+        day = hour = minute = second = dayBase = hourBase = minuteBase = secondBase = 0;  //初始化各个数值
+        var timeHtml = '';
+        timeHtml += " ";
+        dayBase = 24 * 60 * 60 * 1000;  //计算天数的基数，单位毫秒。1天等于24*60*60*1000毫秒
+        hourBase = 60 * 60 * 1000;  //计算小时的基数，单位毫秒。1小时等于60*60*1000毫秒
+        minuteBase = 60 * 1000;  //计算分钟的基数，单位毫秒。1分钟等于60*1000毫秒
+        secondBase = 1000;  //计算秒钟的基数，单位毫秒。1秒钟等于1000毫秒
+        day = Math.floor(dateSub / dayBase);  //计算天数，并取下限值。如 5.9天 = 5天
+        hour = Math.floor(dateSub % dayBase / hourBase);  //计算小时，并取下限值。如 20.59小时 = 20小时
+        minute = Math.floor(dateSub % dayBase % hourBase / minuteBase);  //计算分钟，并取下限值。如 20.59分钟 = 20分钟
+        second = Math.floor(dateSub % dayBase % hourBase % minuteBase / secondBase);  //计算秒钟，并取下限值。如 20.59秒 = 20秒
+        //当天数小于等于0时，就不用显示
+        if(day <= 0){
+            timeHtml += toDouble(hour) + ':' + toDouble(minute) + ':' + toDouble(second) ;
+        }else{
+            timeHtml += day + '天 : ' + toDouble(hour) + ':' + toDouble(minute) + ':' + toDouble(second) ;
+        }
+        $('#time').html(timeHtml);
+    }
+    function  toDouble(num){
+        if(num < 10){
+            return '0'+ num;
+        }else{
+            return '' + num;
+        }
+    }
+</script>
+</body>
+</html>

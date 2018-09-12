@@ -1,0 +1,78 @@
+.el-transfer-panel{
+    width: 300px;
+}
+.el-transfer-panel__body{
+    height: 350px;
+}
+.el-transfer-panel__list.is-filterable{
+    height: 303px;
+}
+.el-step{
+    cursor: pointer;
+}
+.filter_item dt{
+    width: 85px;
+    text-align: right;
+}
+dl.filter_item{
+    margin-bottom: 12px;
+}
+dl.filter_item dd.weightContainer{
+    display: inline-block;
+    padding: 0;
+    margin-left: 0;
+}
+/*dl.filter_item dd.weightContainer:after{*/
+    /*clear:both;*/
+    /*height:0;*/
+    /*overflow:hidden;*/
+/*}*/
+.line{
+    float: left;
+    text-align: center;
+}
+.weightContainer .el-input__inner{
+    height: 28px;
+}
+.weightContainer .el-input{
+    top:-2px;
+}
+.weightContainer .el-input__suffix-inner{
+    position: relative;
+    top: 8px;
+    margin-right: 0;
+}
+.filter_item dd span.el-input__suffix{
+    margin-right: 0;
+}
+.el-select__tags{
+    top:46%;
+}
+.el-step.is-simple .el-step__head{
+    display: none;
+}
+dl.filter_item dd{
+    margin-left: 83px;
+}
+#monthDay .el-radio,#weekDay .el-radio{
+    margin-left: 0 !important;
+    margin-right: 10px;
+}
+.el-select__input{
+    margin-left: 0;
+}
+
+.currentStep:before {
+    border: solid transparent;
+    content: ' ';
+    height: 0;
+    top: 32px;
+    position: absolute;
+    width: 0;
+}
+
+.currentStep:before {
+    border-width: 8px;
+    border-top-color: #409EFF;
+    left: 60px;
+}

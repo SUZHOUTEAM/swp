@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.wasterealase.mapper.WasteReferenceDispositionTypeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.wasterealase.entity.WasteReferenceDispositionType">
+		<id column="id" property="id" />
+		<result column="refer_id" property="referId" />
+		<result column="price_id" property="priceId" />
+		<result column="disposition_type" property="dispositionType" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+	</resultMap>
+
+</mapper>

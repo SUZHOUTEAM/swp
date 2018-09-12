@@ -1,0 +1,112 @@
+body{
+    background-color: #f5f6fa;
+}
+.container{
+    width: 1000px;
+    margin: 0 auto;
+    background-color: #ffffff;
+}
+.status-container{
+    text-align: center;
+    padding: 40px 0;
+    margin: 0 40px;
+}
+.status-row{
+    width: 313px;
+    margin: 0 auto;
+    overflow: auto;
+}
+.circle{
+    width: 41px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #d0d4e6;
+    display: inline-block;
+    border-radius: 20px;
+    color: #ffffff;
+    font-size: 12px;
+    text-align: center;
+}
+.line{
+    display: inline-block;
+    width: 113px;
+    height: 4px;
+    background-color: #d0d4e6;
+    position: relative;
+    top: -3px;
+}
+.circle.active{
+    background-color: #1171D1;
+}
+.line.active{
+    background-color: #1171d1;
+}
+.status-text.active{
+    color: #1171d1;
+}
+.status-text{
+    color: #999999;
+    font-size: 12px;
+    width: 50%;
+    display: inline-block;
+}
+.status-text.align-left{
+    text-align: left;
+}
+.status-text.align-right{
+    text-align: right;
+}
+.message-container{
+    margin: 0 40px;
+    padding: 35px 0;
+    border-top: 1px solid #dddddd;
+}
+.message-container p{
+    margin-bottom: 35px;
+}
+.message-container p b{
+    font-size: 14px;
+    font-weight: normal;
+    color: #2e2e46;
+}
+.message-container p em{
+    font-size: 14px;
+    font-style: normal;
+    font-weight: bold;
+}
+.message-container p em span{
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 18px;
+    position: relative;
+    top: 1px;
+    margin-right: 3px;
+}
+.message-container p.message-tip{
+    font-size: 18px;
+    color: #2e2e46;
+    margin-bottom: 0;
+}
+.message-container p.message-tip span{
+    color: #008aff;
+    font-weight: bold;
+}
+.message-container p.pay-tip{
+    font-size: 14px;
+    color: #2e2e46;
+    line-height: 29px;
+    margin-bottom: 0;
+}
+.message-container p.pay-tip em{
+    font-style: normal;
+    color: #2b7de1;
+}
+.message-container p.pay-tip b{
+    font-weight: bold;
+}
+.tip{
+    color: #2e2e46;
+    font-size: 14px;
+    text-align: center;
+    padding: 40px 0;
+}

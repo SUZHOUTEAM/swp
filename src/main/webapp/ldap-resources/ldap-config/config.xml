@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<FWSSOConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <appCode>1001</appCode>
+  <appName>固废测试产品1</appName>
+  <isSSO>true</isSSO>
+  <directoryConfigs>
+    <DirectoryConfig>
+      <ssoRootDirectory>http://192.168.253.221:9090/sso-server/</ssoRootDirectory>
+      <appRootDirectory>http://192.168.253.221:9090/solid_waste/</appRootDirectory>
+    </DirectoryConfig>
+  </directoryConfigs>
+  <filterPaths>
+    <string>resources/</string>
+    <string>web/scripts/</string>
+  </filterPaths>
+  <filterRegexs>
+    <string>^.*?\.(png|jpg|jpeg|bmp|gif|ico)$</string>
+    <string>^.*?\.(png|jpg|jpeg|bmp|gif)$</string>
+  </filterRegexs>
+  <loginImpl>com.mlsc.sso.login.impl.ClientLoginImpl</loginImpl>
+</FWSSOConfig>

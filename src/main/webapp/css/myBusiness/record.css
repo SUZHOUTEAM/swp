@@ -1,0 +1,71 @@
+.totalPriceMessage{
+    position: absolute;
+    right:10px;
+    margin-top: -5px;
+}
+.totalPriceMessage input.form-control{
+    width: 150px;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    padding-left: 10px;
+    margin-right: 10px;
+    background-color: #f6f7fb;
+}
+.totalPriceMessage button{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 15px;
+    border: 0;
+}
+.totalPriceMessage .totalText{
+    display: inline-block;
+    min-width: 150px;
+    padding-left: 20px;
+    color: #ff0000;
+    font-weight: bold;
+}
+.selectTable .sum{
+    width: 500px;
+    text-align: center;
+    height: 45px;
+    padding: 0;
+    line-height: 45px;
+}
+.sum .el-input__inner{
+    height: 34px;
+    line-height: 34px;
+    padding: 0;
+    padding-left: 10px;
+    margin: 10px 0;
+    background-color: #f6f7fb;
+}
+.el-textarea__inner{
+    background-color: #f6f7fb;
+}
+.sum font{
+    color: #1171d1;
+}
+.el-textarea__inner {
+    background-color: #f6f7fb;
+}
+.sum{
+    width: 2000px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #dfe6ec;
+}
+.sum .el-textarea{
+    margin-bottom: 10px;
+    vertical-align: top;
+    max-width: 80%;
+    margin-top: -5px;
+}
+.el-dialog .el-table td{
+    height: 54px;
+    overflow: hidden;
+    padding: 0 !important;
+}
+.uk-notify{
+    z-index: 10400;
+}

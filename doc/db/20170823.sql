@@ -1,0 +1,1 @@
+alter table pending_dispostion_release add column status_code varchar(20) null;

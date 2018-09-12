@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.waste.wastecircle.mapper.CooperationMessageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.entity.CooperationMessage">
+        <id column="id" property="id"/>
+        <result column="publisher_id" property="publisherId"/>
+        <result column="enterprise_Id" property="enterpriseId"/>
+        <result column="message_detail" property="messageDetail"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="edit_by" property="editBy"/>
+        <result column="edit_time" property="editTime"/>
+        <result column="valid" property="valid"/>
+    </resultMap>
+
+    <resultMap id="listDispositionReleaseResult" type="com.mlsc.waste.wastecircle.model.MessageBodyVo">
+        <id column="msgId" property="msgId"/>
+        <result column="enterBusId" property="enterBusId"/>
+        <result column="enterId" property="enterId"/>
+        <result column="enterName" property="enterName"/>
+        <result column="area" property="area"/>
+        <result column="favorited" property="favorited"/>
+        <result column="weight" property="weight"/>
+        <result column="distance" property="distance"/>
+        <result column="licenceAbledDate" property="licenceAbledDate"/>
+        <result column="matchCount" property="matchCount"/>
+        <result column="imgFileId" property="imgFileId"/>
+        <result column="code" property="enterType.code" />
+        <result column="value"  property="enterType.value" />
+    </resultMap>
+
+    <select id="listDispositionReleaseList" resultMap="listDispositionReleaseResult" parameterType="com.mlsc.waste.wastecircle.model.SearchCondition" >
+        select
+        message.id as msgId,business.business_id as enterBusId,releaseEnter.entId enterId,releaseEnter.entName enterName,releaseEnter.entAddress area,
+        (CASE WHEN entFavor.id IS NOT NULL THEN TRUE
+        ELSE FALSE
+        END) AS favorited,
+        (CASE WHEN releaseEnter.posx IS NULL OR releaseEnter.posy IS NULL THEN format( #{infinity},2)
+        ELSE format( fn_get_distance (#{posx} ,#{posy}, releaseEnter.posx,releaseEnter.posy),2)
+        END) AS distance,
+        (CASE WHEN releaseEnter.weight >0 THEN TRUE
+        ELSE FALSE
+        END) AS weight,
+        CONCAT(DATE_FORMAT( capacityRelease.release_startdate, '%Y.%m' ),"--",DATE_FORMAT( capacityRelease.release_enddate, '%Y.%m' )) as licenceAbledDate,
+        releaseEnter.cantonCode ,
+        <choose>
+            <when test="cantonCode!=null and cantonCode!=''">
+                releaseEnter.cantonCode REGEXP concat('^',left(#{cantonCode},2)) as matchCount,
+            </when>
+            <otherwise>
+                0 as matchCount,
+        </otherwise>
+        </choose>
+        detailRelease.processableCount,
+        uploadFile.business_code imgBusinessCode,
+        uploadFile.file_id imgFileId,
+        enterpriseTypeCode.code,
+        enterpriseTypeCode.value
+        from cooperation_message message
+        inner join cooperation_message_business business on message.id = business.message_id and
+        business.business_type_code = 'dispositionCapacityRelease'
+        inner join disposition_capacity_release capacityRelease on business.business_id = capacityRelease.id
+                  and capacityRelease.release_startdate &lt;= now() AND capacityRelease.release_enddate &gt;= now()
+                  AND capacityRelease.release_status = 'NORMAL'
+        inner join sys_enterprise_base releaseEnter on capacityRelease.release_enterprise_id = releaseEnter.entId
+        INNER JOIN code_value enterpriseTypeCode on enterpriseTypeCode.code = releaseEnter.entType and enterpriseTypeCode.type_code = 'ENTERPRISE_TYPE'
+        INNER JOIN (
+        SELECT
+        count(DISTINCT (enterWaste.wasteId)) as processableCount,detailRelease.capacity_release_id as releaseId
+        FROM
+        disposition_capacitydetail_release detailRelease
+        INNER JOIN ent_waste enterWaste ON detailRelease.waste_id = enterWaste.wasteId  AND enterWaste.entId = #{entId}
+        group by detailRelease.capacity_release_id
+        ) detailRelease on detailRelease.releaseId = capacityRelease.id
+        LEFT JOIN upload_file uploadFile on uploadFile.reference_id = releaseEnter.entId and uploadFile.file_type = 'a'
+        left join ent_favorite entFavor on entFavor.referenceId = message.enterprise_Id and entFavor.entId = #{entId}
+        where detailRelease.processableCount >0
+        <if test='codeWaste !=null and codeWaste !="" '>
+            AND exists (
+            select *
+            from disposition_capacitydetail_release releaseDetail inner join waste waste on releaseDetail.waste_id =
+            waste.id and waste.code like concat('%',#{codeWaste})
+            where releaseDetail.capacity_release_id = business.business_id
+            )
+        </if>
+        <if test='area !=null and area !="" '>
+            AND releaseEnter.CantonCode like concat(trim(#{area}),'%')
+        </if>
+        <if test='entName !=null and entName !="" '>
+            AND releaseEnter.entName like concat('%',trim(#{entName}),'%')
+        </if>
+        <if test="favorited">
+            and entFavor.id is not null
+            and entFavor.favoriteType = 'ENTID'
+        </if>
+        order by matchCount desc ,releaseEnter.weight desc ,processableCount desc,distance asc
+        LIMIT ${startRowIndex} , ${rows}
+    </select>
+
+    <select id="countDispositionReleaseList" resultType="java.lang.Integer" parameterType="com.mlsc.waste.wastecircle.model.SearchCondition" >
+        select
+        count(1)
+        from cooperation_message message
+        inner join cooperation_message_business business on message.id = business.message_id and
+        business.business_type_code = 'dispositionCapacityRelease'
+        inner join disposition_capacity_release capacityRelease on business.business_id = capacityRelease.id
+        and capacityRelease.release_startdate &lt;= now() AND capacityRelease.release_enddate &gt;= now()
+        AND capacityRelease.release_status = 'NORMAL'
+        inner join sys_enterprise_base releaseEnter on capacityRelease.release_enterprise_id = releaseEnter.entId
+        INNER JOIN 		(
+        SELECT
+        DISTINCT(detailRelease.capacity_release_id) as releaseId
+        FROM
+        disposition_capacitydetail_release detailRelease
+        INNER JOIN ent_waste enterWaste ON detailRelease.waste_id = enterWaste.wasteId  AND enterWaste.entId =  #{entId}
+        ) detailRelease on detailRelease.releaseId = capacityRelease.id
+        LEFT JOIN upload_file uploadFile on uploadFile.reference_id = releaseEnter.entId AND uploadFile.file_type = 'a'
+        left join ent_favorite entFavor on entFavor.referenceId = message.enterprise_Id and entFavor.entId = #{entId}
+        <where>
+            <if test='codeWaste !=null and codeWaste !="" '>
+                exists (
+                select *
+                from disposition_capacitydetail_release releaseDetail inner join waste waste on releaseDetail.waste_id = waste.id
+                                                                                              and waste.code like concat('%',#{codeWaste})
+                where releaseDetail.capacity_release_id = business.business_id
+                )
+            </if>
+            <if test='area !=null and area !="" '>
+                AND releaseEnter.CantonCode like concat(trim(#{area}),'%')
+            </if>
+            <if test='entName !=null and entName !="" '>
+                AND releaseEnter.entName like concat('%',trim(#{entName}),'%')
+            </if>
+            <if test="favorited">
+                and entFavor.id is not null
+                and entFavor.favoriteType = 'ENTID'
+            </if>
+        </where>
+    </select>
+
+</mapper>

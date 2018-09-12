@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>易废网直播推流</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+    <link rel="stylesheet" href="../css/common.css?8" />
+    <link rel="stylesheet" type="text/css" href="../css/demo.css">
+    <link rel="stylesheet" href="../css/live.css" />
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            <a href="#" tag="0" title="易废网"> <img src="../img/logo.png" width="273" alt="易废网 logo"> </a>
+        </div>
+        <div class="headerAction">
+            <a class="headerBtnReg" href="../../../register.jsp" title="注册易废网">注册</a>
+            <a class="headerBtnLogin" href="../../../login.jsp" title="登录易废网">登录</a>
+            <span class="sign" style="display:none" id="yifeiwang">
+                         <b>你好,</b><b id="userName"></b><b>!</b>
+                         <a href="">进入易废圈></a>
+                    </span>
+        </div>
+        <ul>
+            <li class="homePage">
+                <a href="" tag="1" title="首页">首页</a>
+            </li>
+            <li class="company_menu">
+                <a id="selectbtn_company">危废经营单位</a>
+                <div class="dropdown btn-group btn-group-info">
+                    <ul role="menu" class="dropdown-menu hidden" id="company_dropdown">
+                        <li role="presentation" id="disposition">
+                            <a role="menuitem" tabindex="-1" href="company.html?type=1">处置企业</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="param-container">
+    <div class="m-head m-head-publish">
+        <h1 class="head-title">管理计划在线培训</h1><span class="u-bottom-line"></span>
+    </div>
+    <div class="m-demo-body">
+        <div class="m-group">
+            <div class="m-group-row">
+                <div class="m-group-col"><label class="side-name">摄像头</label>
+                    <div class="select-wrap" style="position: relative">
+                        <select name="publish-camera" id="cameraSelect" class="j-publish-camera"></select>
+                        <!---->
+                    </div>
+                </div>
+                <div class="m-group-col m-group-col-mf"><label class="side-name">麦克风</label>
+                    <div class="select-wrap" style="position: relative">
+                        <select name="publish-microPhone" id="microPhoneSelect" class="j-publish-microPhone"></select>
+                        <!---->
+                    </div>
+                </div>
+                <div class="m-group-col m-group-col-right"><input type="button" id="previewBtn" value="预览" onclick="startPreview()" class="u-btn-preview"></div>
+            </div>
+        </div>
+        <div class="m-group">
+            <div class="m-group-row">
+                <div class="m-group-col m-group-col5"><label class="side-name">清晰度</label>
+                    <select name="publish-defination" class="j-publish-defination" id="qualitySelect">
+                        <option value="0">流畅（480*360@20）</option>
+                        <option value="1">标清（640*480@20）</option>
+                        <option value="2">高清（960*540@20）</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="m-group">
+            <div class="m-group-row">
+                <div class="m-group-col m-group-col-full"><label class="side-name">推流地址</label>
+                    <input type="text" placeholder="直播推流地址" id="publishUrl" value="rtmp://pc2dcb30a.live.126.net/live/ab65867b0ee54d228185f89b53adf7df?wsSecret=8d70607eea4b115dd4fd03ec9a812385&wsTime=1512703849" class="u-ipt-url">
+                    <!---->
+                </div>
+            </div>
+        </div>
+        <div class="m-group m-group-last">
+            <div class="m-group-row">
+                <div class="m-group-col m-group-col-full m-group-col-center"><input value="开始直播" id="publishBtn" onclick="startPublish()" type="button" class="u-btn-start"></div>
+                <span class="u-status"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div id="my-publisher" class="m-demo-container"></div>-->
+<div class="live-container" style="margin-bottom: 200px">
+    <div class="live-title"><span style="margin-right: 20px">管理计划在线培训</span>(当前人数：<span id="count">1</span>)</div>
+    <div class="container-total">
+        <div class="container-left">
+            <div id="my-publisher"></div>
+        </div>
+        <div class="container-right">
+            <div class="messageList" id="content">
+                开始直播！<br/>
+            </div>
+            <div style="position: relative">
+                <input type="text" class="messageInput" id="message" placeholder="请输入..."/>
+                <a href="javascript:;" class="sendBtn" onclick="sendMessage();" title="发送">发送</a>
+            </div>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+
+</div>
+<script src="../../common/jquery.min.js"></script>
+<!--<script src="../js/detailInit.js"></script>-->
+<script type="text/javascript">
+    //webSocket方法
+    if('WebSocket' in window) {
+        websocket = new WebSocket("ws://"+window.location.host+"/swp/websocket/channel01/主播");
+    } else {
+        alert('当前浏览器 Not support websocket')
+    }
+    websocket.onopen = function() {
+//            this.send("");
+    }
+    function sendMessage() {
+        var message=$('#message').val();
+        websocket.send(message);
+        $('#message').val('');
+    }
+    websocket.onmessage = function(event) {
+//        console.log(typeof event.data);
+        var obj=JSON.parse(event.data)
+        if(typeof obj=='number'){
+            $('#count').html(event.data);
+            return;
+        }
+        $('#content').append('<div class="sayItem">'+obj.account+'<br/><span class="pao"><span class="bot"></span><span class="top"></span>'+obj.message+'</span></div>');
+        $('#content')[0].scrollTop = $('#content')[0].scrollHeight;
+    }
+    window.onbeforeunload = function() {
+        closeWebSocket();
+    }
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+    document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e && e.keyCode==13){ // enter 键
+            var message = document.getElementById('message');
+            if (message == document.activeElement) {
+                sendMessage();
+            }
+        }
+    }
+</script>
+<script src="../../common/nep/nePublisher.min.js"></script>
+<script type="text/javascript">
+    var cameraList,
+        microPhoneList,
+        cameraOptions = '',
+        microPhoneOptions = '';
+    var publishBtn = document.getElementById('publishBtn');
+    var previewBtn = document.getElementById('previewBtn')
+//    var testInput = document.getElementsByClassName('u-input');
+    var myPublisher = new nePublisher('my-publisher', {
+        //viewOptions
+        videoWidth: 960,
+        videoHeight: 540,
+        fps: 20,
+        bitrate: 1500
+    }, {
+        //flashOptions
+        previewWindowWidth: 862,
+        previewWindowHeight: 486,
+        wmode: 'transparent',
+        quality: 'high',
+        allowScriptAccess: 'always'
+    }, function() {
+        cameraList = this.getCameraList();
+        microPhoneList = this.getMicroPhoneList();
+        console.log(cameraList, microPhoneList);
+        for (var i = cameraList.length - 1; i >= 0; i--) {
+            cameraOptions = '<option value="' + i + '">' + cameraList[i] + '</option>' + cameraOptions;
+        }
+        for (var i = microPhoneList.length - 1; i >= 0; i--) {
+            microPhoneOptions = '<option value="' + i + '">' + microPhoneList[i] + '</option>' + microPhoneOptions;
+        }
+        document.getElementById("cameraSelect").innerHTML = cameraOptions;
+        document.getElementById("microPhoneSelect").innerHTML = microPhoneOptions;
+    }, function(code, desc) {
+        console.log(code, desc);
+    });
+    var qualityList = [
+        {
+            //流畅
+            fps: 20,
+            bitrate: 600,
+            videoWidth:480,
+            videoHeight:360
+        },
+        {
+            //标清
+            fps: 20,
+            bitrate: 800,
+            videoWidth:640,
+            videoHeight:480
+        },
+        {
+            //高清
+            fps: 20,
+            bitrate: 1500,
+            videoWidth:960,
+            videoHeight:540
+        }
+    ];
+    var getCameraIndex = function() {
+        var cameraSelect = document.getElementById("cameraSelect");
+        var cameraIndex = cameraSelect.selectedIndex;
+        return cameraSelect.options[cameraIndex].value;
+    };
+    var getMicroPhoneIndex = function() {
+        var microPhoneSelect = document.getElementById("microPhoneSelect");
+        var microPhoneIndex = microPhoneSelect.selectedIndex;
+        return microPhoneSelect.options[microPhoneIndex].value;
+    };
+    var getQualityOption = function() {
+        var qualitySelect = document.getElementById("qualitySelect");
+        var qualityIndex = qualitySelect.selectedIndex;
+        return qualityList[qualityIndex];
+    };
+    var startPreview = function() {
+        document.getElementsByClassName('u-status')[0].innerHTML = '预览中';
+        myPublisher.startPreview(getCameraIndex());
+    };
+    var startPublish = function() {
+        var publishUrl = document.getElementById("publishUrl").value;
+        startPublishCall();
+        myPublisher.setCamera(getCameraIndex());
+        myPublisher.setMicroPhone(getMicroPhoneIndex());
+        myPublisher.startPublish(publishUrl, getQualityOption(),function(code, desc) {
+            console.log(code, desc);
+            alert(code + '：' + desc);
+            stopPublishCall();
+        });
+    };
+    var stopPublish = function() {
+        stopPublishCall();
+        myPublisher.stopPublish();
+    };
+    var startPublishCall = function() {
+        console.log('推流开始');
+        document.getElementsByClassName('u-status')[0].innerHTML = '直播中';
+        publishBtn.value = '停止直播';
+        publishBtn.onclick = stopPublish;
+        previewBtn.disabled = true;
+    };
+    var stopPublishCall = function() {
+        console.log('推流结束');
+        document.getElementsByClassName('u-status')[0].innerHTML = '预览中';
+        publishBtn.value = '开始直播';
+        publishBtn.onclick = startPublish;
+        previewBtn.disabled = false;
+    };
+
+
+</script>
+</body>
+</html>

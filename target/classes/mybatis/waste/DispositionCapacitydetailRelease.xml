@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.licence.mapper.DispositionCapacitydetailReleaseMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.entity.DispositionCapacitydetailRelease">
+		<id column="id" property="id" />
+		<result column="capacity_release_id" property="capacityReleaseId" />
+		<result column="capacityitem_id" property="capacityitemId" />
+		<result column="waste_id" property="wasteId" />
+		<result column="waste_name_id" property="wasteNameId" />
+		<result column="used_quantity" property="usedQuantity" />
+		<result column="release_status" property="releaseStatus" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_by" property="editBy" />
+		<result column="edit_time" property="editTime" />
+		<result column="valid" property="valid" />
+	</resultMap>
+
+
+
+
+	<select id="listWasteInfoByReleaseDetailId"	resultType="com.mlsc.yifeiwang.entwaste.model.EntWasteModel" >
+		SELECT
+		DISTINCT(waste.id),waste.code as wasteCode ,entWaste.wasteName wasteName
+		from disposition_capacitydetail_release detailRelease
+		inner join waste on waste.id = detailRelease.waste_id
+		inner join  ent_waste entWaste on entWaste.wasteId = waste.id
+		<where>
+			<if test='entId !=null  and entId !="" '>
+				entWaste.entId = #{entId}
+			</if>
+			<if test='releaseId !=null  and releaseId !="" '>
+				and detailRelease.capacity_release_id = #{releaseId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

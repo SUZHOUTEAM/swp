@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.appmanagement.mapper.AppManagementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.appmanagement.entity.AppManagement">
+        <id column="id" property="id"/>
+        <result column="versionCode" property="versionCode"/>
+        <result column="fileId" property="fileId"/>
+        <result column="fileName" property="fileName"/>
+        <result column="appType" property="appType"/>
+        <result column="entType" property="entType"/>
+        <result column="description" property="description"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+    <select id="listAppManagement" resultType="com.mlsc.yifeiwang.appmanagement.entity.AppManagement"
+            parameterType="com.mlsc.yifeiwang.appmanagement.model.AppManagementParam">
+        select app.id,app.versionCode,app.fileId,app.appType,app.description ,
+              entTypeCode.value as entType,appType.value as busiStatus,app.editTime as createTime
+        from app_management app inner join code_value entTypeCode
+        on app.entType = entTypeCode.code and entTypeCode.type_code = 'ENTERPRISE_TYPE'
+        inner join code_value appType
+        on app.busiStatus = appType.code and appType.type_code = 'AppStatus'
+        where app.deleteFlag = 0
+        <if test="appType!=null and appType!='' ">
+            and app.appType = #{appType}
+        </if>
+        <if test="entType!=null and entType!='' ">
+            and app.entType = #{entType}
+        </if>
+        <if test="busiStatus!=null and busiStatus!='' ">
+            and app.busiStatus = #{busiStatus}
+        </if>
+        order by app.editTime DESC
+        LIMIT ${startRowIndex} , ${rows}
+    </select>
+
+    <select id="countAppManagement" resultType="java.lang.Integer"
+            parameterType="com.mlsc.yifeiwang.appmanagement.model.AppManagementParam">
+        select count(app.id)
+        from app_management app inner join code_value entTypeCode
+        on app.entType = entTypeCode.code and entTypeCode.type_code = 'ENTERPRISE_TYPE'
+        inner join code_value appType
+        on app.busiStatus = appType.code and appType.type_code = 'AppStatus'
+        where app.deleteFlag = 0
+        <if test="appType!=null and appType!='' ">
+            and app.appType = #{appType}
+        </if>
+        <if test="entType!=null and entType!='' ">
+            and app.entType = #{entType}
+        </if>
+        <if test="busiStatus!=null and busiStatus!='' ">
+            and app.busiStatus = #{busiStatus}
+        </if>
+        order by app.editTime DESC
+    </select>
+</mapper>

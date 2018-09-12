@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.recordcontract.mapper.EntRecordContractMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.recordcontract.entity.EntRecordContract">
+        <id column="id" property="id"/>
+        <result column="orderId" property="orderId"/>
+        <result column="releaseEntId" property="releaseEntId"/>
+        <result column="facilitatorEntId" property="facilitatorEntId"/>
+        <result column="entId" property="entId"/>
+        <result column="releaseId" property="releaseId"/>
+        <result column="inquiryId" property="inquiryId"/>
+        <result column="orderCode" property="orderCode"/>
+        <result column="quotedType" property="quotedType"/>
+        <result column="totalAmount" property="totalAmount"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="remark" property="remark"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+
+    <select id="countRecordContractList" resultType="java.lang.Integer"   parameterType="com.mlsc.yifeiwang.recordcontract.model.EntRecordContractParam">
+        SELECT
+        count(*)
+        FROM
+        ent_record_contract contract
+        INNER JOIN ent_order entOrder on contract.orderId = entOrder.id
+        INNER JOIN sys_enterprise_base productionEnt ON contract.releaseEntId = productionEnt.entId
+        INNER JOIN sys_enterprise_base facilitatorEnt ON contract.facilitatorEntId = facilitatorEnt.entId
+        INNER JOIN sys_enterprise_base disposalEnt on contract.inquiryEntId = disposalEnt.entId
+        INNER JOIN code_value recordContractStatus on contract.busiStatus = recordContractStatus.code and recordContractStatus.type_code = 'RecordContractStatus'
+        <where>
+            <if test=' id != null and id!="" '>
+                contract.id = #{id}
+            </if>
+        </where>
+        order by contract.editTime desc
+    </select>
+
+
+    <select id="listRecordContractList" resultType="com.mlsc.yifeiwang.recordcontract.model.EntRecordContractModel"
+            parameterType="com.mlsc.yifeiwang.recordcontract.model.EntRecordContractParam">
+        SELECT
+        contract.id,
+        productionEnt.entName as releaseEntName,
+        facilitatorEnt.entName as facilitatorEntName,
+        disposalEnt.entName as disposalEntName,
+        contract.quotedType,
+        contract.totalAmount,
+        contract.totalPrice,
+        contract.editTime,
+        entOrder.totalPrice as orderTotalPrice,
+        contract.remark,
+        contract.busiStatus,
+        recordContractStatus.value as busiStatusvalue
+        FROM
+        ent_record_contract contract
+        INNER JOIN ent_order entOrder on contract.orderId = entOrder.id
+        INNER JOIN sys_enterprise_base productionEnt ON contract.releaseEntId = productionEnt.entId
+        INNER JOIN sys_enterprise_base facilitatorEnt ON contract.facilitatorEntId = facilitatorEnt.entId
+        INNER JOIN sys_enterprise_base disposalEnt on contract.inquiryEntId = disposalEnt.entId
+        INNER JOIN code_value recordContractStatus on contract.busiStatus = recordContractStatus.code and recordContractStatus.type_code = 'RecordContractStatus'
+        <where>
+            <if test=' id != null and id!="" '>
+                contract.id = #{id}
+            </if>
+        </where>
+        order by contract.editTime desc
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+    </select>
+</mapper>

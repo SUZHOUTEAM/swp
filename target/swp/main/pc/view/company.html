@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>危废经营单位</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+	<meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="renderer" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<link rel="shortcut icon" href="../../../app/img/favicon.ico">
+	<link rel="stylesheet" href="../css/common.css?11" />
+	<link rel="stylesheet" href="../css/company.css?17" />
+	<link rel="stylesheet" href="../../../main/common/elementui/index.css">
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" href="../css/style_ie.css" />
+	<![endif]-->
+</head>
+<body>
+	<div id="app" @click="cityShow=false">
+		<div class="header">
+			<div class="container">
+				<div class="logo">
+					<a href="/swp/index.html" tag="0" title="易废网"><img src="../../../main/pc/img/logo_short.png" alt="易废网 logo"></a>
+				</div>
+				<div class="city-select" v-cloak>
+					<a href="javascript:" @click.stop="cityShow=!cityShow"><span>{{provinces[cantonCode]}}</span><i class="el-icon-arrow-down"></i></a>
+					<div class="city-select-content" v-show="cityShow">
+						<span><em></em></span>
+						<a href="javascript:" v-for="code in provinceCode" @click="changeProvince(code)" :class="{current:code==cantonCode}">{{provinces[code]}}</a>
+					</div>
+				</div>
+				<!--<el-select v-model="cantonCode" class="city-select" placeholder="区域" @change="changeProvince">
+					<el-option :label="item.value" :value="item.code" v-for="(item,index) in provinces"
+							   :key="item.code"></el-option>
+				</el-select>-->
+				<a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+				<div class="headerAction">
+					<span class="no-login">易废网欢迎你！
+							请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+							<a href="../../../selectEntType.html" class="register-btn">注册</a>
+						</span>
+					<span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+				</div>
+				<ul>
+					<li>
+						<a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+					</li>
+					<li class="active">
+						<a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+					</li>
+					<li>
+						<a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="company_banner" id="chuzhi">
+			<a href="javascript:" class="disposition-btn" onClick="index.publish()" title="去试试">去试试></a>
+		</div>
+		<div class="container" align="right" style="padding-bottom: 0">
+			<div class="demo-input-suffix">
+				站内搜索：
+				<el-input placeholder="请输入关键字" v-model="keyword" class="input-with-keyword" prefix-icon="el-icon-search">
+					<el-button slot="append" @click="search" style="color: #222">搜索</el-button>
+				</el-input>
+			</div>
+		</div>
+		<div class="company-list">
+			<div class="container" v-if="list.length>0" style="padding-bottom: 0">
+				<a href="javascript:scrollTo(0,0);" class="to-top">︿</a>
+				<div class="item" v-for="(item,index) in list" v-cloak>
+					<div class="img_img" :style="'background: url('+item.logo+') center center/auto 100% no-repeat'">
+					</div>
+					<div class="item_name">
+						<a href="javascript:" @click="entDetail(item.id,item.entName)" v-html="item.entName"></a>
+						<label class="ctype DISPOSITION">处置企业</label>
+					</div>
+					<div class="info">
+						<i class="address_icon"></i><span v-html="item.entAddress"></span>
+					</div>
+					<div class="info">
+						<i class="lic_icon"></i>
+						<label class="info-title">许可证有效期</label>
+						<span class="info-content">{{item.endDate}}</span>
+					</div>
+					<div class="info">
+						<label class="info-title">经营方式 </label>
+						<span class="info-content" v-html="item.dispositionType"></span>
+					</div>
+					<div class="info">
+						<label class="info-title">核准危废类别</label>
+						<span class="info-content" style="display: inline-block;vertical-align: top;" v-html="parseWasteCode(item.wasteCode)">
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="no-data" v-if="list.length==0&&!loading">暂无相关数据</div>
+			<div class="listLoading" v-if="loading"><i class="el-icon-loading"></i></div>
+			<div class="no-data" v-if="list.length>0&&completed&&!loading">数据加载完成</div>
+		</div>
+	</div>
+	<script src="../../common/jquery.min.js"></script>
+	<!-- 先引入 Vue -->
+	<script src="../../../main/common/elementui/vue.min.js"></script>
+	<!-- 引入组件库 -->
+	<script src="../../../main/common/elementui/index.js"></script>
+	<script src="../../../main/common/base64.js"></script>
+	<script src="../../../app/js/constants.js?1"></script>
+	<script src="../js/detailInit.js?16"></script>
+	<script src="../../../main/common/provinces.js?4"></script>
+	<script src="../../../app/js/util.js"></script>
+	<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				provinces:province,
+                cityShow:false,
+				cantonCode:'',
+				keyword:getParam('cname')||'',
+				pageIndex:1,
+				completed:false,
+				loading:true,
+				list:[]
+			},
+			created: function () {
+				var province=readCookie('province');
+				if(province){
+					this.cantonCode=province+'';
+				}else{
+					this.cantonCode=returnCitySN['cid'].substring(0,2);
+				}
+				if(sessionStorage.searchObj){
+				    var searchObj=JSON.parse(sessionStorage.searchObj);
+				    this.keyword=searchObj.keyword;
+				    this.pageIndex=searchObj.pageIndex;
+				    this.list=searchObj.list;
+                    window.scrollTo(0,searchObj.scrollTop);
+//                    document.documentElement.scrollTop=searchObj.scrollTop;
+                    sessionStorage.removeItem('searchObj');
+				}
+                this.getList();
+			},
+			mounted:function(){
+			    var _this=this;
+                $(window).scroll(function () {
+                    var totalheight = parseFloat($(window).height()) + parseFloat(
+                            $(window).scrollTop());
+                    if($(window).scrollTop()>600){
+                        $('.to-top').show();
+                    }else{
+                        $('.to-top').hide();
+                    }
+                    if ($(document).height() <= totalheight + 50&&!_this.completed) {
+                        if (!_this.loading) {
+                            _this.loading = true;
+                            _this.getList();
+                        }
+                    }
+                });
+			},
+			methods: {
+				changeProvince:function (code) {
+                    this.cantonCode=code;
+					this.search();
+					document.cookie="province="+this.cantonCode+';path=/swp';
+				},
+				parseWasteCode:function (wasteCode) {
+					if(!wasteCode){
+						return '--';
+					}
+					var str='';
+					for(var code in wasteCode){
+						str+='HW'+code+'('+wasteCode[code]+')<br/>';
+					}
+					return str;
+				},
+				getList:function () {
+				    var _this=this;
+					$.ajax({
+						url: "../../../enterprise/getEnterpriseSuggest.htm",
+						data: {
+							entType: 'DISPOSITION',
+							wasteCodeOrName: this.keyword,
+							pageIndex: this.pageIndex++,
+							cantonCode: this.cantonCode
+						},
+						type: "POST",
+						dataType: 'json',
+						async: true,
+						success: function (result) {
+                            _this.loading=false;
+							if(result.status==1){
+                                var b = new Base64();
+								var listStr= b.decode(result.data.entList);
+								var list=JSON.parse(listStr);
+								if(list.length<10){
+                                    _this.completed=true;
+								}
+								for(var i in list){
+								    if(list[i]['fileId']){
+                                        list[i]['logo']=IMG_VIEW_URL+'&fileID='+list[i]['fileId'];
+									}else{
+                                        list[i]['logo']='../img/company_logo.png';
+									}
+								}
+                                _this.list=_this.list.concat(list);
+							}
+						}
+					});
+				},
+				search:function () {
+					this.pageIndex=1;
+					this.list=[];
+					this.completed=false;
+					this.loading=true;
+					this.getList();
+				},
+				entDetail:function (entId,entName) {
+                    entName=entName.replace("<font color='red'>","").replace("</font>","");
+                    var obj={
+                        list:this.list,
+						pageIndex:this.pageIndex,
+						scrollTop:document.documentElement.scrollTop,
+						keyword:this.keyword
+					};
+                    sessionStorage.searchObj=JSON.stringify(obj);
+                    if(index.isLogin&&index.ticketId){
+                        collectingUserBehavior(index.ticketId,'VIEWINDEXDISENT',entName,'PC经营单位页面');
+                    }else{
+                        collectingUserBehavior('','VIEWINDEXDISENT',entName,'PC经营单位页面');
+                    }
+                    window.location.href='czDetail.html?entId='+entId;
+				}
+			}
+		});
+	</script>
+</body>
+</html>

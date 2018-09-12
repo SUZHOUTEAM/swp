@@ -1,0 +1,124 @@
+.img-div{
+    width: 100%;
+}
+.img-div img{
+    width: 100%;
+}
+.message-div{
+    font-size: 0.36rem;
+    overflow: auto;
+    background: url(../img/time-bg.jpg) center center no-repeat;
+    background-size: 100% 100%;
+    height: 1.2rem;
+    line-height: 1.2rem;
+}
+.message-div-left{
+    float: left;
+    height: 1.2rem;
+    color: #ffffff;
+    padding-left: 0.38rem;
+}
+.message-div-right{
+    float: right;
+    height: 1.2rem;
+    /*width: 3rem;*/
+    text-align: center;
+    padding-right: 0.38rem;
+}
+.day,.sfm{
+    background-color: #642f03;
+    padding: .07rem .12rem;
+    border-radius: 2px;
+    color: #ffffff;
+    font-size: .38rem;
+}
+.day{
+    margin-right: .1rem;
+}
+.right-text{
+    color: #e4171c;
+    font-size: .34rem;
+    margin-right: .15rem;
+}
+.desc{
+    font-size: .35rem;
+    padding: 0.3rem;
+    color: #293f68;
+    line-height: 0.7rem;
+}
+.van-nav-bar{
+    position: fixed;
+    width: 100%;
+}
+.van-nav-bar__left{
+    text-align: left;
+    width: 1rem;
+}
+.van-nav-bar .van-icon{
+    font-weight: bold;
+}
+.van-button--bottom-action{
+    position: fixed;
+    bottom: 0;
+}
+.enterStatus{
+    background-color: #f78c00;
+    padding: .1rem .2rem;
+    border-radius: 3px;
+    font-size: 0.3rem;
+}
+.enterCount{
+    position: relative;
+    padding-left: 1.2rem;
+    top: .05rem;
+    display: inline-block;
+}
+.enterCount b{
+    font-size: .7rem;
+    margin: -.1rem .05rem 0 -1.2rem;
+    font-weight: normal;
+    position: absolute;
+    width: 1.2rem;
+    display: inline-block;
+    text-align: center;
+}
+.activityImg{
+    width: 100%;
+    display: block;
+}
+.van-button--bottom-action.van-button--primary.enter-btn{
+    background-color: #ffa200;
+    font-size: .45rem;
+}
+.activity-name{
+    color: #222222;
+    font-size: .4rem;
+    padding: .2rem .38rem;
+    margin-top: .2rem;
+}
+.entName{
+    font-size: .35rem;
+    padding-left: .38rem;
+    color: #2b3f64;
+}
+.activity-area{
+    font-size: .35rem;
+    padding-right: .38rem;
+    color: #2b3f64;
+}
+.split-area{
+    height: .35rem;
+    background-color: #f0f3fa;
+}
+.other-row{
+    margin: .2rem 0 .4rem;
+}
+.yfw-customer{
+    margin: 0 .38rem;
+}
+.yfw-customer img{
+    width: 100%;
+}
+body{
+    padding-bottom: 1.5rem;
+}

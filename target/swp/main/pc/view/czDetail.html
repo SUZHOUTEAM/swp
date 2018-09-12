@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>企业详细信息</title>
+        <meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="renderer" content="webkit" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+        <link rel="stylesheet" href="../css/common.css?11" />
+        <!--<link rel="stylesheet" href="../../../app/css/bootstrap.css" id="bscss">-->
+        <link rel="stylesheet" href="../../../main/common/elementui/index.css">
+        <link rel="stylesheet" href="../../../css/enterprise/detail.css?6">
+        <link rel="stylesheet" href="../../../css/enterprise/timeline.css">
+        <link rel="stylesheet" href="../../../css/enterprise/enterprise_evaluation.css">
+        <style type="text/css">
+            .footer{
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border-top: 1px solid #e4eaec;
+                padding: 20px;
+                z-index: 109;
+                text-align: center;
+                background: #f5f7fa;
+                font-size: 14px;
+                color: #959595;
+            }
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    -moz-transform: translateY(0);
+                    -ms-transform: translateY(0);
+                    -webkit-transform: translateY(0);
+                    transform: translateY(0);
+                }
+                40% {
+                    -moz-transform: translateY(-20px);
+                    -ms-transform: translateY(-20px);
+                    -webkit-transform: translateY(-20px);
+                    transform: translateY(-20px);
+                }
+                60% {
+                    -moz-transform: translateY(-10px);
+                    -ms-transform: translateY(-10px);
+                    -webkit-transform: translateY(-10px);
+                    transform: translateY(-10px);
+                }
+            }
+            .arrow {
+                position: fixed;
+                bottom: 71px;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                color: #1171d1;
+                font-size: 15px;
+                width: 30px;
+                text-align: center;
+                padding-top: 10px;
+                border-radius: 3px;
+                font-size: 32px;
+                left: 0;
+                right: 0;
+                z-index: 10;
+            }
+            .bounce {
+                -moz-animation: bounce 2s infinite;
+                -webkit-animation: bounce 2s infinite;
+                animation: bounce 2s infinite;
+            }
+            .el-loading-spinner i{
+                font-size: 30px;
+            }
+            .desc_content{
+                font-size: 14px;
+                padding: 14px 0;
+                line-height: 24px;
+            }
+        </style>
+    </head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/swp/index.html" tag="0" title="易废网"> <img src="../img/logo_short.png" alt="易废网 logo"> </a>
+            </div>
+            <div class="headerAction">
+                <span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+                <span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+            </div>
+            <a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+            <ul>
+                <li>
+                    <a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+                </li>
+                <li class="active">
+                    <a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+                </li>
+                <li>
+                    <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container" style="width: 1200px !important;" >
+    <div class="content-wrapper" style="padding-bottom: 0;margin-top: 20px;position: relative;" >
+        <div id="app">
+            <div class="breadcrumb-div">
+                <span class="text-muted">当前位置：</span>
+                <el-breadcrumb separator-class="el-icon-arrow-right" v-cloak>
+                    <el-breadcrumb-item onClick="history.go(-1);">{{breadName||'危废经营单位'}}</el-breadcrumb-item>
+                    <el-breadcrumb-item>企业详情</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <template>
+                <el-dialog
+                        title="查看图片"
+                        :visible.sync="dialogVisible"
+                        :modal-append-to-body="false"
+                        width="90%">
+                    <img :src="largeImg"/>
+                </el-dialog>
+                <el-dialog
+                        title="查看图片"
+                        :visible.sync="dialogVisible2"
+                        :modal-append-to-body="false"
+                        width="90%">
+                    <el-carousel height="600px" :autoplay="false" :initial-index="imgIndex"  v-if="dialogVisible2">
+                        <el-carousel-item  v-for="(item,index) in imgList" :key="index">
+                            <img :src="item.src"/>
+                        </el-carousel-item>
+                    </el-carousel>
+                </el-dialog>
+                <!--<el-button type="text" icon="el-icon-close" size="small" title="返回" style="position: absolute;right:10px;top:4px;z-index: 10;font-size: 13px" @click="back">返回</el-button>-->
+                <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                    <el-tab-pane label="概况" name="first">
+                        <div class="top">
+                            <el-carousel :autoplay="false" height="380px" v-if="imgList&&imgList.length>0" :indicator-position="imgList.length>0&&!imgList[0].imgLoaded?'none':''">
+                                <el-carousel-item v-for="(item,index) in imgList" :key="index" v-loading="!item.imgLoaded"
+                                                  element-loading-spinner="el-icon-loading"
+                                                  element-loading-background="rgba(233, 234, 239, 1)">
+                                    <img :src="item.src" @click="showBannerImg(index)"/>
+                                </el-carousel-item>
+                            </el-carousel>
+                            <div class="enterName" :class="{'noBanner':imgList&&imgList.length==0}" v-show="imgList.length>0&&imgList[0].imgLoaded||imgList.length==0">
+                                {{entName}}
+                            </div>
+                            <el-row class="da" :class="{'noBanner':imgList&&imgList.length==0}">
+                                <el-col :span="18" style="padding-left: 37px;"><i class="publisharea"></i>地址：{{entAddress}} </el-col>
+                                <!--<el-col :span="6" style="padding-right: 37px;text-align: right">-->
+                                    <!--<el-button type="primary" @click="contact(entName)"><img style="position: relative;top: 2px;" src="http://www.yifeiwang.com/img/source/concact_icon.png">  联系TA</el-button>-->
+                                <!--</el-col>-->
+                            </el-row>
+                        </div>
+                        <div class="desc" >
+                            <p class="desc_title" v-if="entDesc!=null">企业简介</p>
+                            <p class="desc_content"  style="text-indent: 2em" v-html="entDesc"></p>
+                            <p class="desc_title" style="margin-top: 30px" v-if="partnerList&&partnerList.length != 0">合作伙伴</p>
+                            <div class="desc_content" style="padding: 10px 0" v-if="partnerList&&partnerList.length != 0">
+                                <div class="entItem" v-for="(item,index) in partnerList">
+                                    <div class="entItem_logo"><img :src="item.imgSrc"/></div>
+                                    <div class="entItem_name">{{item.customerName}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="经营许可证" name="second">
+                        <div class="arrow bounce" v-if="licenceImgStr">︾</div>
+                        <el-row class="license" v-if="licence!=null">
+                            <el-col :span="10">
+                                <div class="licenseTableDiv">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td colspan="2" style="font-size: 14px;color: #222;">危险废物经营许可证</td>
+                                        </tr>
+                                        <tr>
+                                            <td>许可证编号：</td>
+                                            <td class="text">{{licence?licence.licence_no:'--'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>有效期：</td>
+                                            <td class="text">{{licence.start_date?licence.start_date.substring(0,10):''}}~{{licence.end_date?licence.end_date.substring(0,10):''}}</td>
+                                        </tr>
+                                        <!--<tr>-->
+                                            <!--<td>年许可量：</td>-->
+                                            <!--<td class="text">{{approvedQuantity}}吨</td>-->
+                                        <!--</tr>-->
+                                        <tr v-if="licenceImgStr">
+                                            <td colspan="2" style="padding: 20px 10px" >
+                                                <img  :src="licenceImgStr" @click="showLargeImg(licenceImgStr)"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </el-col>
+                            <el-col :span="14" style="padding: 20px" v-show ="licenceImgStr!=''">
+                                <img v-if="licenceImgStr" :src="licenceImgStr" @click="showLargeImg(licenceImgStr)"/>
+                                <span class="tip">危险废物经营许可证副本照片（点击查看大图）</span>
+                            </el-col>
+                        </el-row>
+                        <el-row class="license  text-center" style="margin-top: 28px" v-if="licence==null">
+                            <span>暂无有效许可证</span>
+                        </el-row>
+                        <div class="info_title"v-if="licenseDetail.length>0"  >许可证详情</div>
+                        <div class="info_content">
+                            <template v-for="(item,index) in licenseDetail">
+                                <dl>
+                                    <dd class="dtitle">经营方式</dd>
+                                    <dd class="dcontent">{{item.dispositionType}}</dd>
+                                    <dd class="dtitle">年核准量</dd>
+                                    <dd class="dcontent">{{item.approved_quantity+'吨'}}</dd>
+                                </dl>
+                                <dl class="last_dl">
+                                    <dd class="dtitle">核准名称/核准类别</dd>
+                                    <dd class="dcontent" id="name_code">
+                                            <!--{{parselListItemVo(item.listWasteTypeVo)}}-->
+                                        <div class="dcontent_container codeType" v-for="(o,index) in item.listWasteTypeVo">
+                                            <span>{{o.wasteTypeCode+'/'+o.wasteTypeValue}}</span>
+                                            <span :title="o.listWasteVo[0]">（{{o.listWasteVo[0]}}）</span>
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </template>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="资质与荣誉" name="third" id="third">
+                        <el-row v-show="ryList&&ryList.length>0">
+                            <el-col :span="18">
+                                <div style="background-color: #ffffff">
+                                    <div class="VivaTimeline" id="mainVivaTimeline">
+                                        <dl></dl>
+                                    </div>
+                                </div>
+                            </el-col>
+                            <el-col :span="6">
+                                <div class="VivaTimeline VivaTimelineBar">
+                                    <dl v-for="item1 in ryList">
+                                        <dd class="pos-left clearfix"  v-for="item in item1.content" @click="scrollTo(item.id)">
+                                            <div class="circ"><i class="fa fa-circle"></i></div>
+                                            <div class="time">{{item.gloryTypeValue}}</div>
+                                            <div class="events">
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <div class="toTop" @click="toTop()"><img src="http://www.yifeiwang.com/img/source/top.png"/></div>
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row class=" text-center" style="margin-top: 28px" v-if="ryList&&ryList.length==0">
+                            <span>暂无相关信息</span>
+                        </el-row>
+                    </el-tab-pane>
+                    <el-tab-pane label="销售及合同" name="five">
+                        <el-row class="text-center" style="margin-top: 28px" v-if = "hasSalesInfo">
+                            <span>暂无相关信息</span>
+                        </el-row>
+                        <div class="desc" v-if="saleDesc">
+                            <p class="desc_title">销售说明</p>
+                            <p class="desc_content" v-html="saleDesc">
+                                <!--{{saleDesc?saleDesc:'-'}}-->
+                            </p>
+                        </div>
+                        <div class="desc" v-if="paymentRule">
+                            <p class="desc_title">付款规则</p>
+                            <p class="desc_content" v-html="paymentRule" >
+                                <!--{{paymentRule?paymentRule:'-'}}-->
+                            </p>
+                        </div>
+                        <div class="desc" v-if="otherDesc">
+                            <p class="desc_title">其他说明</p>
+                            <p class="desc_content"  v-html="otherDesc">
+                                <!--{{otherDesc?otherDesc:'-'}}-->
+                            </p>
+                        </div>
+                        <div class="desc" style="background-color: #f6f7fb" v-if="attachList&&attachList.length>0||contractList&&contractList.length>0">
+                            <el-row>
+                                <el-col :span="12" v-if="attachList&&attachList.length>0">
+                                    <p class="desc_title">附件下载</p>
+                                    <p class="desc_content" v-for="(item,index) in attachList">
+                                        <span> {{item.name}} </span><el-button type="text" @click="download(item.path)">点击下载</el-button>
+                                    </p>
+                                </el-col>
+                                <el-col :span="12" v-if="contractList&&contractList.length>0">
+                                    <p class="desc_title">合同下载</p>
+                                    <p class="desc_content" v-for="(item,index) in contractList">
+                                        <span> {{item.name}} </span><el-button type="text" @click="download(item.path)">点击下载</el-button>
+                                    </p>
+                                </el-col>
+                            </el-row>
+                        </div>
+
+                    </el-tab-pane>
+                </el-tabs>
+            </template>
+        </div>
+        <div class="footer">
+		           <span>COPYRIGHT &nbsp; ©  &nbsp; 江苏神彩科技股份有限公司  &nbsp;  www.yifeiwang.com  &nbsp;
+		           	<a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+        </div>
+    </div>
+    </div>
+        <script src="../../common/jquery.min.js"></script>
+        <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+        <script src="../js/detailInit.js?16"></script>
+        <script src="../../../main/common/resLoader.js"></script>
+        <script src="../../../app/js/util.js"></script>
+        <script src="../../../main/common/elementui/vue.min.js"></script>
+        <script src="../../../main/common/elementui/index.js"></script>
+        <script src="../../../app/js/notify.js"></script>
+        <script src="../../../app/js/constants.js?1"></script>
+        <script src="../../../main/common/upload/upload.js"></script>
+        <script src="../../../main/pc/js/data.js"></script>
+        <script src="../../../thirdparty/la-number/la-number.js"></script>
+        <script>
+            var vue = new Vue({
+                el: '#app',
+                data:{
+                    activeName: 'first',
+                    cactiveName:'cfirst',
+                    imgList:[],
+                    videoList:[],
+                    pfList:[],
+                    partnerList:[],
+                    attachList:[],
+                    contractList:[],
+                    licenceImgStr:"",
+                    approvedQuantity:null,
+                    licence:{},
+                    saleDesc:"",
+                    paymentRule:"",
+                    otherDesc:"",
+                    entDesc:"",
+                    ryList:[],
+                    dialogVisible:false,
+                    dialogVisible2:false,
+                    imgIndex:0,
+                    hasSalesInfo:false,
+                    entId:getParam('entId'),
+                    largeImg:'',
+                    entEvaluates:[],
+                    COMMENT:COMMENT,
+                    score:'',
+                    showEntEvaluates:[],
+                    commentCount:{'5':0,'3':0,'1':0},
+                    entName:'',
+                    entAddress:'',
+                    licenseDetail:[],
+                    breadName:getParam('breadName')||''
+                },
+                mounted:function () {
+                    var heights= $(window).height();
+//                    var heights=document.body.clientHeight;
+                    $('#app >.el-tabs >.el-tabs__content').height(heights-218+'px');
+                    window.onresize=function () {
+                        var heights= $(window).height();
+                        $('#app >.el-tabs >.el-tabs__content').height(heights-218+'px');
+                    };
+                    var timer=setInterval(function () {
+                        var panel=$('.el-tabs__content');
+                        if(panel.length>0){
+                            clearInterval(timer);
+                            $('.el-tabs__content').scroll(function () {
+                                if(vue.activeName=='second'){
+                                    if($(this)[0].scrollTop>=150){
+                                        $('.arrow').fadeOut();
+                                    }else{
+                                        $('.arrow').fadeIn();
+                                    }
+                                }else{
+                                    $('.arrow').fadeOut();
+                                }
+                            })
+                        }
+                    },1000)
+                },
+                created:function(){
+                    this.getList();
+                    this.entId = getParam('entId');
+                    this.getAttachList();
+                    this.getContractList();
+                    this.getBanner();
+                    this.getLicenceDetail();
+                },
+                methods:{
+                    back:function () {
+                        goBack();
+                    },
+                    handleClick:function(tab, event) {
+                        console.log(tab, event);
+                        if(tab.index!="3"){
+                            var play1=$('#video_content video');
+                            var play2=$('#video_content2 video');
+                            if(play1.length>0){
+                                play1[0].pause();
+                            }
+                            if(play2.length>0){
+                                play2[0].pause();
+                            }
+                        }
+                    },
+                    getList: function(){
+                        var _this=this;
+                        $.ajax({
+                            url:'/swp/sysEnterpriseBase/getEnterpriseSummaryInfo',
+                            type:'post',
+                            dataType:'json',
+                            data:{
+                                entId:getParam('entId')
+                            },
+                            success:function (result) {
+                                console.log(result);
+                                _this.entName=result.data.entName;
+                                _this.entAddress=result.data.entAddress;
+                                _this.entDesc  = result.data.summary;
+                                _this.saleDesc  = result.data.salesNote;
+                                _this.approvedQuantity = result.data.approvedQuantity;
+                                _this.otherDesc = result.data.otherNote;
+                                _this.paymentRule = result.data.paymentRule;
+                                _this.licence = result.data.operationLicence;
+                                _this.entEvaluates=result.data.entEvaluates;
+                                _this.showEntEvaluates=result.data.entEvaluates;
+                                for(var i in result.data.entEvaluates){
+                                    var item=result.data.entEvaluates[i];
+                                    if(_this.commentCount[item.score]){
+                                        _this.commentCount[item.score]+=1;
+                                    }else{
+                                        _this. commentCount[item.score]=1;
+                                    }
+                                }
+                                if(result.data.licenceFileId){
+                                    _this.licenceImgStr = IMG_VIEW_URL+'&fileID='+result.data.licenceFileId;
+                                }
+                                for(var index in result.data.customerList) {
+                                    var partner = result.data.customerList[index];
+                                    var imgUrl = IMG_VIEW_URL+'&fileID='+partner.fileId;
+                                    partner.imgSrc = imgUrl;
+                                    _this.partnerList.push(partner);
+                                }
+
+                                var map = {},dest = [];
+                                for(var index in result.data.entGloryList){
+                                    var d = result.data.entGloryList[index].getTime;
+                                    var year ;
+                                    if(d!=null){
+                                        year = d.split("-")[0];
+                                    }
+                                    if(!map[year]) {
+                                        dest.push({
+                                            year: year ,
+                                            content: [result.data.entGloryList[index]]
+                                        });
+                                        map[year] = result.data.entGloryList[index];
+                                    }else{
+                                        for(var j = 0; j < dest.length; j++){
+                                            var dj = dest[j];
+                                            if(dj.year == year){
+                                                dj.content.push(result.data.entGloryList[index]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                _this.ryList = dest;
+                                vue.initTimeLine(vue.ryList);
+                                if(_this.saleDesc==null && _this.paymentRule==null && _this.otherDesc==null && _this.attachList.length== 0&& _this.contractList.length== 0){
+                                    _this.hasSalesInfo = true;
+                                }
+
+                            }
+                        })
+                    },
+                    getLoader:function(imgUrl,index){
+                        var loader = new resLoader({
+                            resources:[imgUrl],
+                            onStart: function(total) {
+                                console.log('start:' + total);
+                            },
+                            onProgress: function(current, total) {
+                                console.log(current + '/' + total);
+                            },
+                            onComplete: function(total) {
+                                var item=vue.imgList[index];
+                                item.imgLoaded=true;
+                                Vue.set(vue.imgList,index,item);
+                            }
+                        });
+                        return loader;
+                    },
+                    getLicenceDetail:function () {
+                        $.ajax({
+                            url: "/swp/myenterprise/getHomePageEnterpriseInfoDetail",
+                            data: {
+                                'enterpriseId': this.entId,
+                            },
+                            type: "POST",
+                            dataType: 'json',
+                            async: true,
+                            success: function (data) {
+                                if(data.status==1){
+//                                    vue.entName=data.data.sysEnterpriseBaseVo.entName;
+//                                    vue.entAddress=data.data.sysEnterpriseBaseVo.entAddress;
+                                    vue.licenseDetail=data.data.operationLicenceItemVo&&data.data.operationLicenceItemVo.length>0?data.data.operationLicenceItemVo:[];
+                                }
+                            }
+                        });
+                    },
+                    changeEvaluateType:function (score) {
+                        this.score=score;
+                        if(!score){
+                            this.showEntEvaluates=this.entEvaluates;
+                            return;
+                        }
+                        var arr=[];
+                        for(var i in this.entEvaluates){
+                            if(this.entEvaluates[i]['score']==score){
+                                arr.push(this.entEvaluates[i]);
+                            }
+                        }
+                        this.showEntEvaluates=arr;
+                    },
+                    getBanner:function(){
+                        var list =upload.getImgListByBusinessCode(this.entId+'_banner');
+                        if(list.length==0){
+                            this.imgList.push({src:'../../mobile/img/default.jpg',imgLoaded:true});
+                            return;
+                        }
+                        for(var i in list){
+                            list[i].path = IMG_PREV+'/download?fileID='+list[i]['fileID'];
+                            var imgSrc =  IMGVIEWURL+list[i]['fileID'];
+                            this.imgList.push({src:imgSrc});
+                            this.getLoader(imgSrc,i).start();
+                        }
+                    },
+                    getAttachList:function () {
+                        var list=upload.getImgListByBusinessCode(this.entId+'_attach');
+                        for(var i in list){
+                            list[i].logo=IMG_VIEW_URL+'&fileID='+list[i]['fileID'];
+                            list[i].name=list[i]['fileName'];
+                            list[i].path = IMG_PREV+'/download?fileID='+list[i]['fileID'];
+
+                        }
+                        this.attachList=list;
+                    },
+                    getContractList:function () {
+                        var list=upload.getImgListByBusinessCode(this.entId+'_contract');
+                        for(var i in list){
+                            list[i].logo=IMG_VIEW_URL+'&fileID='+list[i]['fileID'];
+                            list[i].name=list[i]['fileName'];
+                            list[i].path = IMG_PREV+'/download?fileID='+list[i]['fileID'];
+                        }
+                        this.contractList=list;
+                    },
+                    download:function (path) {
+                        window.location=path;
+                    },
+                    showLargeImg:function (imgUrl) {
+                        this.largeImg=imgUrl;
+                        this.dialogVisible=true;
+                    },
+                    showBannerImg:function (index) {
+                        this.imgIndex=index;
+                        this.dialogVisible2=true;
+                    },
+                    scrollTo:function (id) {
+                        document.getElementById(id).scrollIntoView(true);
+                    },
+                    contact:function (entName) {
+                        collectingUserBehavior(index.isLogin?index.ticketId:'', 'HOMEPAGECONTACTHIM ',entName);
+                        var ticketId=getParam('ticketId');
+                        if(ticketId){
+                            window.location='../../../enterprise/czDetail.htm?enterpriseId='+this.entId+'&breadcrumbName=首页&ticketId='+ticketId;
+                        }else{
+                            var url='/enterprise/czDetail.htm?enterpriseId='+this.entId+'%26breadcrumbName=首页';
+                            window.location='../../../login.jsp?redirectURL='+url;
+                        }
+                    },
+                    toTop:function () {
+                        document.getElementById('third').scrollIntoView(true);
+                    },
+                    play:function () {
+                        var url='../../../main/pc/file/oceans.mp4';
+                        var str='<video src="'+url+'" width="100%"  height="auto" class="video-js" autoplay="true" controls>'+
+                            '<object>'+
+                            '<embed width="100%" height="auto" showcontrols="1" autostart="1" src="'+url+'" ></embed>'+
+                            '</object>'+
+                            '</video>';
+                        $('#video_content').html(str);
+                    },
+                    play2:function () {
+                        var url='../../../main/pc/file/oceans.mp4';
+                        var str='<video src="'+url+'" width="100%"  height="auto" class="video-js" autoplay="true" controls>'+
+                            '<object>'+
+                            '<embed width="100%" height="auto" showcontrols="1" autostart="1" src="'+url+'" ></embed>'+
+                            '</object>'+
+                            '</video>';
+                        $('#video_content2').html(str);
+                    },
+                    initTimeLine:function(ryList) {
+//                        ryList=ryList1?ryList1:ryList;
+                        var str = '';
+                        var flag = true;
+                        for (var k in this.ryList) {
+                            var year = ryList[k]['year'];
+                            str += '<dt><i class="el-icon-time"></i><span class="time">' + year + '年</span></dt>';
+                            for (var i = 0; i < ryList[k]['content'].length; i++) {
+                                var obj = ryList[k]['content'][i];
+                                var getTime = obj['getTime'].substring(0,10);
+                                var imgUrl=IMG_VIEW_URL+'&fileID='+obj['fileId'];
+                                str += '<dd class="pos-' + (flag ? 'right' : 'left') + ' clearfix" id="' + obj['id'] + '">' +
+                                    '<div class="circ"><i class="el-icon-time"></i></div>' +
+                                    '<div class="time">' + getTime + '</div>' +
+                                    '<div class="events">' +
+                                    '<div class="events-header">' + obj['gloryType'] + '</div>' +
+                                    '<div class="events-body">' + obj['gloryTypeValue'] + '</div>' +
+                                    '<div class="events-footer">' +
+                                    '<img src="'+imgUrl+'" onclick="vue.showLargeImg(\''+imgUrl+'\')"/>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</dd>';
+                                flag = !flag;
+                            }
+                        }
+                        $('#mainVivaTimeline dl').html(str);
+                    }
+                }
+            });
+            function goBack(){
+
+                var keyWord=getParam('keyWord')?getParam('keyWord'):'';
+                window.location.href='company.html?type=1&cname='+keyWord+'&pageIndex='+getParam('pageIndex');
+            }
+            function goActivityList() {
+                window.location.href = "activityList.html"
+            }
+        </script>
+
+</body>
+</html>

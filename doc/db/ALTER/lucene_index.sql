@@ -1,0 +1,1 @@
+alter table lucene_index add column status CHAR(1);

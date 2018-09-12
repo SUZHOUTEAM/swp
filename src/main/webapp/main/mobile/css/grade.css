@@ -1,0 +1,59 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.container{
+    width: 100%;
+}
+.container img{
+    width: 100%;
+    display: block;
+}
+.xunzhan_count,.xunzhan_text,.myMessage{
+    position: absolute;
+    left:0;
+    right: 0;
+    text-align: center;
+}
+.myMessage{
+    margin-top: 109%;
+}
+.xunzhan_count{
+    /*top:16%;*/
+    font-size: 1.2rem;
+    color: #7a3d02;
+    font-weight: bold;
+    margin-top: 28%;
+}
+.xunzhan_text{
+    margin-top: 66%;
+    color: #ffe762;
+    font-size: 0.6rem;
+    font-weight: bold;
+    letter-spacing: 0.06rem;
+}
+.xunzhan_text font{
+    font-size: 0.9rem;
+    margin: 0 0.2rem;
+    position: relative;
+    top: 0.05rem;
+}
+.xunzhan_text span{
+    display: block;
+    font-size: 0.4rem;
+    color: rgba(255,255,255,.8);
+    margin-top: 0.2rem;
+    font-weight: normal;
+}
+.myMessage .userName{
+    color: #333333;
+    font-size: 0.55rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+.myMessage .entName{
+    color: #333333;
+    font-size: 0.4rem;
+    display: block;
+}

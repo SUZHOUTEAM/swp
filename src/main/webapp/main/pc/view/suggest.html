@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>危废建议</title>
+		<meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+	    <meta name="format-detection" content="telephone=no">
+	    <meta name="renderer" content="webkit" /> 
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<link rel="shortcut icon" href="../../../app/img/favicon.ico">
+	    <link rel="stylesheet" href="../css/common.css?11" />
+		<link rel="stylesheet" href="../css/suggest.css" />
+		<link rel="stylesheet" href="../../../main/common/elementui/index.css">
+	</head>
+	<body>
+		<div class="header">
+			<div class="container">
+				<div class="logo">
+					<a href="/swp/index.html" tag="0" title="易废网"> <img src="../img/logo_short.png" alt="易废网 logo"> </a>
+				</div>
+				<div class="headerAction">
+					<span class="no-login">易废网欢迎你！
+						请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+						<a href="../../../selectEntType.html" class="register-btn">注册</a>
+					</span>
+					<span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+				</div>
+				<a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+				<ul>
+					<li class="active">
+						<a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+					</li>
+					<li>
+						<a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+					</li>
+					<li>
+						<a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+					</li>
+				</ul>
+			</div> 
+		</div>
+		<div class="company_banner" id="chuzhi">
+			<div class="company_container">
+				<div class="banner_left">
+					<div class="left_info">
+						<img src="../img/chuzhi_banner.png">
+					</div>
+				</div>
+				<div class="banner_right">
+					<div class="right_info">
+						<span class="title"><font>用户建议</font></span>
+						<span class="subtitle">易废网是不完善的，感谢您帮助我们！</span>
+					</div>
+				</div>
+				<div class="clearfloat"></div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="content_title">用户建议</div>
+			<div class="con" id="app">
+				<el-form label-position="right" label-width="160px" :model="suggest" ref="suggestValidateForm" :rules="suggestRules">
+					<el-form-item label="建议：" prop="content">
+						<el-input
+								type="textarea"
+								:rows="2"
+								placeholder="请输入建议内容"
+								v-model="suggest.content">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="回访电话：" prop="phoneNum">
+						<el-input v-model="suggest.phoneNum" placeholder="必填"></el-input>
+					</el-form-item>
+					<el-form-item label="组织/公司：" prop="company">
+						<el-input v-model="suggest.company" placeholder="选填"></el-input>
+					</el-form-item>
+					<el-form-item align="left">
+						<el-button type="primary" class="btn" @click="saveSuggest">提交建议</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+		</div>
+		<script src="../../common/jquery.min.js"></script>
+		<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+		<script src="../js/detailInit.js?16"></script>
+		<script src="../../../app/js/util.js?1"></script>
+		<!-- 先引入 Vue -->
+		<script src="../../../main/common/elementui/vue.min.js"></script>
+		<!-- 引入组件库 -->
+		<script src="../../common/elementui/index.js"></script>
+		<script>
+            var vue = new Vue({
+                el: '#app',
+                data:{
+                    suggestRules: {
+                        content: [
+                            { required: true, message: '请输入建议内容', trigger: 'blur' },
+                            { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }
+                        ],
+						phoneNum:[
+                            { required: true, message: '请输入回访电话', trigger: 'blur' },
+                            { min: 1, max: 11, message: '长度在 1 到 11 个字符', trigger: 'blur' }
+						]
+                    },
+                    suggest:{
+                        content:'',
+                        phoneNum:'',
+						company:''
+					}
+                },
+                created:function () {
+                },
+                methods:{
+                    saveSuggest:function () {
+                        var param={
+                            suggestion:this.suggest.content,
+                            phoneNo:this.suggest.phoneNum,
+                            company:this.suggest.company
+						};
+                        this.$refs['suggestValidateForm'].validate(function(valid){
+                            if (valid) {
+                                $.ajax({
+									url:'/swp/customerSuggestion/saveCustomerSuggestion',
+									data:JSON.stringify(param),
+									type:'post',
+									contentType:'application/json',
+									success:function (result) {
+										if(result.status==1&&result.data){
+                                            jqueryDialog.alert({msg:'建议成功，感谢您的帮助！',type:'success',timeout:3000});
+                                            setTimeout(function(){
+                                                history.go(-1);
+											},3000)
+										}
+                                    }
+								});
+                            }
+                        });
+                    },
+                }
+            });
+		</script>
+		<!--<script src="../js/app_detail.js"></script>-->
+	<script type="text/javascript">
+		$(document).ready(function () {
+            $('#selectbtn_company').on('click', function() {
+                window.location.href = "company.html" ;
+            });
+        })
+	</script>
+	</body>
+</html>

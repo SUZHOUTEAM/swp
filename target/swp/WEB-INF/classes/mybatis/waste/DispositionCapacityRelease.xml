@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifei.resourcepool.mapper.DispositionCapacityReleaseMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.entity.DispositionCapacityRelease">
+		<id column="id" property="id" />
+		<result column="release_enterprise_id" property="releaseEnterpriseId" />
+		<result column="capacity_release_code" property="capacityReleaseCode" />
+		<result column="release_startdate" property="releaseStartdate" />
+		<result column="release_enddate" property="releaseEnddate" />
+		<result column="operation_licence_id" property="operationLicenceId" />
+		<result column="remark" property="remark" />
+		<result column="versioncode" property="versioncode" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_by" property="editBy" />
+		<result column="edit_time" property="editTime" />
+		<result column="valid" property="valid" />
+		<result column="release_status" property="releaseStatus" />
+	</resultMap>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.waste.fw.mapper.SysCantonMapper">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.mlsc.waste.fw.model.SysCanton">
+    <id column="CantonCode" property="cantonCode"/>
+    <result column="ParentCantonCode" property="parentCantonCode"/>
+    <result column="CantonName" property="cantonName"/>
+    <result column="CantonLevel" property="cantonLevel"/>
+    <result column="CantonType" property="cantonType"/>
+    <result column="CoordinateId" property="coordinateId"/>
+    <result column="PostCode" property="postCode"/>
+    <result column="AreaCode" property="areaCode"/>
+    <result column="EnableDatetime" property="enableDatetime"/>
+    <result column="DisableDatetime" property="disableDatetime"/>
+    <result column="CantonStatus" property="cantonStatus"/>
+    <result column="CreaterID" property="createrId"/>
+    <result column="CreateTime" property="createTime"/>
+    <result column="UpdaterID" property="updaterId"/>
+    <result column="UpdateTime" property="updateTime"/>
+    <result column="IsEndNode" property="isEndNode"/>
+    <result column="CantonFullName" property="cantonFullName"/>
+  </resultMap>
+
+  <select id="listSysCanton" parameterType="com.mlsc.waste.fw.model.SysCantonQueryParam"
+    resultMap="BaseResultMap">
+    SELECT *
+    FROM sys_canton
+    WHERE 1=1
+    <if test="parentCantonCode != null">
+      AND ParentCantonCode = #{parentCantonCode}
+    </if>
+    <if test="parentCantonCodeList !=null and parentCantonCodeList.size()>0 ">
+      AND ParentCantonCode IN
+      <foreach collection="parentCantonCodeList" index="index" item="parentCode" open="("
+        separator="," close=")">
+        #{parentCode}
+      </foreach>
+    </if>
+  </select>
+
+
+    <select id="getCantonCodeByCantonName" parameterType="java.lang.String"  resultMap="BaseResultMap">
+      SELECT *
+      FROM sys_canton
+      WHERE 1=1
+      <if test="cantonName != null">
+        AND CantonName  LIKE concat(#{cantonName},'%')
+      </if>
+      limit 1;
+
+    </select>
+
+</mapper>

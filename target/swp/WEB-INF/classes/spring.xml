@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd ">
+
+    <!-- 启用注解 -->
+    <context:annotation-config/>
+
+    <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
+    <context:component-scan base-package="com.mlsc">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 异步线程池 -->
+    <bean id="threadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数  -->
+        <property name="corePoolSize" value="5"/>
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="10"/>
+        <!-- 队列最大长度 >=mainExecutor.maxSize -->
+        <property name="queueCapacity" value="500"/>
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="300"/>
+        <!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+
+    <bean id="rpcSmsService" class="com.mlsc.rpc.thrift.service.impl.SmsServiceImpl"/>
+    <bean id="rpcLoginService" class="com.mlsc.rpc.thrift.service.impl.SysLoginServiceImpl"/>
+    <bean id="rpcMenuService" class="com.mlsc.rpc.thrift.service.impl.SysMenuServiceImpl"/>
+    <bean id="rpcOrgComService" class="com.mlsc.rpc.thrift.service.impl.SysOrgComServiceImpl"/>
+    <bean id="rpcUserService" class="com.mlsc.rpc.thrift.service.impl.SysUserService"/>
+
+    <import resource="spring-mybatis.xml"/>
+    <import resource="spring-cache.xml"/>
+
+
+    <bean id="jobFactory" class="com.mlsc.task.JobFactory"></bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean name="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory" ref="jobFactory"></property>
+        <!-- 通过applicationContextSchedulerContextKey属性配置spring上下文 -->
+        <property name="applicationContextSchedulerContextKey">
+            <value>appllisticationContext</value>
+        </property>
+    </bean>
+
+
+    <!--运营短信通知-->
+    <!--<bean id="webOperationInit" class="com.mlsc.task.WebOperationInit" init-method="execute"/>-->
+    <!--活动短信通知-->
+    <!---->
+    <!--<bean id="webActivityInit" class="com.mlsc.task.WebActivityInit" init-method="execute"/>-->
+
+    <bean id="webOperationVerify" class="com.mlsc.task.WebOperationVerify" init-method="execute" />
+    <bean id="webActivityVerify" class="com.mlsc.task.WebActivityVerify" init-method="execute" />
+
+
+
+
+    <!--微信分享 -->
+    <bean id="jsApiTicketTimeTask" class="com.mlsc.task.JsApiTicketTimeTask" init-method="getTicket"/>
+
+
+    <task:scheduled-tasks>
+        <!-- 只有一个活动或多个活动但通知时间一致时使用此任务-->
+        <!--<task:scheduled ref="notifyAllUserJob" method="execute" cron="0 0 10 ? * THU"/>-->
+        <!--<task:scheduled ref="notifyAllUserJob" method="execute" cron="0 0 18 ? * THU"/>-->
+        <!-- 运营时间结束时删除运营,开始运营时开启运营-->
+        <task:scheduled ref="webOperationVerify" method="execute" cron="0 0 0 * * ?"/>
+        <task:scheduled ref="webActivityVerify" method="execute" cron="0 0 0 * * ?"/>
+        <!-- 微信每一个小时更新ticketid -->
+        <task:scheduled ref="jsApiTicketTimeTask" method="getTicket" cron="0 0 */1 * * ?"/>
+    </task:scheduled-tasks>
+
+</beans>

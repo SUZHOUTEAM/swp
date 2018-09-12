@@ -1,0 +1,195 @@
+.signDialog .el-dialog{
+    float: right;
+    margin-top: 111.5px !important;
+    margin-bottom: 0;
+}
+.signDialog .title{
+    border-left: 3px solid #1071d0;
+    margin-left: -15px;
+    padding-left: 15px;
+    color: #333333;
+    font-size: 14px;
+}
+.signDialog .el-dialog__body{
+    padding: 15px 0;
+    padding-top: 0;
+}
+.signDialog .entInfo{
+    border-bottom: 1px solid #d5dde6;
+    padding: 0 15px;
+}
+.signDialog .entInfo p{
+    margin-bottom: 10px;
+}
+.signDialog .entInfo p em{
+    font-style: normal;
+    font-size: 12px;
+    color: #6a7580;
+}
+.signDialog .entInfo p b{
+    font-size: 14px;
+    color: #222;
+    font-weight: normal;
+}
+.signDialog .entInfo p b font{
+    font-weight: bold;
+}
+.signDialog .editArea .el-button-group{
+    margin: 20px 0 20px 15px;
+}
+.signDialog .editArea .el-select .el-input__inner{
+    height: 34px;
+}
+.signDialog .editArea .el-button{
+    height: 34px;
+    padding: 0 20px;
+}
+.signTimeLine{
+    padding: 15px;
+    background-color: #ffffff;
+    line-height: 1;
+    overflow-y: auto;
+}
+.signTimeLine .el-step__icon-inner{
+    display: none;
+}
+.signTimeLine .el-step__icon{
+    width: 14px;
+    height: 14px;
+}
+.signTimeLine .el-step.is-vertical .el-step__line{
+    left: 6px;
+}
+.signTimeLine .el-step{
+    max-width: none !important;
+}
+.signTimeLine .signTitle{
+    font-size: 12px;
+    padding-left: 12px;
+    text-align: center;
+    color: #6a7580;
+    font-weight: 100;
+}
+.signTimeLine .el-step.is-vertical .el-step__title{
+    line-height: 20px;
+}
+.signTimeLine .signContent{
+    background-color: #f6f7fb;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #222222;
+    line-height: 26px;
+    font-size: 14px;
+}
+.signTimeLine .el-step__description{
+    padding-bottom: 30px;
+    padding-right: 0;
+}
+.signTimeLine .el-step.is-vertical .el-step__main{
+    padding-left: 0;
+    margin-top: -4px;
+}
+.signTimeLine .signTitle .signTime{
+    float: left;
+}
+.signTimeLine .signTitle .signCreate{
+
+}
+.signTimeLine .signTitle .el-button{
+    float: right;
+    margin-top: -9px;
+    color: #6a7580;
+}
+.signTimeLine .signTitle .el-button:hover{
+    color: #1171d1;
+}
+.signTimeLine .el-step__line{
+    background-color: #d5dde6;
+}
+.signTimeLine .el-step__icon.is-text{
+    border-color: #d5dde6;
+}
+.sign_form{
+    background-color: #f6f7fb;
+    padding: 20px 15px;
+}
+.sign_form .el-input{
+    width: 200px;
+    margin-bottom: 10px;
+    height: 34px;
+}
+.sign_form .el-input .el-input__inner{
+    height: 34px;
+}
+.sign_form_title{
+    color: #222222;
+    margin-bottom: 12px;
+}
+.sign_form_btn{
+    text-align: center;
+    margin-top: 20px;
+}
+.signIcon{
+    position: absolute;
+    width: 16px;
+    height:16px;
+    background: url(../../app/img/sign.png) center center no-repeat;
+    background-size:100% 100%;
+    margin-left: -21px;
+    margin-top: 1px;
+}
+.signBtn{
+    color: #1171d1;
+    line-height: normal !important;
+}
+.sign_form .el-input__icon{
+    line-height: 35.8px;
+}
+.signDialog .el-tag{
+    margin-right: 25px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 10px;
+    font-size: 14px;
+    border: 0;
+    background-color: #feb300;
+    color: #ffffff;
+}
+@-webkit-keyframes bounceInRight {
+    0% {
+        -webkit-transform: translate3d(100px, 0, 0);
+        transform: translate3d(100px, 0, 0)
+    }
+    100% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0)
+    }
+}
+
+@keyframes bounceInRight {
+    0% {
+        -webkit-transform: translate3d(100px, 0, 0);
+        transform: translate3d(100px, 0, 0)
+    }
+    100% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0)
+    }
+}
+.animated {
+    -webkit-animation-duration: .3s;
+    animation-duration: .3s;
+}
+.bounceInRight {
+    -webkit-animation-name: bounceInRight;
+    animation-name: bounceInRight
+}
+.wrapper > .aside{
+    z-index: 111;
+}
+body{
+    padding-right: 0 !important;
+}
+.el-loading-spinner i{
+    font-size: 32px;
+}

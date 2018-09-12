@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>危废小课堂</title>
+    <meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废,危废知识">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <link rel=" shortcut icon" href="../../../app/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="../../../main/pc/css/common.css?11" />
+    <script type="text/javascript" src="../../../main/common/adaptation.js"></script>
+    <link rel="stylesheet" href="../../../main/common/elementui/index.css">
+    <link rel="stylesheet" href="../../../main/pc/css/information.css?6" />
+    <!-- 先引入 Vue -->
+    <script src="../../../main/common/elementui/vue.min.js"></script>
+    <!-- 引入组件库 -->
+    <script src="../../../main/common/elementui/index.js"></script>
+</head>
+
+<body>
+<div id="app"  v-cloak>
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/swp/index.html" tag="0" title="易废网"> <img src="../../../main/pc/img/logo_short.png" alt="易废网 logo"> </a>
+            </div>
+            <div class="headerAction" >
+                <span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+                <span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+            </div>
+            <a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+            <ul>
+                <li>
+                    <a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+                </li>
+                <li class="active">
+                    <a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+                </li>
+                <li>
+                    <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <iframe src="" width="100%" height="500px" scrolling="no" id="iframe"></iframe>
+        <el-row class="header-tab-div">
+            <i class="title-logo"></i>易废网小课堂
+            <span class="tab first-tab" :class="{current:tabIndex==0}" @click="changeTab(0)"><b>知识</b>危废管理要点</span>
+            <div class="split-line"></div>
+            <span class="tab" :class="{current:tabIndex==1}" @click="changeTab(1)"><b>直播</b>易废网直播不断更新</span>
+        </el-row>
+        <el-row class="search-div" v-if="tabIndex==0">
+            <el-col :span="12">
+                <b>排序：</b>
+                <el-button type="text" :class="{'select':orderKey=='latestNews'}" @click="orderByKey('latestNews')">最新</el-button>
+                <el-button type="text" :class="{'select':orderKey=='mostRead'}" @click="orderByKey('mostRead')">最热</el-button>
+            </el-col>
+            <el-col :span="12" align="right">
+                <el-input placeholder="请输入关键字" v-model="keyword" class="input-with-keyword" style="width: 240px" prefix-icon="el-icon-search">
+                    <el-button slot="append" @click="search">搜索</el-button>
+                </el-input>
+            </el-col>
+        </el-row>
+        <el-row class="search-div" v-if="tabIndex==1">
+            <b>活动状态：</b>
+            <el-button type="text" :class="{'select':status==''}" @click="queryStatus('')">全部</el-button>
+            <el-button type="text" :class="{'select':status=='1'}" @click="queryStatus('1')">预热中</el-button>
+            <el-button type="text" :class="{'select':status=='2'}" @click="queryStatus('2')">进行中</el-button>
+            <el-button type="text" :class="{'select':status=='3'}" @click="queryStatus('3')">已结束</el-button>
+        </el-row>
+        <el-row style="min-height: 652px">
+            <el-col class="left" v-if="tabIndex==0" :class="{total:livingList.length==0}">
+                <div v-if="listLoading" class="listLoading">
+                    <i class="el-icon-loading"></i>
+                </div>
+                <div v-if="list&&list.length>0" class="information-content">
+                    <a :href="'/knowledge/'+item.htmlSrc+'.html'" class="item wasteInfo" v-for="(item,index) in list" @click="queryInformation(item)">
+                        <el-aside class="logoDiv" width="290px" :style="'background: url('+item.logo+') center center / auto 100% no-repeat'" v-loading="!item.imgLoaded"
+                                  element-loading-spinner="el-icon-loading"
+                                  element-loading-background="rgba(233, 234, 239, 1)">
+                            <div class="play_div" v-if="item.videoFileId"></div>
+                        </el-aside>
+                        <el-main>
+                            <el-row>
+                                <el-col :span="24" class="title">
+                                    <span class="title-tag" :class="typeObj[item.type]" v-if="item.type">{{item.type}}</span>
+                                    <span class="title-text" v-html="lightTitle(item.title)"></span>
+                                </el-col>
+                            </el-row>
+                            <div class="content" v-html="lightContenxt(item.context)"></div>
+                            <div class="otherDiv">
+                                发布时间：{{item.createTime}}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                阅读次数：{{item.clickAmount}}次
+                            </div>
+                        </el-main>
+                    </a>
+                </div>
+                <div class="nodata" v-if="list.length==0&&!listLoading">暂无相关数据</div>
+                <div v-show="list&&list.length>0" align="right"  style="margin-top: 30px">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageIndex" :page-sizes="[pageSize,10,20,30,50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                    </el-pagination>
+                </div>
+            </el-col>
+            <el-col class="left" v-if="tabIndex==1" :class="{total:livingList.length==0}">
+                <div v-if="listLoading" class="listLoading">
+                    <i class="el-icon-loading"></i>
+                </div>
+                <div v-if="activityList&&activityList.length>0" class="information-content">
+                    <a class="item" v-for="(item,index) in activityList">
+                        <el-aside class="logoDiv" width="290px" :style="'background: url('+item.logo+') center center / auto 100% no-repeat'" v-loading="!item.imgLoaded"
+                                  element-loading-spinner="el-icon-loading"
+                                  element-loading-background="rgba(233, 234, 239, 1)">
+                            <div class="play_div" v-if="item.videoResource" @click="goLive(item.videoResource,item.logo,item.activityName)"></div>
+                        </el-aside>
+                        <el-main>
+                            <el-row>
+                                <el-col :span="16" class="title">{{item.activityName}}</el-col>
+                                <el-col :span="6" align="right" class="status">
+                                    <span v-if="item.status=='1'" class="yure">
+                                        <b>{{item.remainTimeText}}</b>
+                                    </span>
+                                        <span v-if="item.status=='2'" class="going">
+                                        <b>{{item.remainTimeText}}</b>
+                                    </span>
+                                        <span v-if="item.status=='3'" class="over">
+                                    </span>
+                                </el-col>
+                            </el-row>
+                            <div class="content">
+                                {{item.activityRemark}}
+                            </div>
+                            <div class="btnDiv">
+                                <el-row>
+                                    <el-col :span="16">
+                                        <el-button type="primary" @click="goLive(item.videoResource,item.logo,item.activityName)" v-if="item.enrollFee==0&&item.videoResource">{{item.videoResource.indexOf('/main/pc')>-1?'观看直播':'回看'}}></el-button>
+                                    </el-col>
+                                    <el-col :span="8" align="right">
+                                        <el-button type="text" @click="viewPDF" v-if="item.activityId=='20874a8cb01b46ce9707174a568b3924'" style="background-color: transparent;color: #0179de;width: auto;">查看课件</el-button>
+                                    </el-col>
+                                </el-row>
+                            </div>
+                        </el-main>
+                    </a>
+                </div>
+                <div class="nodata" v-if="activityList&&activityList.length==0&&!listLoading">暂无相关数据</div>
+                <div v-show="activityList&&activityList.length>0" align="right" style="margin-top: 30px">
+                    <el-pagination @size-change="handleSizeChangeActivity" @current-change="handleCurrentChangeActivity" :current-page.sync="pageIndexActivity" :page-sizes="[pageSizeActivity,10,20,30,50]" :page-size="pageSizeActivity" layout="total, sizes, prev, pager, next, jumper" :total="totalActivity">
+                    </el-pagination>
+                </div>
+            </el-col>
+            <el-col class="right" v-if="livingList.length>0">
+                <div v-if="livingLoading" class="listLoading">
+                    <i class="el-icon-loading"></i>
+                </div>
+                <el-carousel :interval="4000"  :arrow="livingList.length>1?'hover':'never'" :autoplay="true" height="680px" indicator-position="none">
+                    <el-carousel-item v-for="(item,index) in livingList" :key="index" class="right-content">
+                        <a href="javascript:" @click="goLive(item.videoResource,null,item.activityName)">
+                            <el-row class="status-div" :class="{living:item.status=='2'}">
+                                <el-col :span="12" class="status-text" align="left">{{item.status=='1'?'预热中':'直播中'}}</el-col>
+                                <el-col :span="12" class="time" align="right">{{item.remainTimeText}}</el-col>
+                            </el-row>
+                            <img :src="item.logo"/>
+                            <div class="right-text">
+                                <div class="right-title">《{{item.activityName}}》</div>
+                                <div class="right-ent">活动方：<b>{{item.entName}}</b></div>
+                                <div class="right-desc">{{item.activityRemark}}</div>
+                            </div>
+                        </a>
+                    </el-carousel-item>
+                </el-carousel>
+            </el-col>
+        </el-row>
+
+    </div>
+</div>
+<div class="footer">
+       <span>COPYRIGHT &nbsp; &copy;  &nbsp; 江苏神彩科技股份有限公司 &nbsp;  www.yifeiwang.com  &nbsp;
+        <a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+</div>
+<script src="../../../main/common/jquery.min.js"></script>
+<script src="../../../main/common/resLoader.js"></script>
+<script src="../../../app/js/constants.js?1"></script>
+<script src="../../../app/js/util.js?1"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="../../../main/pc/js/detailInit.js?16"></script>
+
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data:{
+            list:[],
+            activityList:[],
+            listLoading:true,
+            pageIndex:1,
+            pageSize:5,
+            total:0,
+            pageIndexActivity:1,
+            pageSizeActivity:5,
+            totalActivity:0,
+            tabIndex:0,
+            orderKey:'latestNews',
+            keyword:'',
+            timerList:[],
+            timerList2:[],
+            status:'',
+            livingList:[],
+            livingLoading:true,
+            typeObj:{'时事热点解析':'HOT_NEWS','危废日常管理':'WASTE_MANAGE','危废申报转移':'WASTE_TRANSFER'},
+            cantonCode:returnCitySN['cid'].substring(0,2)
+        },
+        created:function () {
+            this.getList();
+            this.getLivingList();
+//            this.getActivityList();
+        },
+        computed:{
+        },
+        methods: {
+            changeTab:function (tabIndex) {
+                this.tabIndex=tabIndex;
+                this.listLoading=true;
+                switch (tabIndex){
+                    case 0:
+                        this.pageIndex=1;
+                        this.getList();
+                        break;
+                    case 1:
+                        this.pageIndexActivity=1;
+                        this.getActivityList();
+                        break;
+                }
+            },
+            viewPDF:function () {
+                window.open('http://www.yifeiwang.com/PDF/viewer.html?name=xcl.pdf');
+            },
+            queryStatus:function (status) {
+                this.status=status;
+                this.pageIndexActivity=1;
+                this.getActivityList();
+            },
+            lightTitle:function (title) {
+                if(!this.keyword){
+                    return title;
+                }
+                return title.replace(new RegExp(this.keyword,'g'), '<span style="color: red;font-weight: bold">'+this.keyword+'</span>');
+            },
+            lightContenxt:function (contenxt) {
+                if(!this.keyword){
+                    return contenxt;
+                }
+                return contenxt.replace(new RegExp(this.keyword,'g'), '<span style="color: red;font-weight: bold">'+this.keyword+'</span>');
+            },
+            queryInformation: function (item) {
+                collectingUserBehavior(index.ticketId,'WASTEINFO_CLASSDETAI','查看了：'+item.title);
+                this.updateClickAmount(item.id);
+            },
+            goLive:function (url,logo,activityName) {
+                if(url.indexOf('/main/pc')>-1){
+                    if(index.isLogin&&index.ticketId){
+                        collectingUserBehavior(index.ticketId,'WASTEINFO_ACTIVITY',activityName);
+                    }else{
+                        collectingUserBehavior('','WASTEINFO_ACTIVITY',activityName);
+                    }
+                    var ticketStr=(index.ticketId?('?ticketId='+index.ticketId):'');
+                    window.location=url+ticketStr;
+                }else{
+                    this.videoWatch(url,logo);
+                }
+            },
+            videoWatch:function(url,logo){
+                $('#iframe').attr('src','video.html?url='+encodeURIComponent(url)+'&logo='+encodeURIComponent(logo)).css('display','block');
+                scrollTo(0,0);
+            },
+            updateClickAmount:function (id) {
+                $.ajax({
+                    url: '../../../wasteInformation/updateClickAmount',
+                    type: 'post',
+                    data: {
+                        id:id
+                    },
+                    success: function (result) {
+
+                    }
+                })
+            },
+            search:function () {
+                this.pageIndex=1;
+                this.listLoading=true;
+                this.getList();
+            },
+            getList: function () {
+                var param={
+                    pageIndex:this.pageIndex,
+                    pageSize:this.pageSize,
+                    keyword:this.keyword
+                };
+                if(this.orderKey==='latestNews'){
+                    param['latestNews']=1;
+                    param['mostRead']='';
+                }
+                if(this.orderKey==='mostRead'){
+                    param['mostRead']=1;
+                    param['latestNews']='';
+                }
+                this.list=[];
+                $.ajax({
+                    url: '../../../wasteInformation/listWasteInformation',
+                    type: 'post',
+                    data:param,
+                    dataType:'json',
+                    success: function (result) {
+//                        console.log(result);
+                        vue.listLoading=false;
+                        if (result.status == 1 && result.data.wasteInformationModels && result.data.wasteInformationModels.length > 0) {
+                            var list = result.data.wasteInformationModels;
+                            for (var i in list) {
+                                var imgUrl = IMGVIEWURL + list[i].fileId;
+                                list[i]['logo'] = imgUrl;
+                                vue.getLoader(imgUrl, i).start();
+                                list[i]['context'] = list[i]['text'];
+                            }
+                            vue.list = list;
+                            vue.total = result.data.pagingParameter.totalRecord;
+                        } else {
+                            vue.list = [];
+                            vue.total = 0;
+                        }
+                    }
+                })
+            },
+            getActivityList:function () {
+                this.clearAllTimer();
+                vue.activityList=[];
+                $.ajax({
+                    url:'../../../wasteActivity/listHomePageWasteActivity?pageIndex='+this.pageIndexActivity+'&pageSize='+this.pageSizeActivity,
+                    type:'post',
+                    contentType:'application/json',
+                    data:JSON.stringify({status:this.status,cantonCode:this.cantonCode,activityContent:'live'}),
+                    success:function (result) {
+                        vue.listLoading=false;
+                        if(result.status==1&&result.data.list&&result.data.list.length>0){
+                            var list=result.data.list;
+                            var currentDate=result.data.serverTime;
+                            for(var i in list){
+                                var imgUrl=IMGVIEWURL+list[i].logoFileId;
+                                list[i]['logo']=imgUrl;
+                                vue.getLoaderActivity(imgUrl,i).start();
+                                list[i]['activityRemark']=list[i]['activityRemark'].replace(/<br\/>/g,'');
+                                if(list[i]['status']=='2'){
+                                    var endDate=new Date(list[i].endDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    var longTime=new Date(currentDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    vue.createTimer(endDate,longTime,i);
+                                }
+                                if(list[i]['status']=='1'){
+                                    var startDate=new Date(list[i].startDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    var longTime=new Date(currentDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    vue.createTimer(startDate,longTime,i);
+                                }
+                            }
+                            vue.activityList=result.data.list;
+                            vue.totalActivity=result.data.paging.totalRecord;
+                        }else{
+                            vue.activityList=[];
+                            vue.totalActivity=0;
+                        }
+                    }
+                })
+            },
+            getLivingList:function () {
+                this.livingLoading=true;
+                this.livingList=[];
+                $.ajax({
+                    url:'../../../wasteActivity/listLiveWasteActivity',
+                    type:'post',
+                    contentType:'application/json',
+                    data:JSON.stringify({cantonCode:this.cantonCode,activityContent:'live'}),
+                    success:function (result) {
+                        vue.livingLoading=false;
+                        if(result.status==1&&result.data.list&&result.data.list.length>0){
+                            var list=result.data.list;
+                            var currentDate=result.data.serverTime;
+                            for(var i in list){
+                                var imgUrl=IMGVIEWURL+list[i].inquiryFileId;
+                                list[i]['logo']=imgUrl;
+                                vue.getLoaderLiving(imgUrl,i).start();
+                                list[i]['activityRemark']=list[i]['activityRemark'].replace(/<br\/>/g,'');
+                                if(list[i]['status']=='2'){
+                                    var endDate=new Date(list[i].endDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    var longTime=new Date(currentDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    vue.createTimer2(endDate,longTime,i);
+                                }
+                                if(list[i]['status']=='1'){
+                                    var startDate=new Date(list[i].startDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    var longTime=new Date(currentDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                    vue.createTimer2(startDate,longTime,i);
+                                }
+                            }
+                            vue.livingList=result.data.list;
+                        }else{
+                            vue.livingList=[];
+                        }
+                    }
+                })
+            },
+            createTimer:function (endDate,longTime,index) {
+                var timer=setInterval(function(){
+                    longTime+=1000;
+                    vue.ShowCountDown(endDate,longTime,index);
+                },1000);
+                this.timerList.push(timer);
+            },
+            createTimer2:function (endDate,longTime,index) {
+                var timer=setInterval(function(){
+                    longTime+=1000;
+                    vue.ShowCountDown2(endDate,longTime,index);
+                },1000);
+                this.timerList2.push(timer);
+            },
+            ShowCountDown:function(dateFinal,dateNow,index){
+                var dateSub = dateFinal - dateNow;  //计算差值，单位毫秒
+                if(dateSub<0){
+                    var item=this.activityList[index];
+                    item.remainTimeText='已结束';
+                    Vue.set(this.activityList,index,item);
+                    return;
+                }
+                var day , hour , minute, second ,dayBase , hourBase, minuteBase, secondBase;
+                day = hour = minute = second = dayBase = hourBase = minuteBase = secondBase = 0;  //初始化各个数值
+                var timeHtml = '';
+                timeHtml += " ";
+                dayBase = 24 * 60 * 60 * 1000;  //计算天数的基数，单位毫秒。1天等于24*60*60*1000毫秒
+                hourBase = 60 * 60 * 1000;  //计算小时的基数，单位毫秒。1小时等于60*60*1000毫秒
+                minuteBase = 60 * 1000;  //计算分钟的基数，单位毫秒。1分钟等于60*1000毫秒
+                secondBase = 1000;  //计算秒钟的基数，单位毫秒。1秒钟等于1000毫秒
+                day = Math.floor(dateSub / dayBase);  //计算天数，并取下限值。如 5.9天 = 5天
+                hour = Math.floor(dateSub % dayBase / hourBase);  //计算小时，并取下限值。如 20.59小时 = 20小时
+                minute = Math.floor(dateSub % dayBase % hourBase / minuteBase);  //计算分钟，并取下限值。如 20.59分钟 = 20分钟
+                second = Math.floor(dateSub % dayBase % hourBase % minuteBase / secondBase);  //计算秒钟，并取下限值。如 20.59秒 = 20秒
+                //当天数小于等于0时，就不用显示
+                if(day <= 0){
+                    timeHtml += this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }else{
+                    timeHtml += day + '天 ' + this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }
+                var item=this.activityList[index];
+                item.remainTimeText=timeHtml;
+                Vue.set(this.activityList,index,item);
+            },
+            ShowCountDown2:function(dateFinal,dateNow,index){
+                var dateSub = dateFinal - dateNow;  //计算差值，单位毫秒
+                if(dateSub<0){
+                    var item=this.livingList[index];
+                    item.remainTimeText='已结束';
+                    Vue.set(this.livingList,index,item);
+                    return;
+                }
+                var day , hour , minute, second ,dayBase , hourBase, minuteBase, secondBase;
+                day = hour = minute = second = dayBase = hourBase = minuteBase = secondBase = 0;  //初始化各个数值
+                var timeHtml = '';
+                timeHtml += " ";
+                dayBase = 24 * 60 * 60 * 1000;  //计算天数的基数，单位毫秒。1天等于24*60*60*1000毫秒
+                hourBase = 60 * 60 * 1000;  //计算小时的基数，单位毫秒。1小时等于60*60*1000毫秒
+                minuteBase = 60 * 1000;  //计算分钟的基数，单位毫秒。1分钟等于60*1000毫秒
+                secondBase = 1000;  //计算秒钟的基数，单位毫秒。1秒钟等于1000毫秒
+                day = Math.floor(dateSub / dayBase);  //计算天数，并取下限值。如 5.9天 = 5天
+                hour = Math.floor(dateSub % dayBase / hourBase);  //计算小时，并取下限值。如 20.59小时 = 20小时
+                minute = Math.floor(dateSub % dayBase % hourBase / minuteBase);  //计算分钟，并取下限值。如 20.59分钟 = 20分钟
+                second = Math.floor(dateSub % dayBase % hourBase % minuteBase / secondBase);  //计算秒钟，并取下限值。如 20.59秒 = 20秒
+                //当天数小于等于0时，就不用显示
+                if(day <= 0){
+                    timeHtml += this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }else{
+                    timeHtml += day + '天 ' + this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }
+                var item=this.livingList[index];
+                item.remainTimeText=timeHtml;
+                Vue.set(this.livingList,index,item);
+            },
+            toDouble:function(num){
+                if(num < 10){
+                    return '0'+ num;
+                }else{
+                    return '' + num;
+                }
+            },
+            clearAllTimer:function () {
+                for(var i in this.timerList){
+                    clearInterval(this.timerList[i]);
+                }
+            },
+            removeTag: function (str) {
+                return str.replace(/<.*?>/ig, "").replace(/&nbsp;/g, '');
+            },
+            getLoader: function (imgUrl, index) {
+                var loader = new resLoader({
+                    resources: [imgUrl],
+                    onStart: function (total) {
+//                        console.log('start:' + total);
+                    },
+                    onProgress: function (current, total) {
+//                        console.log(current + '/' + total);
+                    },
+                    onComplete: function (total) {
+                        var item = vue.list[index];
+                        item.imgLoaded = true;
+                        Vue.set(vue.list, index, item);
+                    }
+                });
+                return loader;
+            },
+            getLoaderActivity: function (imgUrl, index) {
+                var loader = new resLoader({
+                    resources: [imgUrl],
+                    onStart: function (total) {
+                    },
+                    onProgress: function (current, total) {
+                    },
+                    onComplete: function (total) {
+                        var item = vue.activityList[index];
+                        item.imgLoaded = true;
+                        Vue.set(vue.activityList, index, item);
+                    }
+                });
+                return loader;
+            },
+            getLoaderLiving: function (imgUrl, index) {
+                var loader = new resLoader({
+                    resources: [imgUrl],
+                    onStart: function (total) {
+                    },
+                    onProgress: function (current, total) {
+                    },
+                    onComplete: function (total) {
+                        var item = vue.livingList[index];
+                        item.imgLoaded = true;
+                        Vue.set(vue.livingList, index, item);
+                    }
+                });
+                return loader;
+            },
+            orderByKey: function (orderKey) {
+                this.orderKey = orderKey;
+                this.pageIndex = 1;
+                this.listLoading=true;
+                this.getList();
+            },
+
+            handleSizeChange: function (val) {
+                this.pageIndex = 1;
+                this.pageSize = val;
+                this.listLoading=true;
+                this.getList()
+            },
+            handleCurrentChange: function (val) {
+                this.pageIndex = val;
+                this.listLoading=true;
+                this.getList()
+            },
+            handleSizeChangeActivity: function (val) {
+                this.pageIndexActivity = 1;
+                this.pageSizeActivity = val;
+                this.listLoading=true;
+                this.getActivityList()
+            },
+            handleCurrentChangeActivity: function (val) {
+                this.pageIndexActivity = val;
+                this.listLoading=true;
+                this.getActivityList()
+            },
+            goEntList: function () {
+                window.location.href = "../../../main/pc/view/company.html";
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

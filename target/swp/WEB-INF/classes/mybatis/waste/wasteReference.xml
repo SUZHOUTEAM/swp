@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.wasterealase.mapper.WasteReferenceMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.wasterealase.entity.WasteReference">
+		<id column="id" property="id" />
+		<id column="name" property="name" />
+		<result column="canton_code" property="cantonCode" />
+		<result column="waste_code" property="wasteCode" />
+		<result column="default_disposition_type" property="defaultDispositionType" />
+		<result column="remark" property="remark" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+	</resultMap>
+	<select id="listDefDisposition" resultType="com.mlsc.yifeiwang.wasterealase.entity.WasteReference" parameterType="com.mlsc.yifeiwang.wasterealase.model.WasteReferencePriceParam">
+		select id,waste_code wasteCode,canton_code cantonCode ,default_disposition_type defaultDispositionType,keyword,remark
+		from waste_reference
+		<where>
+            <if test='wasteCode !=null and wasteCode!="" '>
+                waste_code =  #{wasteCode}
+            </if>
+            <if test='cantonCode !=null and  cantonCode!="" '>
+				and (
+					FIND_IN_SET (left(#{cantonCode},4) ,canton_code)
+					or FIND_IN_SET (left(#{cantonCode},2) ,canton_code)
+				)
+			</if>
+			<if test='keyword !=null  '>
+				<choose>
+					<when test="keyword == 1">
+						and keyword is not null
+					</when>
+					<otherwise>
+						and keyword is null
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</select>
+</mapper>

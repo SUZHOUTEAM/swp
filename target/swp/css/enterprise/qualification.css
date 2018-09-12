@@ -1,0 +1,144 @@
+.qualification-dialog{
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    text-align: center;
+    z-index: 10000;
+    top: 0;
+    bottom: 0;
+    display: none;
+}
+.qualification-dialog .qualification{
+    margin-top: 100px;
+}
+.qualification-dialog .image {
+    width: 210px;
+    height: 160px;
+    line-height: 160px;
+    display: block;
+    cursor: pointer;
+    transition: all 0.6s;
+    overflow: hidden;
+    border: 1px dashed #c0ccda;
+    text-align: center;
+}
+.qualification-dialog .image img{
+    max-width: 100%;
+    vertical-align: middle;
+    max-height: 100%;
+}
+.qualification-img{
+    display: inline-block;
+    margin-right: 50px;
+}
+.qualification-img.qualification-img2{
+    margin-right: 0;
+}
+.qualification-text{
+    text-align: center;
+    color: #222222;
+    margin: 10px 0 0;
+}
+.qualification{
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 7px;
+    display: inline-block;
+}
+.el-dialog .qualification{
+    padding: 0;
+}
+.qualification:nth-child(2n){
+    margin-right: 0;
+}
+.qualification-title{
+    margin-bottom: 10px;
+    color: #222222;
+    font-size: 20px;
+}
+.qualification-index{
+    color: #222222;
+    font-size: 16px;
+    margin-right: 9px;
+}
+.qualification-title-text{
+
+}
+.qualification-title a{
+    font-size: 14px;
+    float: right;
+}
+.largeImg{
+    max-width: 90%;
+    max-height: 80%;
+    vertical-align: middle;
+    margin: 80px auto;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*transform: translateY(-50%);*/
+    animation: scale .5s;
+}
+.large-dialog{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.7);
+    left: 0;
+    top: 0;
+    right: 0;
+    z-index: 10000;
+    line-height: 414px;
+    display: none;
+    text-align: center;
+    overflow: auto;
+}
+.large-dialog::-webkit-scrollbar {display:none}
+.large-dialog{
+    background: transparent;
+}
+.close-dialog{
+    position: absolute;
+    color: #fff;
+    font-size: 35px;
+    right: 20%;
+    top: 10.6%;
+    line-height: 20px;
+    z-index: 1000;
+    background: rgba(0,0,0,.08);
+    border-radius: 19px;
+}
+.close-dialog:hover{
+    color: #ffffff;
+}
+.qualification-dialog .close-dialog,.large-dialog .close-dialog{
+    width: 30px;
+    height: 30px;
+    display: block;
+    line-height: 27px;
+    font-size: 20px;
+}
+.viewLarge{
+
+}
+@keyframes scale{
+    0%{
+        transform:scale(0,0);
+        -ms-transform:scale(0,0); /* IE 9 */
+        -moz-transform:scale(0,0); /* Firefox */
+        -webkit-transform:scale(0,0); /* Safari and Chrome */
+        -o-transform:scale(0,0); /* Opera */
+    }
+    100%{
+        transform:scale(1,1);
+        -ms-transform:scale(1,1); /* IE 9 */
+        -moz-transform:scale(1,1); /* Firefox */
+        -webkit-transform:scale(1,1); /* Safari and Chrome */
+        -o-transform:scale(1,1); /* Opera */
+    }
+}

@@ -1,0 +1,173 @@
+.newresource{
+	line-height:37px;
+}
+
+.more-notice{
+	text-align: center;
+}
+
+.unreaddata{
+	float: none ! important;
+	margin-left: -25px;
+    margin-top: 10px;
+}
+
+.nonotice{
+	text-align: center;
+}
+.userinfo-li{
+	left: left;
+}
+
+.btn-readnotice{
+	float: right;
+}
+
+.read{
+	font-size: 12px;
+    font-family: 微软雅黑;
+    color: #6a7580;
+}
+
+.selectChatLog{
+	border:none;
+    width: 254px;
+    height:40px;
+}
+
+.chatTime{
+	font-size: 12px;
+    color: #6a7580;
+    font-family: 微软雅黑;
+    float: right;
+    padding-right: 10px;
+    margin-left: 8px;
+}
+
+.noticeMessage{
+	font-size: 12px;
+	color:#6a7580;
+	font-family: 微软雅黑;
+	display: block;
+}
+
+.noticeMessage img{
+	width:20px;
+}
+
+.moreNotice{
+	font-size: 12px;
+	color:#222222;
+	font-family: 微软雅黑;
+}
+.guideDiv{
+	position: fixed;
+	z-index: 100000;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.4);
+	text-align: center;
+	display: none;
+	overflow-y: auto;
+}
+.guideDiv::-webkit-scrollbar {display:none}
+.guide{
+	background-color: #fff;
+	width: 920px;
+	margin: 50px auto;
+	position: relative;
+	border-radius: 5px;
+}
+.guide_close,.activity_close{
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	background: url(../../main/pc/img/close.png) center center no-repeat;
+	background-size: 100% 100%;
+	right: 12px;
+	top: 12px;
+}
+.guide_icon{
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	background: url(../../main/pc/img/guide.png) center center no-repeat;
+	background-size: 100% 100%;
+	margin-left: -31px;
+	margin-top: 24px;
+}
+.guide_text{
+	height: 72px;
+	line-height: 72px;
+	font-size: 18px;
+	color: #001b59;
+	font-weight: bold;
+}
+.guide_text b{
+	color: #2b7de1;
+}
+.guide_img{
+
+}
+.activityDialog{
+	position: fixed;
+	z-index: 100000;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.6);
+	text-align: center;
+	display: none;
+	overflow-y: auto;
+}
+.activityDialog .guide{
+	margin: 0 auto;
+	width: 840px;
+	height: 430px;
+	/*background: url(../img/activityBG.png) center no-repeat;*/
+	background-size: 100%;
+	margin-top: 150px;
+	/*border: 1px dotted #fff;*/
+	background-color: transparent;
+}
+.activityDialog .guide img{
+	cursor: pointer;
+}
+.activityDialog::-webkit-scrollbar {display:none}
+.timeDiv{
+	text-align: center;
+	margin-top: 225.5px;
+}
+.time{
+	margin-left: 316px;
+	display: inline-block;
+	line-height: 23px;
+	width: 261px;
+}
+.time small{
+	color: #dee0f3;
+	float: left;
+}
+.time b{
+	color: #8bffd7;
+	font-size: 23px;
+	float: left;
+}
+.activity_btn{
+	text-align: center;
+	color: #fff;
+	font-size: 15px;
+	font-weight: bold;
+	width: 162px;
+	margin: 69px auto 0;
+	height: 40px;
+	line-height: 40px;
+	display: block;
+}
+.activity_btn:hover{
+	color: #ffffff;
+	text-decoration: none;
+}

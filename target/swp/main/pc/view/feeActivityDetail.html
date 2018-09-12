@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>企业详细信息</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="shortcut icon" href="../../../app/img/favicon.ico">
+    <!--<link rel="stylesheet" href="../../../app/css/app.css" >-->
+    <link rel="stylesheet" href="../css/common.css?11" />
+    <link rel="stylesheet" href="../css/feeActivityDetail.css?1"/>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            <a href="#" tag="0" title="易废网"> <img src="../img/logo_short.png" alt="易废网 logo"> </a>
+        </div>
+        <div class="headerAction">
+            <span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+            <span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+        </div>
+        <a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+        <ul>
+            <li>
+                <a href="javascript:" id="menu-home" title="首页">首页</a>
+            </li>
+            <li>
+                <a href="javascript:" id="menu-company" title="危废经营单位">危废经营单位</a>
+            </li>
+            <li class="active">
+                <a href="javascript:" id="menu-activity" title="促销活动">促销活动</a>
+            </li>
+            <li>
+                <a href="javascript:" id="menu-information" title="危废小课堂">危废小课堂</a>
+            </li>
+            <li>
+                <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="body">
+    <!--<div class="activity">
+        <div class="timeDiv">
+            <span class="time"><small>剩余时间：</small><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span>
+        </div>
+        <a href="javascript:;" class="activity_btn">立即报名></a>
+    </div>-->
+    <div style="background-color: #f5f6fa;padding: 20px 0">
+    <div class="activity-logo-message">
+        <div class="activity-logo"><img src=""/></div>
+        <div class="activity-message">
+            <div class="activity-title">直播课程：<b></b></div>
+            <div class="info">
+                <span class="price-title">限时优惠：</span>
+                <span class="price-text">￥<em><b></b>元</em></span>
+                <span class="old-price-text">原价￥<b style="font-weight: normal"></b>元</span>
+            </div>
+            <div  class="info">
+                <span class="price-title">剩余名额：</span>
+                <progress value="30" max="100" id="progress"></progress>
+                <span class="remainText">剩余<b></b>名</span>
+            </div>
+            <div  class="info">
+                <span class="price-title"><b style="font-weight: normal">截止倒计时</b>：</span>
+                <span class="remainTime"></span>
+                <span class="riseEndTime">(截止<b></b>)</span>
+            </div>
+            <a href="javascript:" class="entry-btn">现在报名></a>
+            <a href="javascript:" class="goLive">观看直播></a>
+        </div>
+    </div>
+    <!--<div style="background-color: #ffffff;height: 40px;margin: -40px 0;"></div>-->
+    <div class="container" style="width: 1200px !important;">
+        <div class="row">
+            <div class="entName">
+                <div class="tt">
+                    <hr class="hrLine"/>
+                        <span >主讲人</span>
+                    <hr class="hrLine"/>
+                </div>
+                <span class="mydata"></span>
+            </div>
+             <div class="entName licNo">
+                <div class="tt">
+                    <hr class="hrLine"/>
+                        <span >主办方</span>
+                    <hr class="hrLine"/>
+                </div>
+                <span class="mydata"></span>
+            </div>
+             <div class="entName licDate">
+                <div class="tt">
+                    <hr class="hrLine"/>
+                        <span >课程时长</span>
+                    <hr class="hrLine"/>
+                </div>
+                <span class="mydata"></span>
+            </div>
+             <div class="entName entAddress">
+                <div class="tt">
+                    <hr class="hrLine"/>
+                        <span >开课时间</span>
+                    <hr class="hrLine"/>
+                </div>
+                <span class="mydata"></span>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <div class="container" style="width: 1200px !important;text-align: center">
+        <div class="item">
+            <div class="remarktitle"><span>课程要点</span></div>
+            <div class="remarkdetail" id="detail1">
+                <b>第一节</b>：关于课程性质、设课目的（此处略，可详见本课教学大纲及教材前言）。<br/>
+                <b>第二节</b>：本课所承载的任务指标：<br/>
+                <b>第三节</b>：检查与测评方案（详见学习指导书后所附之测评方案）。<br/>
+                <b>第四节</b>：教学过程的具体实施方案
+            </div>
+        </div>
+        <div class="item">
+            <div class="remarktitle"><span>定制课程说明</span></div>
+            <div class="remarkdetail"  id="detail2">
+                课程预购时间：关于课程性质、设课目的（此处略，可详见本课教学大纲及教材前言）。<br/>
+                课程直播时间：本课所承载的任务指标：
+            </div>
+        </div>
+        <div class="item">
+            <div class="remarktitle"><span>购买付费说明</span></div>
+            <div class="remarkdetail"  id="detail3">
+                1.付款方式和销售须知请参照公司信息的销售和合同部分<br/>
+                2.2吨以下按包年<br/>
+                3.产废企业直接和高邮康博签合同
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="width: 1200px !important;margin-top: 16px">
+       <div class="button">
+           <a href="javascript:" class="gobtn">现在报名</a>
+           <a href="javascript:" class="goLive2">观看直播</a>
+           <a href="javascript:" class="backbtn">稍后再说</a>
+       </div>
+        <div style="text-align: center;margin-top: 30px;margin-bottom: 40px">
+            <a href="javascript:" onclick="wasteActivityDetail.goIntroduction()" class="goIntroduction">了解易废网></a>
+        </div>
+    </div>
+</div>
+<div class="footer">
+		           <span>COPYRIGHT &nbsp; ©  &nbsp; 江苏神彩科技股份有限公司  &nbsp;  www.yifeiwang.com  &nbsp;
+		           	<a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+</div>
+<script src="../../common/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="../js/detailInit.js?16"></script>
+<script src="../../../app/js/util.js?1"></script>
+<script src="../../../app/js/constants.js"></script>
+<script src="../js/feeActivityDetail.js"></script>
+<script src="../../../app/js/notify.js"></script>
+</body>
+</html>

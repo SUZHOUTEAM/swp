@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>易废网-环保卫士</title>
+    <script type="text/javascript">
+        document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        window.onresize=function () {
+            document.getElementsByTagName('html')[0].style.fontSize=window.innerWidth/10+'px';
+        }
+    </script>
+    <script type="text/javascript" src="../../common/adaptation.js"></script>
+    <link rel="stylesheet" href="../css/grade.css?10" />
+    <!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+</head>
+<body>
+    <div class="bg">
+        <div class="android-arrow"></div>
+        <div class="ios-arrow"></div>
+        <div class="weixin-arrow"></div>
+    </div>
+    <div class="share_box">
+        <a href="javscript:" class="close"></a>
+        <a href="javascript:;" data-type="weixin">
+            <img src="../img/weixin.png"/><br/>微信好友
+        </a>
+        <a href="javascript:;" data-type="weixinFriend">
+            <img src="../img/weixin_friend.png"/><br/>微信朋友圈
+        </a>
+    </div>
+    <div class="makePattern-bg">
+        <div class="make-pattern-div">
+            <img src="../img/make-pattern-bg.png"/>
+            <a href="tel:18962177691" class="tel">18962177691</a>
+        </div>
+        <a href="javascript:;" class="makePattern-close"></a>
+    </div>
+    <a href="javascript:;" class="make-pattern" id="makePattern"></a>
+    <div class="share-success-dialog">
+        <div class="share-success-bg"><img src="../img/share-success-bg.png"/></div>
+        <a href="javascript:;" class="share-close"></a>
+    </div>
+    <div class="container">
+        <span class="xunzhan_count"></span>
+        <a href="javascript:;" class="guide_close" @click="closeDialog"></a>
+        <div class="xunzhan_text">- 获得 -</div>
+        <div class="myMessage">
+            <span class="userName"></span>
+            <span class="entName"></span>
+        </div>
+        <div class="other-view-message">恭喜<span></span><b style="display: none">**</b>成功领取红包!</div>
+        <img src="" id="gradeBg">
+    </div>
+    <a href="javascript:;" class="share" id="share">立即领取</a>
+    <script type="text/javascript" src="../../common/jquery.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="../js/nativeShare.js?1"></script>
+    <script type="text/javascript" src="../js/grade.js?20"></script>
+</body>
+</html>

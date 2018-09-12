@@ -1,0 +1,26 @@
+.title{
+    text-align: center;
+}
+.sub-title{
+    text-align: center;
+}
+.meal-container{
+    border: 1px solid #1171d1;
+    padding: 7px 5px;
+    width: 100px;
+    margin: 17px auto;
+    border-radius: 7px;
+    cursor: pointer;
+    color: #1171d1;
+}
+.select .meal-container{
+    background-color: #1171d1;
+    color: #ffffff;
+}
+[v-cloak] {
+    display: none;
+}
+.title-text{
+    color: #333333;
+    text-align: center;
+}

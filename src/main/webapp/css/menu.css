@@ -1,0 +1,190 @@
+@charset "UTF-8";
+.active #menuWasteCircle,a:hover  #menuWasteCircle{
+   background-image: url(../app/img/menu_icon/yifei.png);
+}
+#menuWasteCircle {
+   background-image: url(../app/img/menu_icon/yifei_not.png);
+   width:16px;
+   height:16px;
+   margin-right:0px;
+   display:inline-block;
+   background-repeat: no-repeat;
+   margin-right: 18px;
+}
+ .active #menuMyIndex,li:hover #menuMyIndex {
+   background-image: url(../app/img/menu_icon/homepage.png);
+}
+#menuMyIndex {
+   background-image: url(../app/img/menu_icon/homepage_not.png);
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   background-repeat: no-repeat;
+   margin-right: 16px;
+}
+.sidebar > .nav > li.active > a > span{
+	color: #1171d1;
+}
+ .sidebar-subnav .active  #menuMyBusiness,.sidebar-subnav li:hover #menuMyBusiness{
+   background-image: url(../app/img/menu_icon/business_info.png);
+}
+#menuMyBusiness {
+   background-image: url(../app/img/menu_icon/business_info_not.png);
+}
+.sidebar-subnav .active #menuShoppingCart,.sidebar-subnav li:hover #menuShoppingCart {
+   background-image: url(../app/img/icon/myshoppingcart_active.png);
+}
+#menuShoppingCart {
+   background-image: url(../app/img/icon/myshoppingcart.png);
+}
+#menuMyMessage {
+   background-image: url(../app/img/menu_icon/notice.png);
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   margin-right: 16px;
+}
+ .sidebar-subnav .active #menuMyRelease,.sidebar-subnav li:hover #menuMyRelease {
+   background-image: url(../app/img/menu_icon/my_message.png);
+}
+#menuMyRelease {
+   background-image: url(../app/img/menu_icon/my_message_not.png);
+}
+ .sidebar-subnav .active #menuMyFollow,.sidebar-subnav li:hover #menuMyFollow {
+   background-image: url(../app/img/menu_icon/my_follow.png);
+}
+ #menuMyFollow {
+   background-image: url(../app/img/menu_icon/my_follow_not.png);
+}
+#menuMyCollect {
+   background-image: url(../app/img/menu_icon/my_collection.png);
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   margin-right: 16px;
+}
+
+.active #menuMyEnterprise,a:hover #menuMyEnterprise {
+   background-image: url(../app/img/menu_icon/my_enterprise.png);
+   /*width:16px;*/
+   /*height:16px;*/
+   /*margin-right:5px;*/
+   /*display:inline-block;*/
+   /*margin-right: 18px;*/
+}
+#menuMyEnterprise {
+   background-image: url(../app/img/menu_icon/my_enterprise_not.png);
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   margin-right: 18px;
+}
+ .sidebar-subnav .active #enterpriseInfo,.sidebar-subnav li:hover #enterpriseInfo {
+   background-image: url(../app/img/menu_icon/enterprise_info.png);
+}
+#enterpriseInfo {
+   background-image: url(../app/img/menu_icon/enterprise_info_not.png);
+}
+#menuAuditUserList {
+   /* background-image: url(../app/img/menu_icon/homepage.png); */
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   margin-right: 16px;
+}
+.sidebar-subnav .active #menuWasteManage,.sidebar-subnav li:hover #menuWasteManage {
+   background-image: url(../app/img/menu_icon/waste_manage.png);
+}
+#menuWasteManage {
+   background-image: url(../app/img/menu_icon/waste_manage_not.png);
+}
+.sidebar-subnav .active #menuLicenceManage,.sidebar-subnav li:hover #menuLicenceManage {
+   background-image: url(../app/img/menu_icon/licence_manage.png);
+}
+#menuLicenceManage {
+   background-image: url(../app/img/menu_icon/licence_manage_not.png);
+}
+#menuIdentificationManage {
+   background-image: url(../app/img/menu_icon/identification.png);
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   margin-right: 16px;
+}
+
+.active #usercenter,a:hover  #usercenter{
+   background-image: url(../app/img/menu_icon/usercenter.png);
+}
+#usercenter {
+   background-image: url(../app/img/menu_icon/usercenter_not.png);
+   width:16px;
+   height:16px;
+   margin-right:5px;
+   display:inline-block;
+   margin-right: 18px;
+}
+  .sidebar-subnav .active #menuPersonalInformation,.sidebar-subnav li:hover #menuPersonalInformation {
+   background-image: url(../app/img/menu_icon/userinfo.png);
+}
+#menuPersonalInformation {
+   background-image: url(../app/img/menu_icon/userinfo_not.png);
+}
+  .sidebar-subnav .active #menuMyBit,.sidebar-subnav li:hover #menuMyBit {
+   background-image: url(../app/img/menu_icon/mybit.png);
+}
+#menuMyBit {
+   background-image: url(../app/img/menu_icon/mybit_not.png);
+}
+  .sidebar-subnav .active #myActivityIcon,.sidebar-subnav li:hover #myActivityIcon {
+   background-image: url(../app/img/menu_icon/myActivity_active.png);
+}
+#myActivityIcon {
+   background-image: url(../app/img/menu_icon/myActivity_gray.png);
+    top:3px;
+}
+  .sidebar-subnav .active #myImproveIcon,.sidebar-subnav li:hover #myImproveIcon {
+   background-image: url(../app/img/menu_icon/improve_active.png);
+}
+#myImproveIcon {
+   background-image: url(../app/img/menu_icon/improve_gray.png);
+}
+#course{
+    background-image: url(../app/img/menu_icon/course_not.png);
+}
+.sidebar-subnav .active #course,.sidebar-subnav li:hover #course {
+    background-image: url(../app/img/menu_icon/course.png);
+}
+
+.btn-release {
+    height: 50px;
+    width: 160px;
+    background: url(../main/pc/img/header-inquiry-btn.png) center center no-repeat;
+    background-size: 100% 100%;
+    color: white;
+    border-color: white;
+    font-size: 17px;
+    padding: 0;
+}
+
+.menuli{
+	height:24px;
+	margin-bottom:20px;
+}
+.sidebar-subnav >li.menuli >a{
+	padding-left: 10px;
+}
+.sidebar ul.nav li ul.sidebar-subnav >li a em{
+    position: relative;
+    top: 2px;
+    width:16px;
+    height:16px;
+    margin-right:5px;
+    display:inline-block;
+    margin-right: 16px;
+}

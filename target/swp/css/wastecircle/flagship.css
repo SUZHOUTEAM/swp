@@ -1,0 +1,481 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    overflow-y: auto;
+}
+.banner{
+    height: 280px;
+    padding-top: 80px;
+    background: url(../../main/pc/img/banner-bg2.jpg) center center no-repeat;
+    background-size:auto 100%;
+    position: relative;
+    margin: 20px 0;
+}
+.banner-content{
+    width: 940px;
+    margin: 0 auto;
+}
+.banner-title{
+    color: #ffffff;
+    font-size: 52px;
+    text-shadow:  -3px 8px 9px rgba(255,0,0,.5);
+    letter-spacing: 2px;
+}
+.banner-btn{
+    background: url(../../main/pc/img/inquiry-bg.png) center center no-repeat;
+    background-size: 100% 100%;
+    width: 220px;
+    height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    padding: 0;
+    line-height: 40px;
+    display: inline-block;
+    color: #fff;
+    font-size: 16px;
+    position: relative;
+    top: 20px;
+    letter-spacing: 1px;
+}
+.banner-subtitle{
+    color: #1c2438;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+.banner-tel{
+    color: #1c2438;
+    font-size: 22px;
+}
+.banner-tel .tel{
+    width: 24px;
+    height: 25px;
+    background: url(../../main/pc/img/icons.png) -490px -78px  no-repeat;
+    position: relative;
+    display: inline-block;
+    top: 4px;
+    margin-right: 10px;
+}
+.chat-btn{
+    width: 114px;
+    height: 40px;
+    background: url(../../main/pc/img/icons.png) -48px -78px no-repeat;
+    line-height: 40px;
+    padding: 0;
+    color: #fb612b;
+    display: inline-block;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+    padding-left: 32px;
+    letter-spacing: 0;
+    position: relative;
+    top: -4px;
+    font-weight: normal;
+    text-shadow: none;
+}
+.chat-btn:hover,.chat-btn:link{
+    text-decoration: none;
+    color: #fb612b;
+}
+.banner-btn:hover,.banner-btn:link{
+    text-decoration: none;
+    color: #fff;
+}
+
+/*服务样式*/
+.service-title{
+    width: 940px;
+    margin: 0 auto;
+    color: #1c2438;
+    height: 48px;
+    line-height: 48px;
+}
+.banner-service-title .service-title{
+    margin: 26px auto;
+}
+.service-icon{
+    width: 48px;
+    height: 48px;
+    background: url(../../main/pc/img/icons.png) -268px -0px no-repeat;
+    position: absolute;
+}
+.partner-icon{
+    width: 48px;
+    height: 48px;
+    background: url(../../main/pc/img/icons.png) -412px -0px no-repeat;
+    position: absolute;
+}
+.service-title b{
+    font-size: 24px;
+    margin: 0 20px 0 68px;
+}
+.service-title em{
+    font-size: 20px;
+    font-style: normal;
+}
+.package-list{
+    /*overflow: auto;*/
+    border-top: 1px solid #ececec;
+    border-bottom: 1px solid #ececec;
+    border-right: 1px solid #ececec;
+    width: 940px;
+    margin: 20px auto 0;
+    height:543px;
+}
+.clear{
+　　clear:both;
+}
+.package-item{
+    float: left;
+    width: 210px;
+    border-left: 1px solid #ececec;
+    cursor: pointer;
+}
+.package-item:first-child{
+    width: 312px;
+}
+.package-item .package-header-first{
+    height: 140px;
+    line-height: 140px;
+    color: #090c38;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+.package-item >div:not(:first-child) {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #1c2438;
+    font-size: 16px;
+}
+.package-item >div:nth-child(even){
+    background-color: #f5f6fa;
+}
+.package-header{
+    height: 140px;
+    text-align: center;
+    padding-top: 15px;
+    position: relative;
+}
+.package-header .package-header-title{
+    color: #090c38;
+    font-weight: bold;
+    font-size: 18px;
+}
+.package-header .package-header-price{
+    color: #ff474c;
+    font-size: 18px;
+    margin: 16px 0 12px;
+}
+.package-header .package-header-btn{
+    width: 172px;
+    height: 32px;
+    line-height: 30px;
+    border:1px solid #ffa92e;
+    color: #ffa92e;
+    display: block;
+    margin: 0 auto;
+    border-radius: 20px;
+    font-size: 16px;
+}
+.package-header .header-icon{
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    top: -3px;
+    margin-right: 4px;
+}
+.package-header .header-icon.gong{
+    background: url(../../main/pc/img/icons.png) -514px -78px no-repeat;
+}
+.package-header .header-icon.bo{
+    background: url(../../main/pc/img/icons.png)  -336px -126px no-repeat;
+}
+.package-header .header-icon.hou{
+    background: url(../../main/pc/img/icons.png) -562px -78px no-repeat;
+}
+.package-header .package-header-btn:hover,.package-header .package-header-btn.focus{
+    text-decoration: none;
+    background: url(../../main/pc/img/inquiry-bg.png) center center no-repeat;
+    background-size: 100% 100%;
+    color: #ffffff;
+    border-radius:0;
+    border: 0;
+    width: 174px;
+    height: 34px;
+}
+.commend{
+    width: 30px;
+    height: 36px;
+    background: url(../../main/pc/img/commend-bg.png) center center no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    left: 10px;
+    top: 0;
+    color: #fff;
+    font-size: 16px;
+    line-height: 28px;
+    text-align: center;
+}
+.package-item.active{
+    border:1px solid #ff5400;
+    height: 553px;
+    top: -10px;
+    position: relative;
+    background-color: #fff;
+    width: 207px;
+    -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, .3);
+}
+.package-item.active .package-header{
+    height: 150px;
+    padding-top: 25px;
+}
+.star{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+}
+.star.light{
+    background: url(../../main/pc/img/icons.png) -360px -126px no-repeat;
+}
+.star.gray{
+    background: url(../../main/pc/img/icons.png)  -538px -78px no-repeat;
+}
+[v-cloak] {
+    display: none;
+}
+.banner-service-title{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+}
+/*card样式*/
+.cardList{
+    width: 940px;
+    margin: 28px auto;
+}
+.cardItem{
+    float: left;
+    width: 300px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+.cardItem:nth-child(3n+2){
+    margin: 0 20px;
+}
+.cardItem .el-card{
+    border: 1px solid #ececec;
+    box-shadow: none;
+}
+.cardItem:hover .el-card{
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+.clear{
+    clear: both;
+}
+.image {
+    width: 280px;
+    height: 140px;
+    display: block;
+    cursor: pointer;
+    transition: all 0.6s;
+    overflow: hidden;
+    background-color: #d0e1ff;
+    text-align: center;
+    margin: 10px;
+}
+.image img{
+    -webkit-transition:all ease .5s;
+}
+.first .image img{
+    position: relative;
+    left: -91px;
+}
+.cardItem:hover .image img{
+    transform: scale(1.2);
+}
+.entName{
+    font-size: 15px;
+    color: #1c2438;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.address{
+    color: #1c2438;
+    font-size: 12px;
+    margin: 10px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.entContent{
+    font-size: 12px;
+    line-height: 23px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.entContent .split{
+    color: #dddddd;
+    margin-right: 8px;
+}
+.entContent.shenglv{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.entContent em{
+    font-style: normal;
+    margin-right:8px;
+    color: #777777;
+}
+.entContent b{
+    font-weight: 100;
+    margin-right: 8px;
+    color: #090c38;
+}
+.address_icon,.xukezheng_icon{
+    position: relative;
+    width: 14px;
+    height: 14px;
+    margin-right: 0px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    top: 3px;
+    margin-right: 3px;
+}
+.address_icon{
+    background: url(../../main/pc/img/icons.png) -586px -78px no-repeat;
+}
+.xukezheng_icon{
+    background: url(../../main/pc/img/icons.png)  -518px -126px no-repeat;
+}
+
+/*文档样式*/
+.dialogTitle{
+    font-size: 22px;
+    color: #001b59;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    letter-spacing: 1px;
+}
+.dialogTitle em{
+    color: #2b7de1;
+    font-style: normal;
+}
+.el-dialog--center .el-dialog__body{
+    padding:0;
+}
+.dialogBody{
+    background-color: #e9f3ff;
+    overflow-y: auto;
+    padding:0 60px 40px;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+.dialogBody::-webkit-scrollbar{
+    background-color: transparent;
+    width: 8px;
+}
+.dialogBody::-webkit-scrollbar-thumb{
+    background-color: #c4d1e5;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+.el-dialog--center .el-dialog__header{
+    padding: 0 15px 0 60px;
+    height:72px;
+    line-height: 72px;
+}
+.dialogTitle .closeDialog{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right:12px;
+    top:12px;
+    background: url(../../main/pc/img/sprite.png) -97px -0px no-repeat;
+}
+.el-dialog--center .el-dialog__footer{
+    padding: 18px 0;
+}
+.el-button--primary{
+    height: 36px;
+    line-height: 36px;
+    padding: 0 40px;
+    background-color: #1171d1;
+}
+.el-button--text{
+    color: #1171d1;
+}
+.el-radio__input.is-checked .el-radio__inner{
+    background: #1171d1;
+    border-color: #1171d1;
+}
+.titleText{
+    text-align: center;
+    color: #333333;
+    font-size: 20px;
+    height: 78px;
+    line-height: 78px;
+}
+.contentText{
+    color: #282828;
+    font-size: 14px;
+    text-align: left;
+    padding-bottom: 20px;
+    /*text-indent: 2em;*/
+}
+.contentText table{
+    border-collapse: collapse;
+    width: 100%;
+}
+.contentText table td{
+    border: 1px solid #333333;
+    padding: 10px 12px;
+    text-align: center;
+}
+.contentText table tr:first-child td{
+    padding: 5px 12px;
+}
+ol{
+    counter-reset: li;
+    list-style: none;
+}
+.el-dialog{
+    margin: 50px auto !important;
+}
+.el-loading-spinner i{
+    font-size:33px;
+}
+.other{
+    color: #1c2438;
+    font-size: 16px;
+    text-align: center;
+    margin: -16px auto 45px;
+    width: 200px;
+    position: relative;
+}
+.other >span{
+    font-size: 49px;
+    position: absolute;
+    height: 18px;
+    display: inline-block;
+    line-height: 18px;
+    color: #d5d8e0;
+}
+.other >span.left-point{
+    left: 0;
+}
+.other >span.right-point{
+    right: 0;
+}

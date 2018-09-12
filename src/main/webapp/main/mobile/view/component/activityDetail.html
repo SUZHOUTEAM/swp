@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="../css/activityDetail.css" />
+<div id="app">
+    <van-nav-bar
+            title="活动详情"
+            left-text=""
+            left-arrow
+            @click-left="onClickLeft"
+    ></van-nav-bar>
+    <img :src="activityInfo.swipeImg" class="activityImg"/>
+    <div  class="message-div">
+        <div class="message-div-left">
+            <span class="enterStatus">已报名</span>
+            <span class="enterCount"><b>{{total}}</b>家</span>
+            <!--<span class="split">/</span>
+            <span class="enterQty"><b>3000</b>吨</span>-->
+        </div>
+        <div class="message-div-right">
+            <span class="right-text">离结束仅剩</span><span class="day">{{day}}天</span><span class="sfm">{{sfm}}</span>
+        </div>
+    </div>
+    <div class="activity-name">{{activityInfo.activityName}}</div>
+    <van-row class="other-row">
+        <van-col span="12" align="left" class="entName">
+            {{activityInfo.entName}}
+        </van-col>
+        <van-col span="12" align="right" class="activity-area">
+            江苏苏州
+        </van-col>
+    </van-row>
+    <div class="split-area"></div>
+    <div class="desc">
+        {{activityInfo.activityRemark}}
+    </div>
+    <div class="yfw-customer" v-if="activityId=='a7ea6b0e017a47a680b57e2d5d48d568'">
+        <img src="../img/yfw-customer.jpg"/>
+    </div>
+    <van-button type="primary" bottom-action class="enter-btn" @click="buy">立即询价></van-button>
+</div>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            activityId:getParam('activityId'),
+            activityInfo:{},
+            day:'00',
+            sfm:'00:00:00',
+            currentDay:0,
+            countArr:[{dayCount:8,totalCount:56},{dayCount:12,totalCount:84},{dayCount:12,totalCount:84},{dayCount:8,totalCount:56},{dayCount:4,totalCount:20}],
+            total:0
+        },
+        created: function () {
+            if(this.activityId){
+                this.getActivityDetail();
+            }
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            onClickLeft:function () {
+                window.history.go(-1);
+            },
+            getActivityDetail:function () {
+                $.ajax({
+                    url:'/swp/wasteActivity/getActivityDetailById',
+                    data:{activityId:this.activityId},
+                    dataType:'json',
+                    type:'post',
+                    success:function (result) {
+                        console.log(result);
+                        if(result.status==1){
+                            vue.activityInfo=result.data.activityDetailList[0];
+                            vue.activityInfo['activityRemark']=vue.activityInfo['activityRemark'].replace(/<br\/>/g,'');
+                            vue.activityInfo['swipeImg']=IMG_VIEW_URL+'&fileID='+vue.activityInfo.swipeFileId;
+                            var s =  vue.activityInfo.endDate.replace(new RegExp("-","gm"),"/");
+                            var t =  vue.activityInfo.startDate.replace(new RegExp("-","gm"),"/");
+                            var e =  result.data.serverTime.replace(new RegExp("-","gm"),"/");
+                            var dateFinal = (new Date(s)).getTime();
+                            var dateStart = (new Date(t)).getTime();
+                            var dateNow = (new Date(e)).getTime();
+                            vue.getCurrentDay(dateStart,dateNow);
+                            timer=setInterval(function(){
+                                dateNow = dateNow+1000;
+                                vue.countDown&&vue.countDown(dateFinal,dateNow);
+                            },1000);
+                        }
+                    }
+                })
+            },
+            getCurrentDay:function (dateStart,dateNow) {
+                var dateSub = dateNow - dateStart;  //计算差值，单位毫秒
+                var dayBase = 24 * 60 * 60 * 1000;
+                var totalDay=Math.floor(dateSub / dayBase);
+                var curWeek=Math.floor(totalDay/7);
+                var curWeekday=Math.floor(totalDay%7)+1;
+                var total=0;
+                for(var i=0;i<curWeek;i++){
+                    total+=this.countArr[i]['totalCount'];
+                }
+                for(var j=0;j<curWeekday;j++){
+                    total+=this.countArr[curWeek]['dayCount'];
+                }
+                this.total=total;
+            },
+            countDown:function(dateFinal,dateNow){
+                var dateSub = dateFinal - dateNow;  //计算差值，单位毫秒
+                var day , hour , minute, second ,dayBase , hourBase, minuteBase, secondBase;
+                day = hour = minute = second = dayBase = hourBase = minuteBase = secondBase = 0;  //初始化各个数值
+                var timeHtml = '';
+                timeHtml += " ";
+                dayBase = 24 * 60 * 60 * 1000;  //计算天数的基数，单位毫秒。1天等于24*60*60*1000毫秒
+                hourBase = 60 * 60 * 1000;  //计算小时的基数，单位毫秒。1小时等于60*60*1000毫秒
+                minuteBase = 60 * 1000;  //计算分钟的基数，单位毫秒。1分钟等于60*1000毫秒
+                secondBase = 1000;  //计算秒钟的基数，单位毫秒。1秒钟等于1000毫秒
+                day = Math.floor(dateSub / dayBase);  //计算天数，并取下限值。如 5.9天 = 5天
+                hour = Math.floor(dateSub % dayBase / hourBase);  //计算小时，并取下限值。如 20.59小时 = 20小时
+                minute = Math.floor(dateSub % dayBase % hourBase / minuteBase);  //计算分钟，并取下限值。如 20.59分钟 = 20分钟
+                second = Math.floor(dateSub % dayBase % hourBase % minuteBase / secondBase);  //计算秒钟，并取下限值。如 20.59秒 = 20秒
+                //当天数小于等于0时，就不用显示
+               /* if(day <= 0){
+                    timeHtml += this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }else{
+                    timeHtml += day + '天 : ' + this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }*/
+                this.day=day <= 0?'0':day;
+                this.sfm=this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second);
+//                $('.time b').html(timeHtml);
+            },
+            toDouble:function(num){
+                if(num < 10){
+                    return '0'+ num;
+                }else{
+                    return '' + num;
+                }
+            },
+            buy:function () {
+                if(localStorage.ticketId){
+                    window.location='#publish';
+                }else{
+                    window.location='../../../login.jsp';
+                }
+//                this.$dialog.alert({
+//                    message: '请用电脑登录www.yifeiwang.com参加活动，或者拨打<a href="tel:051262717018" style="color:#000;text-decoration: underline;">0512-62717018</a>咨询'
+//                }).then(function(){
+//                    // on close
+//                });
+            }
+        }
+    });
+</script>

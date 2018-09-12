@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifei.resourcepool.mapper.DispositionCapacitydetailResponseMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.entity.DispositionCapacitydetailResponse">
+		<id column="id" property="id" />
+		<result column="capacity_response_id" property="capacityResponseId" />
+		<result column="capacitydetai_release_id" property="capacitydetaiReleaseId" />
+		<result column="waste_id" property="wasteId" />
+		<result column="waste_name_id" property="wasteNameId" />
+		<result column="response_quantity" property="responseQuantity" />
+		<result column="accept_quantity" property="acceptQuantity" />
+		<result column="response_price" property="responsePrice" />
+		<result column="response_amount" property="responseAmount" />
+		<result column="disposition_type_id" property="dispositionTypeId" />
+		<result column="operating_party_payment" property="operatingPartyPayment" />
+		<result column="is_cfr" property="isCfr" />
+		<result column="response_date" property="responseDate" />
+		<result column="accept_date" property="acceptDate" />
+		<result column="response_status" property="responseStatus" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="edit_by" property="editBy" />
+		<result column="edit_time" property="editTime" />
+		<result column="valid" property="valid" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+</mapper>

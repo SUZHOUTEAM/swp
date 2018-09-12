@@ -1,0 +1,191 @@
+.item {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-radius: 2px;
+    margin-bottom: 10px;
+}
+.item{
+    color: #333333;
+    font-size: 14px;
+}
+.item .split{
+    color: #d7dfe7;
+    margin: 0 20px;
+}
+.item b{
+    color: #6a7580;
+    font-weight: 100;
+}
+.item font{
+    color: #1171d1;
+}
+.itemRelease{
+    display: inline-block;
+    width: 40%;
+    background-color: #f6f7fb;
+    margin-right: 2%;
+    text-align: center;
+    min-width: 400px;
+    white-space: nowrap;
+    border: 1px solid #d5dde6;
+}
+.itemRelease:first-child,.itemRelease:first-child +.itemRelease{
+    /*border-top:1px solid #d5dde6;*/
+}
+.itemRelease >span{
+    width: 30%;
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    color: #333;
+    font-size: 13px;
+    border-right: 1px solid #d5dde6;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    float: left;
+}
+.itemRelease >span:first-child{
+    width: 44%;
+    text-align: left;
+    padding:0 20px;
+}
+.itemRelease >span:first-child +span{
+    width: 26%;
+    text-align: center;
+}
+.itemRelease >span:first-child +span +span{
+    width: 29.8%;
+    text-align: right;
+    padding:0 20px;
+    border-right:0;
+}
+.panel.buy_item{
+    margin-bottom: 10px;
+}
+.buy_item b{
+    color: #6b7580;
+    font-size: 12px;
+}
+.buy_item em,.buy_item em b{
+    color: #222222;
+    font-size: 14px;
+    font-style: normal;
+    margin-right: 24px;
+}
+.buy_item em b{
+    margin-right: 1px;
+}
+.buy_item .el-button{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+}
+.buy_item .el-button--primary:hover{
+    color: #fff;
+    /*background-color: #0f569d;*/
+}
+.status{
+    font-size: 13px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 0 3px;
+    border-radius: 4px;
+}
+.status.ACCEPT,.status.DONE{
+    color: #18caa6;
+    border: 1px solid #18caa6;
+}
+.status.SUBMIT{
+    color: #feb300;
+    border: 1px solid #feb300;
+}
+.status.REFUSED{
+    color: #97a4b4;
+    border: 1px solid #97a4b4;
+}
+.status.ACTIVE{
+    color: #ffb712;
+    border: 1px solid #ffb712;
+}
+.status.DRAFT{
+    color: #1072d3;
+    border: 1px solid #1072d3;
+}
+.status.OVER{
+    color: #96a3b3;
+    border: 1px solid #96a3b3;
+}
+.qipao_logo {
+    font-size: 13px;
+    color: #1171d1;
+}
+.qipao_logo img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    position: relative;
+    top: -1.6px;
+}
+.loading {
+    text-align: center;
+    font-size: 12px;
+    color: #87a0b5;
+    padding: 10px 0;
+}
+.over{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    background: url(../../app/img/circle/addShopCardbtn.png) center center no-repeat;
+    background-size: 100% 100%;
+}
+.buy_item a{
+    text-decoration: none;
+}
+.buy_item a:hover em{
+    color: #1171d1;
+}
+.item_message table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.item_message table td{
+    border:1px solid #d7dbe4;
+    height: 35px;
+    line-height: 35px;
+    padding-left: 24px;
+}
+.item table font{
+    color: #222;
+    margin-right: 20px;
+}
+.item table .el-button--text{
+    color: #6a7580;
+    /*margin-left: -24px;*/
+    padding: 5px;
+}
+.item table .el-button--text:hover{
+    color: #1171d1;
+}
+.publisharea {
+    position: relative;
+    background-image: url(../../app/img/circle/publisharea.png);
+    width: 14px;
+    height: 14px;
+    margin-right: 0px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    top: 2px;
+    margin-right: 4px;
+}
+.buy_item em font{
+    color: #1171d1;
+    font-weight: bold;
+}
+.noSubmit{
+    color: #6a7580;
+    margin-left: -24px;
+}

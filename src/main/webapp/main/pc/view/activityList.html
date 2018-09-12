@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>易废网-促销活动</title>
+    <meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit" />
+    <link rel=" shortcut icon" href="../../../app/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="../../../main/pc/css/common.css?11" />
+    <script type="text/javascript" src="../../../main/common/adaptation.js?1"></script>
+    <link rel="stylesheet" href="../../../main/common/elementui/index.css">
+    <link rel="stylesheet" href="../../../main/pc/css/activityList.css?10" />
+    <!-- 先引入 Vue -->
+    <script src="../../../main/common/elementui/vue.min.js"></script>
+    <!-- 引入组件库 -->
+    <script src="../../../main/common/elementui/index.js"></script>
+    <!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+</head>
+
+<body>
+<div id="app"  v-cloak>
+    <div class="header">
+        <div class="container" style="padding-bottom: 0">
+            <div class="logo">
+                <a href="/swp/index.html" tag="0" title="易废网"> <img src="../../../main/pc/img/logo_short.png" alt="易废网 logo"> </a>
+            </div>
+            <div class="headerAction" >
+                <span class="no-login">易废网欢迎你！
+					请<a href="../../../login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="../../../selectEntType.html" class="register-btn">注册</a>
+				</span>
+                <span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+            </div>
+            <a href="javascript:" onClick="index.publish()" class="publishBtn">危废处置询价</a>
+            <ul>
+                <li>
+                    <a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+                </li>
+                <li class="active">
+                    <a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+                </li>
+                <li>
+                    <a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+                </li>
+                <li>
+                    <a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container" style="padding-bottom: 50px;width: 1200px !important;">
+        <el-row :gutter="10" class="searchDiv">
+            <b>活动状态：</b>
+            <el-button type="text" :class="{'select':status==''}" @click="queryStatus('')">全部</el-button>
+            <el-button type="text" :class="{'select':status=='1'}" @click="queryStatus('1')">预热中</el-button>
+            <el-button type="text" :class="{'select':status=='2'}" @click="queryStatus('2')">进行中</el-button>
+            <el-button type="text" :class="{'select':status=='3'}" @click="queryStatus('3')">已结束</el-button>
+        </el-row>
+        <div v-if="list.length>0">
+
+        <el-container class="item" v-for="(item,index) in list" >
+            <el-aside class="logoDiv" width="414px" :style="'background: url('+item.logo+') center center / auto 100% no-repeat'" v-loading="!item.imgLoaded"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(233, 234, 239, 1)">
+            </el-aside>
+            <el-main>
+                <el-row>
+                    <el-col :span="12" class="title">{{item.activityName}}</el-col>
+                    <el-col :span="12" align="right" class="status">
+                        <span v-if="item.status=='1'" class="yure">
+                            <b>{{item.remainTimeText}}</b>
+                        </span>
+                        <span v-if="item.status=='2'" class="going">
+                            <b>{{item.remainTimeText}}</b>
+                        </span>
+                        <span v-if="item.status=='3'" class="over">
+                        </span>
+                    </el-col>
+                </el-row>
+                <div class="createBy">
+                    活动方：<b>{{item.entName}}</b>
+                </div>
+                <div class="content">
+                    {{item.activityRemark}}
+                </div>
+                <div class="btnDiv">
+                    <el-button type="primary" v-if="item.enrollFee>0" class="activity_btn" @click="goEnrollFee(item.activityId,item.activityName)">查看详情></el-button>
+                    <el-button type="primary" @click="goActivityDetail(item.activityId,item.activityName)" v-if="item.enrollFee==0&&!item.videoResource">查看详情></el-button>
+                </div>
+            </el-main>
+        </el-container>
+        </div>
+        <div class="nodata" v-if="list.length==0&&!listLoading">暂无相关数据</div>
+        <div class="listLoading" v-if="listLoading"><i class="el-icon-loading"></i></div>
+        <div v-show="list&&list.length>0" align="center">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageIndex" :page-sizes="[5,10,20,30,50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            </el-pagination>
+        </div>
+    </div>
+</div>
+<!--<div class="footer">
+       <span>COPYRIGHT &nbsp; &copy;  &nbsp; 易废网 &nbsp;  www.yifeiwang.com  &nbsp;
+        <a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+</div>-->
+<script src="../../../main/common/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="../../../main/common/resLoader.js"></script>
+<script src="../../../app/js/constants.js?1"></script>
+<script src="../../../app/js/util.js?1"></script>
+<script src="../../../main/pc/js/detailInit.js?16"></script>
+
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data:{
+            list:[],
+            pageIndex:1,
+            pageSize:5,
+            total:0,
+            listLoading:true,
+            activityStatus:{'1':'预热中','2':'进行中','3':'已结束'},
+            status:'',
+            timerList:[],
+            cantonCode:returnCitySN['cid'].substring(0,2)
+        },
+        created:function () {
+            this.getList();
+        },
+        mounted:function() {
+
+        },
+        methods:{
+            getList:function () {
+                this.clearAllTimer();
+                this.listLoading=true;
+                $.ajax({
+                  url:'../../../wasteActivity/listHomePageWasteActivity?pageIndex='+this.pageIndex+'&pageSize='+this.pageSize,
+                  type:'post',
+                  contentType:'application/json',
+                  data:JSON.stringify({status:this.status,cantonCode:this.cantonCode,activityContent:'OnSale'}),
+                  success:function (result) {
+                      vue.listLoading=false;
+                      if(result.status==1&&result.data.list&&result.data.list.length>0){
+                          var list=result.data.list;
+                          var currentDate=result.data.serverTime;
+                          for(var i in list){
+                              var imgUrl=IMGVIEWURL+list[i].logoFileId;
+                              list[i]['logo']=imgUrl;
+                              vue.getLoader(imgUrl,i).start();
+                              list[i]['activityRemark']=list[i]['activityRemark'].replace(/<br\/>/g,'');
+                              if(list[i]['status']=='2'){
+                                  var endDate=new Date(list[i].endDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                  var longTime=new Date(currentDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                  vue.createTimer(endDate,longTime,i);
+                              }
+                              if(list[i]['status']=='1'){
+                                  var startDate=new Date(list[i].startDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                  var longTime=new Date(currentDate.replace(new RegExp("-","gm"),"/")).getTime();
+                                  vue.createTimer(startDate,longTime,i);
+                              }
+                          }
+                          vue.list=result.data.list;
+                          vue.total=result.data.paging.totalRecord;
+                      }else{
+                          vue.list=[];
+                          vue.total=0;
+                      }
+                  }
+                })
+            },
+            getLoader:function(imgUrl,index){
+                var loader = new resLoader({
+                    resources:[imgUrl],
+                    onStart: function(total) {
+                        console.log('start:' + total);
+                    },
+                    onProgress: function(current, total) {
+                        console.log(current + '/' + total);
+                    },
+                    onComplete: function(total) {
+                        var item=vue.list[index];
+                        item.imgLoaded=true;
+                        Vue.set(vue.list,index,item);
+                    }
+                });
+                return loader;
+            },
+            clearAllTimer:function () {
+                for(var i in this.timerList){
+                    clearInterval(this.timerList[i]);
+                }
+            },
+            queryStatus:function (status) {
+                this.status=status;
+                this.pageIndex=1;
+                this.listLoading=true;
+                this.getList();
+            },
+            createTimer:function (endDate,longTime,index) {
+                var timer=setInterval(function(){
+                    longTime+=1000;
+                    vue.ShowCountDown(endDate,longTime,index);
+                },1000);
+                this.timerList.push(timer);
+            },
+            ShowCountDown:function(dateFinal,dateNow,index){
+                var dateSub = dateFinal - dateNow;  //计算差值，单位毫秒
+                if(dateSub<0){
+                    var item=this.list[index];
+                    item.remainTimeText='已结束';
+                    Vue.set(this.list,index,item);
+                    return;
+                }
+                var day , hour , minute, second ,dayBase , hourBase, minuteBase, secondBase;
+                day = hour = minute = second = dayBase = hourBase = minuteBase = secondBase = 0;  //初始化各个数值
+                var timeHtml = '';
+                timeHtml += " ";
+                dayBase = 24 * 60 * 60 * 1000;  //计算天数的基数，单位毫秒。1天等于24*60*60*1000毫秒
+                hourBase = 60 * 60 * 1000;  //计算小时的基数，单位毫秒。1小时等于60*60*1000毫秒
+                minuteBase = 60 * 1000;  //计算分钟的基数，单位毫秒。1分钟等于60*1000毫秒
+                secondBase = 1000;  //计算秒钟的基数，单位毫秒。1秒钟等于1000毫秒
+                day = Math.floor(dateSub / dayBase);  //计算天数，并取下限值。如 5.9天 = 5天
+                hour = Math.floor(dateSub % dayBase / hourBase);  //计算小时，并取下限值。如 20.59小时 = 20小时
+                minute = Math.floor(dateSub % dayBase % hourBase / minuteBase);  //计算分钟，并取下限值。如 20.59分钟 = 20分钟
+                second = Math.floor(dateSub % dayBase % hourBase % minuteBase / secondBase);  //计算秒钟，并取下限值。如 20.59秒 = 20秒
+                //当天数小于等于0时，就不用显示
+                if(day <= 0){
+                    timeHtml += this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }else{
+                    timeHtml += day + '天 ' + this.toDouble(hour) + ':' + this.toDouble(minute) + ':' + this.toDouble(second) ;
+                }
+                var item=this.list[index];
+                item.remainTimeText=timeHtml;
+                Vue.set(this.list,index,item);
+            },
+            toDouble:function(num){
+                if(num < 10){
+                    return '0'+ num;
+                }else{
+                    return '' + num;
+                }
+            },
+            handleSizeChange:function(val) {
+                this.pageIndex=1;
+                this.pageSize = val;
+                this.getList()
+            },
+            handleCurrentChange:function(val) {
+                this.pageIndex = val;
+                this.getList()
+            },
+            goActivityDetail:function (activityId,activityName) {
+                if(index.isLogin&&index.ticketId){
+                    collectingUserBehavior(index.ticketId,'VIEWACTIVITY',activityName);
+                }else{
+                    collectingUserBehavior('','VIEWACTIVITY',activityName);
+                }
+                var ticketStr=(index.ticketId?('&ticketId='+index.ticketId):'');
+                window.location='wasteActivityDetail.html?activityId='+activityId+ticketStr;
+            },
+            goEntList:function () {
+                window.location.href = "../../../main/pc/view/company.html" ;
+            },
+            goEnrollFee:function (activityId,activityName) {
+                if(index.isLogin&&index.ticketId){
+                    collectingUserBehavior(index.ticketId,'VIEWACTIVITY',activityName);
+                }else{
+                    collectingUserBehavior('','VIEWACTIVITY',activityName);
+                }
+                var ticketStr=(index.ticketId?('&ticketId='+index.ticketId):'');
+                window.location='feeActivityDetail.html?activityId='+activityId+ticketStr;
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

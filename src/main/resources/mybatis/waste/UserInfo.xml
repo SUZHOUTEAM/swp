@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.user.mapper.UserInfoMapper">
+
+    <select id="listUserInfo" parameterType="java.util.List" resultType="com.mlsc.yifeiwang.user.model.UserInfo">
+        SELECT
+        su.UserId userId,
+        su.PhoneNum phoneNum,
+        su.UserStatus userStatus,
+        ue.registration_code registrationCode
+        FROM sys_user su
+        INNER JOIN user_extended ue ON ue.sys_user_id = su.UserId
+        WHERE su.UserId in
+        <foreach item="userid" collection="list" open="(" separator="," close=")">
+            #{userid}
+        </foreach>
+    </select>
+
+
+    <select id="listUserInfoByEnterIds" parameterType="java.util.List" resultType="com.mlsc.waste.user.model.User">
+        SELECT
+          user.UserId,user.PhoneNum as phoneNo
+        FROM
+        sys_user_enterprise_relation uer
+        inner JOIN sys_user user on uer.UserId = `user`.UserId
+        inner join user_extended  ue on `user`.UserId = ue.sys_user_id and ue.user_status = 'PASS'
+        where uer.entId in
+        <foreach item="enterId" collection="list" open="(" separator="," close=")">
+            #{enterId}
+        </foreach>
+    </select>
+
+
+    <select id="listSysAdminUser"  resultType="com.mlsc.waste.user.model.User" parameterType="java.lang.String">
+        SELECT
+        user.UserId,user.PhoneNum as phoneNo
+        FROM
+        sys_user user inner join sys_admin  sysadmin on  `user`.UserId = sysadmin.userId
+        <where>
+            <if test="userType == 'ADMIN' ">
+                sysadmin.userType = #{userType}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUserInfo" parameterType="com.mlsc.waste.user.model.User">
+        update sys_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName != null"> ChineseName =#{userName} , </if>
+            <if test="updaterID != null"> updaterID =#{updaterID} , </if>
+            <if test="updateTime !=null"> updateTime =#{updateTime} , </if>
+        </trim>
+        where UserId = #{userId}
+    </update>
+
+    <select id="getUserInfoByOpenId"  resultType="com.mlsc.yifeiwang.user.model.UserInfo"  parameterType="java.lang.String">
+        SELECT
+        sysUser.UserId,sysUser.PhoneNum
+        from sys_user sysUser
+        inner join user_extended  ue on sysUser.UserId = ue.sys_user_id
+        <where>
+            <if test="openId !=null and openId!= ''  ">
+                ue.weixin_open_id = #{openId}
+            </if>
+        </where>
+    </select>
+    <select id="getCodeByOpenId"  resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+        case when sysUser.userid is null then 'NOUSER'
+             when uer.entId is null then 'NOENT'
+             else ''
+        end
+        from sys_user sysUser
+        inner join user_extended  ue on sysUser.UserId = ue.sys_user_id
+        left join sys_user_enterprise_relation uer on uer.UserId = sysUser.UserId
+        <where>
+            <if test="openId !=null and openId!= ''  ">
+                ue.weixin_open_id = #{openId}
+            </if>
+        </where>
+    </select>
+
+    <select id="checkPassword"  resultType="java.lang.Boolean"  parameterType="com.mlsc.yifeiwang.user.model.UserParam">
+        SELECT
+        case when count(1)>0 then true else false end
+        from sys_user_auth sysUser
+        <where>
+            <if test="phoneNum !=null and phoneNum!= ''  ">
+                sysUser.PhoneNum = #{phoneNum}
+            </if>
+            <if test="passWord !=null and passWord!= ''  ">
+               and sysUser.Password = #{passWord}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getUserInfo"  resultType="com.mlsc.yifeiwang.user.model.UserInfo"  parameterType="com.mlsc.yifeiwang.user.model.UserParam">
+        SELECT
+        sysUser.UserId,sysUser.phoneNum,sysUser.Password
+        from sys_user sysUser
+        inner join sys_user_auth  au on sysUser.UserId = au.UserId
+        <where>
+            <if test="PhoneNum !=null and PhoneNum!= ''  ">
+                au.PhoneNum = #{PhoneNum}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

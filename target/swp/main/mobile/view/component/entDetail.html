@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="../css/entDetail.css" />
+<div id="app">
+    <van-nav-bar
+            title="企业详情"
+            left-text=""
+            left-arrow
+            @click-left="onClickLeft"
+    ></van-nav-bar>
+    <van-swipe :autoplay="3000" v-if="imgList.length>0">
+        <van-swipe-item v-for="(item,index) in imgList" :key="index" :style="'background: url('+item+') center center/auto 100% no-repeat #6ea3ff'">
+        </van-swipe-item>
+    </van-swipe>
+    <div class="base-message">
+        <div class="ent-name">{{entInfo.entName}}</div>
+        <div class="ent-address">{{entInfo.entAddress}}</div>
+    </div>
+    <div class="container">
+        <van-tabs @click="handleTabClick" type="card">
+            <van-tab  title="经营许可证">
+                <div v-if="entInfo.licenceImg" class="split-area"></div>
+                <van-row v-if="entInfo.licenceImg" onClick="vue.changeLicenceImgShow()">
+                    <van-col span="18" class="xukezheng-title">
+                        <i class="xukezheng_icon"></i>
+                        <span>许可证照片</span>
+                    </van-col>
+                    <van-col span="6" class="arrow" :class="{'down':!licenceImgShow}">{{licenceImgShow?'︿':'﹀'}}</van-col>
+                </van-row>
+                <div class="licence-img" @click="imagePreview(entInfo.licenceImg)" v-show="licenceImgShow"  v-if="entInfo.licenceImg"><img :src="entInfo.licenceImg"/></div>
+                <div class="split-area"></div>
+                <van-row onClick="vue.changeDetailShow();">
+                    <van-col span="18" class="xukezheng-title">
+                        <i class="xukezheng_icon"></i>
+                        <span>许可证详情</span>
+                    </van-col>
+                    <van-col span="6" class="arrow" :class="{'down':!detailShow}">{{detailShow?'︿':'﹀'}}</van-col>
+                </van-row>
+                <div v-show="detailShow">
+                    <template  v-for="(item,index) in licenseDetail" >
+                        <van-row class="license-header">
+                            <van-col span="12">
+                                <p class="dtitle">经营方式：</p>
+                                <p class="dcontent">{{item.dispositionType}}</p>
+                            </van-col>
+                            <van-col span="12">
+                                <p class="dtitle">年核准量：</p>
+                                <p class="dcontent">{{item.approved_quantity+'吨'}}</p>
+                            </van-col>
+                        </van-row>
+                        <div  v-for="(o,index) in item.listWasteTypeVo" class="license-content">
+                            <p class="license-content-title">{{o.wasteTypeCode+'/'+o.wasteTypeValue}}</p>
+                            <p :title="o.listWasteVo[0]" class="license-content-content">({{o.listWasteVo[0]}})</p>
+                        </div>
+                    </template>
+                </div>
+            </van-tab>
+            <van-tab  title="企业介绍">
+                <div class="ent-summary">{{entInfo.summary||'暂无相关信息'}}</div>
+            </van-tab>
+        </van-tabs>
+    </div>
+</div>
+<script type="text/javascript" src="../../common/upload/upload.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            entId:getParam('entId'),
+            imgList:[],
+            entInfo:{},
+            licenseDetail:{},
+            activeNames:'1',
+            licenceImgShow:true,
+            detailShow:true
+        },
+        created: function () {
+
+        },
+        mounted: function () {
+            if(this.entId){
+                this.getBanner();
+                this.getDetail();
+                this.getLicenceDetail();
+            }
+        },
+        methods: {
+            onClickLeft:function () {
+                window.history.go(-1);
+            },
+            getDetail:function () {
+                $.ajax({
+                    url:'/swp/sysEnterpriseBase/getEnterpriseSummaryInfo',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        entId:this.entId
+                    },
+                    success:function (result) {
+                        console.log(result);
+                        vue.entInfo=result.data;
+                        if(result.data.licenceFileId){
+                            vue.entInfo.licenceImg=IMG_VIEW_URL+'&fileID='+result.data.licenceFileId;
+                        }
+                    }
+              })
+            },
+            getBanner:function(){
+                var list =upload.getImgListByBusinessCode(this.entId+'_banner');
+                for(var i in list){
+                    list[i].path = IMG_PREV+'/download?fileID='+list[i]['fileID'];
+                    var imgSrc =  IMG_VIEW_URL+'&businessCode='+this.entId+'&fileID='+list[i]['fileID'];
+                    this.imgList.push(imgSrc);
+                }
+                if(list.length==0){
+                    this.imgList.push('../img/default.jpg');
+                }
+            },
+            getLicenceDetail:function () {
+                $.ajax({
+                    url: "/swp/myenterprise/getHomePageEnterpriseInfoDetail",
+                    data: {
+                        'enterpriseId': this.entId,
+                    },
+                    type: "POST",
+                    dataType: 'json',
+                    async: true,
+                    success: function (data) {
+                        if(data.status==1&&data.data.operationLicenceItemVo&&data.data.operationLicenceItemVo.length>0){
+                            vue.licenseDetail=data.data.operationLicenceItemVo;
+                        }
+                    }
+                });
+            },
+            handleTabClick:function (index) {
+//                alert(index);
+            },
+            imagePreview:function (url) {
+                this.$dialog.alert({
+                    message: '<img src="'+url+'"/>',
+                    showConfirmButton:false,
+                    closeOnClickOverlay:true,
+                    showCancelButton:true,
+                    cancelButtonText:'关闭'
+                }).then(function(){
+                    // on close
+                }).catch(function() {
+                    // on cancel
+                });
+            },
+            changeLicenceImgShow:function () {
+                this.licenceImgShow=!this.licenceImgShow;
+            },
+            changeDetailShow:function () {
+                this.detailShow=!this.detailShow;
+            }
+        }
+    });
+</script>

@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>base64加密</title>
+    <script type="text/javascript" src="base64.js"></script>
+    <script type="text/javascript">
+        var b = new Base64();
+        var str = b.encode("admin:admin");
+        console.log("base64 encode:" + str);
+        //解密
+        str = b.decode(str);
+        console.log("base64 decode:" + str);
+        function  decodeStr() {
+            var str=document.getElementById('input').value;
+            var encode=b.encode(str);
+            document.getElementById('encode').innerHTML=encode;
+            document.getElementById('decode').innerHTML=b.decode(encode);
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="input"/>
+    <button type="button" onclick="decodeStr()">encode&decode</button>
+    <div id="encode"></div>
+    <div id="decode"></div>
+</body>
+</html>

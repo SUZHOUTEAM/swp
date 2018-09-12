@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="utf-8">
+	<title>危废处置流程</title>
+	<meta name="keywords" content="危废处置,危废询价,危废管家服务,处置危废">
+	<meta name="description" content="易废网,危废处置,危废询价,处置危废,提供一站式固废解决方案">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="renderer" content="webkit" />
+	<link rel="shortcut icon" href="./app/img/favicon.ico">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<link rel="stylesheet" href="main/pc/css/common.css?11" />
+	<link rel="stylesheet" href="main/pc/css/que-sug.css" />
+	<script type="text/javascript" src="./main/common/adaptation.js"></script>
+	<link rel="stylesheet" href="./main/common/elementui/index.css">
+	<link rel="stylesheet" href="main/pc/css/introduction.css?15" />
+	<!-- 先引入 Vue -->
+	<script src="./main/common/elementui/vue.min.js"></script>
+	<!-- 引入组件库 -->
+	<script src="./main/common/elementui/index.js"></script>
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" href="main/pc/css/style_ie.css" />
+	<![endif]-->
+	<!-- start Dplus --><script type="text/javascript">!function(a,b){if(!b.__SV){var c,d,e,f;window.dplus=b,b._i=[],b.init=function(a,c,d){function g(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var h=b;for("undefined"!=typeof d?h=b[d]=[]:d="dplus",h.people=h.people||[],h.toString=function(a){var b="dplus";return"dplus"!==d&&(b+="."+d),a||(b+=" (stub)"),b},h.people.toString=function(){return h.toString(1)+".people (stub)"},e="disable track track_links track_forms register unregister get_property identify clear set_config get_config get_distinct_id track_pageview register_once track_with_tag time_event people.set people.unset people.delete_user".split(" "),f=0;f<e.length;f++)g(h,e[f]);b._i.push([a,c,d])},b.__SV=1.1,c=a.createElement("script"),c.type="text/javascript",c.charset="utf-8",c.async=!0,c.src="//w.cnzz.com/dplus.php?id=1262787667",d=a.getElementsByTagName("script")[0],d.parentNode.insertBefore(c,d)}}(document,window.dplus||[]),dplus.init("1262787667");</script><!-- end Dplus -->
+</head>
+
+<body>
+<div id="app" style="overflow: hidden">
+	<div class="m-help">
+		<div class="m-help-text">
+			<i class="m-help-logo"></i>咨询&建议
+		</div>
+		<div class="m-tip fadeIn">
+			<ul>
+				<li style="cursor: default">
+					<i class="contactTel"></i>
+					<div class="m-tip-title telTitle">咨询电话</div>
+					<div class="m-tip-content tel">0512-62717018</div>
+				</li>
+				<li title="在线咨询" onclick="yfw.onlineTalk();">
+					<i class="onlineTalk"></i>
+					<div class="m-tip-title">在线咨询</div>
+					<div class="m-tip-content">小易在线提供咨询服务</div>
+				</li>
+				<li title="聆听·建议" onclick="yfw.goSuggest();">
+					<i class="suggestion"></i>
+					<div class="m-tip-title">聆听·建议</div>
+					<div class="m-tip-content" style="line-height: 22px">易废网是不完善的，我们渴望你的建议</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="header" :style="entType=='DISPOSITION'?'border-bottom:1px solid #DDD':''"  id="cfBanner">
+		<div class="container">
+			<div class="logo">
+				<a href="/swp/index.html" tag="0" title="易废网"><img src="main/pc/img/logo_short.png" alt="易废网 logo"></a>
+			</div>
+			<div class="headerAction" >
+				<span class="no-login">易废网欢迎你！
+					请<a href="login.jsp" class="login-btn">登录</a><b>/</b>
+					<a href="register.jsp" class="register-btn">注册</a>
+				</span>
+				<span class="is-login">你好，<b id="userName"></b><a href="javascript:">进入易废圈></a></span>
+			</div>
+			<ul>
+				<li>
+					<a href="/swp/index.html" id="menu-home" title="首页">首页</a>
+				</li>
+				<li>
+					<a href="/swp/main/pc/view/company.html" id="menu-company" title="危废经营单位">危废经营单位</a>
+				</li>
+				<li>
+					<a href="/swp/main/pc/view/activityList.html" id="menu-activity" title="促销活动">促销活动</a>
+				</li>
+				<li>
+					<a href="/swp/main/pc/view/information.html" id="menu-information" title="危废小课堂">危废小课堂</a>
+				</li>
+				<li>
+					<a href="javascript:" id="menu-tmall" title="本地旗舰店">本地旗舰店</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div style="width: 1200px;margin: 40px auto 0" v-if="entType=='DISPOSITION'" class="DISPOSITION" v-cloak>
+		<div class="anchorPointDiv">
+			<a href="javascript:" class="anchor-btn">一步到达</a>
+			<div  class="anchorPoint">
+				<a href="javascript:" :class="{'current':anchorPoint=='cfBanner'}" @click="changeAnchorPoint('cfBanner')">1.合同说明</a>
+				<a href="javascript:" :class="{'current':anchorPoint=='czContract'}" @click="changeAnchorPoint('czContract')">2.下载附件</a>
+				<a href="javascript:" :class="{'current':anchorPoint=='loginAndRegister'}" @click="changeAnchorPoint('loginAndRegister')">3.登录注册</a>
+			</div>
+		</div>
+		<div style="margin-bottom: 10px">
+			<i class="title_logo ht_icon"></i>
+			<span class="title_text">处置企业加盟协议</span>
+		</div>
+		<div class="contentTextDiv" style="width: 1100px">
+			<p class="titleText">易废网危废服务居间协议</p>
+			<div class="contentText" :class="{'open':contractShowAll}">
+				<p>甲方：_________________________________________（甲方）</p>
+				<p>地址： </p>
+				<p>乙方：易废网（乙方）</p>
+				<p>地址：苏州市工业园区娄阳路12号</p>
+				<p style="text-indent: 2em">甲方是取得政府环保部门核发的《危险废物经营许可证》（许可证号：__________________
+					）的合法收集、处置企业。甲方委托乙方以代理商身份在
+					市场上为甲方进行《危险废物经营许可证》范围内的居间服务。经友好协商
+					一致，就居间服务达成协议如下，以兹共同遵照执行：</p>
+				<p>一、委托内容：符合甲方《危险废物经营许可证》资质许可范围内的危险废物的居间服务。</p>
+				<p>二、委托权限：</p>
+				<p>甲方授权乙方以甲方代理商的身份与产废单位进行合同谈判、合同签署、危废转移、运输服务等活动。</p>
+				<p>三、甲方的权利与义务</p>
+				<p>1、甲方需获得政府主管部门核发的合法经营的身份，并向乙方提供相应资质证书文件。</p>
+				<p>2、甲方为乙方在合同洽谈、物流转移提供相应的支持服务，及时审核签章。</p>
+				<p>3、由乙方负责代理的客户，在合同执行期间或合同存续过程中，该客户带来权益均归属乙方所有，甲方不得以任何理由变更该权益。</p>
+				<p>4、甲方有义务为乙方相关人员提供相应的培训支持。</p>
+				<p><b>5、甲方应积极配合乙方做好产废企业的危废转移业务，并同意乙方在确保安全的前提下组织多家产废单位共用运输车辆进行危废转移。</b></p>
+				<p>四、乙方的权利与义务</p>
+				<p>1、乙方在服务过程中必须遵守国家的相关规定。</p>
+				<p>2、乙方应及时、定期向甲方通报客户签约情况（包括客户名称、数量、价格等）。</p>
+				<p>3、乙方须将乙方代理签约服务的客户产生的危险废物按危废运输管理的要求全部运到甲方经营地点进行处置，不得以任何理由私自处理。</p>
+				<p><b>4、乙方应根据甲方和由乙方代理服务的产废企业签订的合同，及时履行付款义务，无论产废企业是否支付费用给乙方，乙方都必须按期履行付款义务。</b></p>
+				<p><b>5、乙方应保证在危废转移前，核实所需完成的申报手续，并确保产废企业的危废符合甲方的运输包装要求。</b></p>
+				<p><b>6、乙方同意在合同有效期内在易废网的首页为甲方做免费的广告宣传。</b></p>
+				<p><b>7、乙方每年组织两次行业专家培训，甲方可免费参加。</b></p>
+				<p><b>8、乙方为甲方免费提供江苏省危险废物动态管理信息系统VIP客服专线服务。</b></p>
+				<p>五、费用及结算</p>
+				<p>1、价格：</p>
+				<table>
+					<tr>
+						<td style="width: 100px">样品规格</td>
+						<td style="width: 120px">数量</td>
+						<td style="width: 80px">价格</td>
+						<td>备注</td>
+					</tr>
+					<tr>
+						<td>样品检测正常</td>
+						<td>XX吨及XX吨以内</td>
+						<td>XXXX元/吨</td>
+						<td style="text-align: left">实际处置量不足1吨，按1吨收费，超出一吨不满2吨按2吨收费，以此类推。处置前必须先付款。</td>
+					</tr>
+					<tr>
+						<td>样品检测正常</td>
+						<td>XX吨-XX吨</td>
+						<td>XXXX元/吨</td>
+						<td style="text-align: left">按实际处置量收费</td>
+					</tr>
+					<tr>
+						<td>样品检测正常</td>
+						<td>XX吨以上</td>
+						<td>XXXX元/吨</td>
+						<td style="text-align: left">按实际处置量收费，特殊物料根据物料分析情况作适当调整协商确定</td>
+					</tr>
+				</table>
+				<p>2、结算：</p>
+				<p>2.1乙方代理的客户合同资金约定进行结算。</p>
+				<p>2.2乙方向甲方支付费用时，甲方需提供等额服务费发票。</p>
+				<p>六、保密条款</p>
+				<p>协议双方对本协议履行过程中所接触或获知的对方的任何商业信息均有保密义务。</p>
+				<p>七、其他事项</p>
+				<p>1、乙方代理签约的客户，乙方及时向甲方提供计划代理签约客户，经甲方同意后，由乙方代理甲方与客户洽谈危废处置事宜，乙方提供合同订立的媒介服务、合同订立及转移过程的服务。</p>
+				<p>2、乙方直接与乙方代理签约的客户签订危废运输合同，相关费用由乙方承担。</p>
+				<p>3、本协议一式四份，双方各执二份，具有同等法律效力。</p>
+				<p>4、本协议自甲、乙双方盖章签字之日起生效，有效期XXX年。</p>
+				<br/>
+				<p>甲方(盖章)： </p>
+				<p>代理人：</p>
+				<br/>
+				<p>乙方(盖章)：易废网（乙方）</p>
+				<p>代理人：</p>
+				<p>签订日期：2018年____月____日</p>
+			</div>
+			<div align="center" class="folder" style="height: 50px">
+				<el-button type="text" @click="shortAllContract" v-if="contractShowAll"><i class="el-icon-arrow-up"></i><br/>收起全部</el-button>
+				<el-button type="text" @click="showAllContract" v-else>展示全部<br/><i class="el-icon-arrow-down"></i></el-button>
+			</div>
+			<el-row class="contractDownload" title="下载委托处置合同模板" onClick="vue.downloadJiameng()" id="czContract" style="margin: 60px auto;">
+				<el-col :span="6" style="width: 112px" class="word">
+					<div class="word-img"></div>
+				</el-col>
+				<el-col :span="18"  style="width: 206px">
+					<div class="download_text">加盟协议模板</div>
+					<div class="download_link">— 点击下载 —</div>
+				</el-col>
+			</el-row>
+		</div>
+		<div class="btnDiv"  id="loginAndRegister">
+			<a href="login.jsp" class="login_btn" title="已有账号登录">登录已有账号{{entType=='DISPOSITION'?'处置':'处置'}}危废</a>
+			<a href="register.jsp" class="register_btn" title="继续注册">注册账号{{entType=='DISPOSITION'?'处置':'处置'}}危废></a>
+		</div>
+	</div>
+	<div class="content" v-else v-cloak style="overflow: hidden">
+		<div class="anchorPointDiv" style="top: 162px;">
+			<a href="javascript:" class="anchor-btn">一步到达</a>
+			<div  class="anchorPoint">
+				<a href="javascript:" :class="{'current':anchorPoint=='cfBanner'}" @click="changeAnchorPoint('cfBanner')">1.委托流程</a>
+				<a href="javascript:" :class="{'current':anchorPoint=='cfContract'}" @click="changeAnchorPoint('cfContract')">2.合同说明</a>
+			</div>
+		</div>
+		<div class="banner">
+		</div>
+		<div class="btnDiv" id="loginAndRegister-production" v-if="btnShow">
+			<a href="javascript:" class="inquiry-btn" @click="goInquiry">现在去询价></a>
+		</div>
+		<div v-else style="margin-top: -358px"></div>
+		<div class="container" style="overflow: hidden;background-color: #fff;padding: 30px;width: 1140px;">
+			<el-row id="cfContract">
+				<el-col :span="17" class="contentTextDiv">
+					<div style="margin-bottom: 10px;margin-left: -68px;">
+						<i class="title_logo ht_icon"></i>
+						<span class="title_text">合同说明</span>
+					</div>
+					<div class="contentText" :class="{'open':contractShowAll}">
+						<p>委托人：XXXX有限公司（以下简称“甲方”）</p>
+						<p>受托人：江苏神彩环保技术发展有限公司（以下简称“乙方”）</p>
+						<p><b>危险废物</b></p>
+						<p>甲方委托乙方将甲方所产生的危险废物转移到乙方的有对应经营许可能力的合作经营单位进行合法化处置，甲方的危险废物通过其它渠道处置的，其后果由甲方自行承担，与乙方无关 。与乙方签订合作协议的危险废弃物处置企业，处置过程必须符合《中华人民共和国固体废物污染防治法》等法律法规。</p>
+						<p>甲方委托给乙方的危险废物包括：</p>
+						<table>
+							<tr>
+								<td>序号</td>
+								<td>危废名称</td>
+								<td>危废类别</td>
+								<td>危废代码</td>
+								<td>数量（吨）</td>
+								<td>包装形式</td>
+							</tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						</table>
+						<p>注：甲方实际出货量不得小于合同量 <b>XX 吨的90%</b>，否则按合同金额<b>90%</b>付款，具体付款方式见附件1.</p>
+						<p><b>经营单位</b></p>
+						<p>乙方负责将甲方产生的上述危险废物委托给有对应处置资质的危废经营处置利用单位中的一家或者多家进行处置，<b>经营处置利用</b>单位包括：</p>
+						<ol>
+							<li>1、<b>张家港市华瑞危险废物处理中心有限公司</b></li>
+							<li>2、<b>高邮康博环境资源有限公司</b></li>
+							<li>...........</li>
+						</ol>
+						<p><b>运输单位</b></p>
+						<p>乙方负责将甲方的危险废物委托给下列有<b>危险废物运输资质的运输单位进行承运</b>，不得委托给其他运输公司，受委托的运输公司包括：</p>
+						<ol>
+							<li>1、江苏快而捷物流股份有限公司</li>
+							<li>2、苏州工业园区天天物流有限公司</li>
+							<li>...........</li>
+						</ol>
+						<p><b>服务费用</b></p>
+						<p>乙方收取甲方XXXX总费用，总费用包含危险废物的处置费和服务费及根据双方约定的运输费，如运输频次超出合同范围，甲方需按照实际发生的金额支付额外的运输费用。在不超出合同所签订的危废种类和数量的前提下，如上述费用超出实际所需费用，超出部分费用由乙方承担，与甲方（产废单位）无关。</p>
+						<p><b>费用支付</b></p>
+						<p>1、包年合同支付</p>
+						<p>甲方委托给乙方的危险废物总量在10吨以内，乙方须在合同签订之日起5个工作日内付清合同规定的费用。</p>
+						<p>2、非包年合同支付</p>
+						<p>甲方委托给乙方的危险废物总量在10吨及10吨以上，在每次发生转移的45个工作日内，甲方向乙方支付当次转移所涉及到的危险废物处置费、服务费及运输费。如甲方未能履行付款义务，乙方有权无条件终止合同，并向甲方追讨相关欠款。</p>
+						<p><b>责任、权利及义务</b></p>
+						<p><b>甲方责任、权利及义务</b></p>
+						<ol>
+							<li>1、甲方指定相关人员负责定期与乙方进行信息的沟通和交流，甲方在危险废物转移前需完成网上的转移审批及月度申报（乙方可协助）。</li>
+							<li>2、甲方保证实际转移的危险废物与本协议约定的名称、数量、类别、包装等相符，保证包装容器密封、无破损，确保贮存运输过程中不发生抛洒泄漏。</li>
+							<li>3、甲方所产生的危险废物在存储时，每个单独的吨袋、桶或托盘上需按照规范粘贴危险废物标签(彩色打印，按要求写全标签内容），分类储放，不得混装，如因标识信息错误造成的各类风险事故，责任由甲方自行承担。</li>
+							<li>4、甲方在危险废物转移前，应该提前 十 个工作日通知乙方，乙方安排运输计划，并告知甲方具体运输时间。</li>
+							<li>5、甲方应在乙方确定排车日期时，指定专人负责协助装车，提前约好叉车等相关装车工具，并保证通行便利。</li>
+							<li>6、甲方不得自行将危险废物交由无资质的第三方进行处理，否则引起的法律责任由甲方承担。</li>
+						</ol>
+						<p><b>乙方责任、权利及义务</b></p>
+						<ol>
+							<li>1、乙方负责将甲方所产生的危险废物转移到相应的具备危险废物处置许可的经营单位进行处置，为甲方签订正式危废处置协议。</li>
+							<li>2、乙方负责将所有危险废物的转移运输工作委托给具有危险废物运输资质的运输公司进行转移，运输费用由甲方承担。</li>
+							<li>3、乙方负责和处置企业协商确定危险废物转移时间和转移所用车辆，并提前3个工作日告知甲方（产废单位）。</li>
+							<li>4、危险废物转移前协助甲方检查危废容器是否张贴合格标签、包装是否符合要求。</li>
+							<li>5、协助甲方做好危险废物转移过程中的防泄漏措施，做好应急预案，参与应急处理，并为每次转移投保。</li>
+						</ol>
+						<p><b>保障条款</b></p>
+						<ol>
+							<li>1、本协议一式两份，有效期为2018年1月 1日至2018年12月31日，且各类废物转移计划审批完成后生效。</li>
+							<li>2、在合同期内，如乙方未能协调处置企业将甲方产生的危险废物转移出去，未转移的部分（总量按合同总量的90%计算），乙方按照每吨2000元人民币的补贴给甲方，如因甲方原因未能转移的（包含但不限于甲方在合同期内所产生的危废达不到合同签订量），不在此条范围内。</li>
+							<li>3、在合同期限内，运输过程中如发生意外，由乙方协助甲方处理相关事宜</li>
+							<li>4、本协议未尽事宜，以乙方跟处置企业的合同条款为准。</li>
+						</ol>
+						<p><b>争议的解决</b></p>
+						<p>因执行本协议而发生的或者与本协议有关的争议，双方应本着友好协商的原则解决，如果双方通过协商不能达成一致，可以提交乙方所在地人民法院诉讼解决。</p>
+					</div>
+					<div align="center" class="folder">
+						<el-button type="text" @click="shortAllContract" v-if="contractShowAll"><i class="el-icon-arrow-up"></i><br/>收起全部</el-button>
+						<el-button type="text" @click="showAllContract" v-else>展示全部<br/><i class="el-icon-arrow-down"></i></el-button>
+					</div>
+				</el-col>
+				<el-col :span="7" style="width: 320px;padding-top: 10px;">
+					<img src="main/pc/img/contractProcedure2.jpg"/>
+					<el-row class="contractDownload" title="下载委托处置合同模板" onClick="vue.downloadContract()">
+						<el-col :span="6" style="width: 112px" class="word">
+							<div class="word-img"></div>
+						</el-col>
+						<el-col :span="18"  style="width: 206px">
+							<div class="download_text">危废处置合同</div>
+							<div class="download_link">— 点击下载 —</div>
+						</el-col>
+					</el-row>
+				</el-col>
+			</el-row>
+		</div>
+	</div>
+
+</div>
+<div class="footer">
+		   <span>COPYRIGHT &nbsp; &copy;  &nbsp; 江苏神彩科技股份有限公司 &nbsp;  www.yifeiwang.com  &nbsp;
+			<a href="http://www.miibeian.gov.cn" target="_blank">&nbsp;苏ICP备16051104号-2</a>&nbsp;&nbsp;ICP证: 苏B2-20170197</span>
+</div>
+<script src="main/common/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="app/js/constants.js"></script>
+<script src="app/js/util.js?1"></script>
+<script src="main/common/provinces.js"></script>
+<script src="main/pc/js/introduction.js?6"></script>
+<script src="main/pc/js/index.js?15"></script>
+</body>
+
+</html>

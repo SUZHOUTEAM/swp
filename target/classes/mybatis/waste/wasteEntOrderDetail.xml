@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.entorder.mapper.EntOrderDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.entorder.entity.EntOrderDetail">
+		<id column="id" property="id" />
+		<result column="orderId" property="orderId" />
+		<result column="releaseDetailId" property="releaseDetailId" />
+		<result column="inquiryDetailId" property="inquiryDetailId" />
+		<result column="price" property="price" />
+		<result column="totalPrice" property="totalPrice" />
+		<result column="busiStatus" property="busiStatus" />
+		<result column="createBy" property="createBy" />
+		<result column="createTime" property="createTime" />
+		<result column="editBy" property="editBy" />
+		<result column="editTime" property="editTime" />
+		<result column="deleteFlag" property="deleteFlag" />
+	</resultMap>
+
+	<select id="listOrderDetailByOrderId" resultType="com.mlsc.yifeiwang.entorder.model.OrderDetailModel" parameterType="java.lang.String" >
+		SELECT
+		orderDetail.id ,
+		entWaste.wasteCode,
+		entWaste.wasteName,
+		releaseDetail.releaseAmount as amount,
+		unitCode.`value` as unitValue,
+		orderDetail.price,
+		orderDetail.totalPrice AS wasteTotalPrice
+		FROM  ent_order_detail orderDetail
+		INNER JOIN ent_release_detail releaseDetail ON orderDetail.releaseDetailId = releaseDetail.id
+		INNER JOIN ent_waste entWaste ON releaseDetail.entWasteId = entWaste.id
+		INNER JOIN code_value unitCode ON entWaste.unitCode = unitCode.`code` AND unitCode.type_code = 'UNIT_TYPE'
+		<where>
+			<if test ="orderId!= null">
+			orderDetail.orderId = #{orderId}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateOrderDetail"  parameterType="com.mlsc.yifeiwang.entorder.entity.EntOrderDetail" >
+		update ent_order_detail
+		<trim prefix="set" suffixOverrides=",">
+			<if test="busiStatus != null"> busiStatus =#{busiStatus} , </if>
+			<if test="editBy != null"> editBy =#{editBy} , </if>
+			<if test="editTime != null"> editTime =#{editTime} , </if>
+		</trim>
+		where orderId = #{orderId}
+	</update>
+	<select id="countOrderWasteAmount" resultType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseDetailModel" parameterType="com.mlsc.yifeiwang.entorder.model.OrderParam">
+		SELECT
+		sum(releaseDetail.releaseAmount) AS wasteAmount,
+		unitCode.`value` AS unitValue
+		FROM
+		ent_order entOrder inner join ent_inquiry entInquiry on entOrder.inquiryId = entInquiry.id
+		<if test='activityId !=null and activityId !="" '>
+			<choose>
+				<when test="activityId == 'resourcePull' ">
+					and entOrder.activityId is null
+				</when>
+				<otherwise>
+					INNER JOIN waste_activity activity ON activity.id = entOrder.activityId AND activity.id  = #{activityId}
+				</otherwise>
+			</choose>
+		</if>
+		INNER JOIN sys_enterprise_base releaseEnt ON entInquiry.releaseEntId = releaseEnt.entId
+		INNER JOIN sys_enterprise_base inquiryEnt ON entOrder.inquiryEntId = inquiryEnt.entId
+		INNER JOIN sys_user sysuser ON entInquiry.createBy = sysuser.UserId
+		INNER JOIN ent_order_detail orderDetail on entOrder.id = orderDetail.orderId
+		INNER JOIN ent_release_detail releaseDetail ON orderDetail.releaseDetailId = releaseDetail.id
+		INNER JOIN ent_waste entWaste ON releaseDetail.entWasteId = entWaste.id
+		INNER JOIN code_value unitCode ON entWaste.unitCode = unitCode.`code` AND unitCode.type_code = 'UNIT_TYPE'
+		<where>
+			<if test='inquiryEntId !=null and inquiryEntId !="" '>
+				entOrder.inquiryEntId = #{inquiryEntId}
+			</if>
+			<if test=' releaseEntId != null and releaseEntId!="" '>
+				<choose>
+					<when test=" releaseEntType == 'FACILITATOR' ">
+						and entOrder.facilitatorEntId = #{releaseEntId}
+
+					</when>
+					<otherwise>
+						and
+						( case when entOrder.facilitatorEntId is not null  then  entOrder.releaseEntId = #{releaseEntId}
+						else  entOrder.releaseEntId = #{releaseEntId}	AND entOrder.facilitatorEntId IS NULL
+						end )
+					</otherwise>
+				</choose>
+			</if>
+			<if test='releaseEnterName !=null and releaseEnterName !="" '>
+				AND releaseEnt.entName = #{releaseEnterName}
+			</if>
+			<if test='inquiryPersonId !=null and inquiryPersonId !="" '>
+				AND sysuser.UserId = #{inquiryPersonId}
+			</if>
+			<if test='dateType !=null and dateType !="" '>
+				<choose>
+					<when test="dateType == 'TODAY'.toString() ">
+						AND to_days(entOrder.createTime) = to_days(now())
+					</when>
+					<when test="dateType == 'WEEK'.toString() ">
+						AND YEARWEEK(date_format(entOrder.createTime,'%Y-%m-%d')) = YEARWEEK(now())
+					</when>
+					<when test="dateType == 'MONTH'.toString() ">
+						AND DATE_FORMAT( entOrder.createTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+					</when>
+					<when test="dataType == 'YEAR'.toString() ">
+						AND year(entOrder.createTime) = year(now())
+					</when>
+				</choose>
+			</if>
+			<if test='year !=null and year !=""  '>
+				AND year(entOrder.createTime)= #{year}
+			</if>
+			<if test='startDateTime !=null or endDateTime !=null'>
+				<choose>
+					<when test="startDateTime !=null and endDateTime !=null ">
+						AND entOrder.createTime between #{startDateTime} and #{endDateTime}
+					</when>
+					<when test="startDateTime !=null ">
+						AND entOrder.createTime &gt;= #{startDateTime}
+					</when>
+					<when test="endDateTime !=null ">
+						AND entOrder.createTime &lt; #{endDateTime}
+					</when>
+				</choose>
+			</if>
+			<if test='orderStatus !=null and orderStatus !=""  '>
+				AND entOrder.busiStatus = #{orderStatus}
+			</if>
+		</where>
+		group by unitValue
+	</select>
+
+
+
+	<select id="listTotalPrice" resultType="com.mlsc.yifeiwang.entorder.model.OrderDetailModel" parameterType="com.mlsc.yifeiwang.entorder.model.OrderParam">
+		SELECT
+			entOrder.totalPrice AS wasteTotalPrice
+		FROM
+		ent_order entOrder inner join ent_inquiry entInquiry on entOrder.inquiryId = entInquiry.id
+		<if test='activityId !=null and activityId !="" '>
+			<choose>
+				<when test="activityId == 'resourcePull' ">
+					and entOrder.activityId is null
+				</when>
+				<otherwise>
+					INNER JOIN waste_activity activity ON activity.id = entOrder.activityId AND activity.id  = #{activityId}
+				</otherwise>
+			</choose>
+		</if>
+		INNER JOIN sys_enterprise_base releaseEnt ON entInquiry.releaseEntId = releaseEnt.entId
+		INNER JOIN sys_enterprise_base inquiryEnt ON entOrder.inquiryEntId = inquiryEnt.entId
+		INNER JOIN sys_user sysuser ON entInquiry.createBy = sysuser.UserId
+		INNER JOIN ent_order_detail orderDetail on entOrder.id = orderDetail.orderId
+
+		<where>
+			<if test='inquiryEntId !=null and inquiryEntId !="" '>
+				entOrder.inquiryEntId = #{inquiryEntId}
+			</if>
+			<if test=' releaseEntId != null and releaseEntId!="" '>
+				<choose>
+					<when test=" releaseEntType == 'FACILITATOR' ">
+						and entOrder.facilitatorEntId = #{releaseEntId}
+
+					</when>
+					<otherwise>
+						and
+						( case when entOrder.facilitatorEntId is not null  then  entOrder.releaseEntId = #{releaseEntId}
+						else  entOrder.releaseEntId = #{releaseEntId}	AND entOrder.facilitatorEntId IS NULL
+						end )
+					</otherwise>
+				</choose>
+			</if>
+			<if test='releaseEnterName !=null and releaseEnterName !="" '>
+				AND releaseEnt.entName = #{releaseEnterName}
+			</if>
+			<if test='inquiryPersonId !=null and inquiryPersonId !="" '>
+				AND sysuser.UserId = #{inquiryPersonId}
+			</if>
+			<if test='dateType !=null and dateType !="" '>
+				<choose>
+					<when test="dateType == 'TODAY'.toString() ">
+						AND to_days(entOrder.createTime) = to_days(now())
+					</when>
+					<when test="dateType == 'WEEK'.toString() ">
+						AND YEARWEEK(date_format(entOrder.createTime,'%Y-%m-%d')) = YEARWEEK(now())
+					</when>
+					<when test="dateType == 'MONTH'.toString() ">
+						AND DATE_FORMAT( entOrder.createTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+					</when>
+					<when test="dataType == 'YEAR'.toString() ">
+						AND year(entOrder.createTime) = year(now())
+					</when>
+				</choose>
+			</if>
+			<if test='year !=null and year !=""  '>
+				AND year(entOrder.createTime)= #{year}
+			</if>
+			<if test='startDateTime !=null or endDateTime !=null'>
+				<choose>
+					<when test="startDateTime !=null and endDateTime !=null ">
+						AND entOrder.createTime between #{startDateTime} and #{endDateTime}
+					</when>
+					<when test="startDateTime !=null ">
+						AND entOrder.createTime &gt;= #{startDateTime}
+					</when>
+					<when test="endDateTime !=null ">
+						AND entOrder.createTime &lt; #{endDateTime}
+					</when>
+				</choose>
+			</if>
+			<if test='orderStatus !=null and orderStatus !=""  '>
+				AND entOrder.busiStatus = #{orderStatus}
+			</if>
+		</where>
+		group by entOrder.id
+	</select>
+
+
+</mapper>

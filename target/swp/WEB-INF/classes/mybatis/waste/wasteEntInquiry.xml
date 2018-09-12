@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.entinquiry.mapper.EntInquiryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.entinquiry.entity.EntInquiry">
+        <id column="id" property="id"/>
+        <result column="entId" property="entId"/>
+        <result column="releaseEntId" property="releaseEntId"/>
+        <result column="facilitatorEntId" property="facilitatorEntId"/>
+        <result column="disEntId" property="disEntId"/>
+        <result column="releaseId" property="releaseId"/>
+        <result column="quotedType" property="quotedType"/>
+        <result column="totalAmount" property="totalAmount"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="remark" property="remark"/>
+        <result column="busiStatus" property="busiStatus"/>
+        <result column="inquiryType" property="inquiryType"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+        <result column="responseId" property="responseId"/>
+        <result column="priority" property="priority"/>
+        <result column="activityId" property="activityId"/>
+        <result column="responsiblePerson" property="responsiblePerson"/>
+    </resultMap>
+    <sql id="wasteInquiryCondition">
+        <where>
+            <if test='inquiryType !=null and inquiryType !="" '>
+                and entInquiry.inquiryType = #{inquiryType}
+            </if>
+            <if test='inquiryEntId !=null and inquiryEntId !="" '>
+                and entInquiry.entId = #{inquiryEntId}
+            </if>
+            <if test='releaseId !=null  and releaseId !="" '>
+                and entRelease.id = #{releaseId}
+            </if>
+            <if test='releaseEntId !=null  and releaseEntId !="" '>
+                and entRelease.entId = #{releaseEntId}
+            </if>
+            <if test='responsibleUserId !=null  and responsibleUserId !="" '>
+                <choose>
+                    <when test="responsibleUserId== 'UNDISTRIBUTED'">
+                        and entInquiry.responsiblePerson is null
+                    </when>
+                    <otherwise>
+                        and entInquiry.responsiblePerson = #{responsibleUserId}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test='dateType !=null and dateType !="" '>
+                <choose>
+                    <when test="dateType == 'TODAY'.toString() ">
+                        AND to_days(entInquiry.createTime) = to_days(now())
+                    </when>
+                    <when test="dateType == 'WEEK'.toString() ">
+                        AND YEARWEEK(date_format(entInquiry.createTime,'%Y-%m-%d')) = YEARWEEK(now())
+                    </when>
+                    <when test="dateType == 'MONTH'.toString() ">
+                        AND DATE_FORMAT( entInquiry.createTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+                    </when>
+                </choose>
+            </if>
+            <if test='startDateTime !=null or endDateTime !=null'>
+                <choose>
+                    <when test="startDateTime !=null and endDateTime !=null ">
+                        AND entInquiry.createTime between #{startDateTime} and #{endDateTime}
+                    </when>
+                    <when test="startDateTime !=null ">
+                        AND entInquiry.createTime &gt;= #{startDateTime}
+                    </when>
+                    <when test="endDateTime !=null ">
+                        AND entInquiry.createTime &lt; #{endDateTime}
+                    </when>
+                </choose>
+            </if>
+            <if test='inquiryStatus !=null and inquiryStatus !=""  '>
+                AND entInquiry.busiStatus = #{inquiryStatus}
+            </if>
+            <if test=' tagType != null and tagType!="" '>
+                <choose>
+                    <when test=" tagType == 'INIT' ">
+                        AND latestTag2.tagType is null
+                    </when>
+                    <otherwise>
+                        AND latestTag2.tagType = #{tagType}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test=' tagTypeStatus != null and tagTypeStatus!="" '>
+                AND latestTag2.busiStatus = #{tagTypeStatus}
+            </if>
+            <if test=' priority != null and priority!="" '>
+                AND entInquiry.priority = #{priority}
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="listWasteInquiry" resultType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryModel"
+            parameterType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryParam">
+        SELECT
+        entInquiry.id AS inquiryId,
+        releaseEnterBase.entId AS releaseEntId,
+        releaseEnterBase.entName AS releaseEnterName,
+        entRelease.facilitatorEntId ,
+        entRelease.createBy as releaseUserId,
+        inquiryEnterBase.entId as inquiryEntId,
+        case when inquiryEnterBase.entType = 'DIS_FACILITATOR' then
+           CONCAT(disEntBase.entName,'-',inquiryEnterBase.entName)
+        else inquiryEnterBase.entName
+        end as inquiryEnterName,
+        case when 'A' = 'A'  then releaseUser.PhoneNum
+        else NULL
+        end as releaseUserPhoneNum,
+        disEntBase.entId as entDisEntId,
+        sysuser.UserId AS createrId,
+        sysuser.ChineseName AS createrName,
+        responsibleUser.UserId AS responsibleUserId,
+        responsibleUser.ChineseName AS responsibleUserName,
+        entInquiry.releaseId as releaseId,
+        entInquiry.quotedType AS quotedType,
+        entInquiry.totalPrice,
+        entInquiry.totalAmount,
+        entInquiry.remark AS inquiryRemark,
+        entInquiry.busiStatus AS busiStatus,
+        entInquiry.createTime AS inquiryDate,
+        entInquiry.activityId AS activityId,
+        entInquiry.priority AS priority,
+        entInquiry.inquiryType AS inquiryType,
+        inquiryEnterBase.entType as inquiryEnterType,
+        case when entInquiry.activityId is not null then
+                ( select activity_name from waste_activity where id = entInquiry.activityId )
+              else ''
+        end as activityName,
+        ( select case when count(entEnval.id)>1 then true else false end from ent_evaluate entEnval  where entEnval.orderId = entInquiry.id  ) as evaluated
+        FROM
+        ent_inquiry entInquiry
+        INNER JOIN sys_enterprise_base releaseEnterBase ON entInquiry.releaseEntId = releaseEnterBase.entId and entInquiry.deleteFlag = 0
+        <if test='activityId !=null and activityId !="" '>
+            <choose>
+                <when test="activityId == 'resourcePull' ">
+                    and entInquiry.activityId is null
+                </when>
+                <otherwise>
+                    INNER JOIN waste_activity activity ON activity.id = entInquiry.activityId AND activity.id =
+                    #{activityId}
+                </otherwise>
+            </choose>
+        </if>
+        INNER JOIN sys_enterprise_base inquiryEnterBase ON entInquiry.entId = inquiryEnterBase.entId
+        INNER JOIN ent_release entRelease ON entInquiry.releaseId = entRelease.id
+        left join sys_user releaseUser on releaseUser.UserId = entRelease.createBy
+        left join sys_user responsibleUser on responsibleUser.userId = entInquiry.responsiblePerson
+        LEFT JOIN sys_user sysuser ON entInquiry.createBy = sysuser.UserId
+        left join sys_enterprise_base disEntBase on   entInquiry.disEntId = disEntBase.entId
+        LEFT JOIN (
+        select latestTag.* from (
+        select * from (
+        SELECT   releaseId as relaseId2,     max(createTime) as maxCreateTime
+        FROM    discuss_tag        WHERE        entId = #{loginEntId} AND deleteFlag = '0'
+        GROUP BY        releaseId   ) maxTag
+        inner join discuss_tag tag on maxTag.relaseId2 = tag.releaseId and maxTag.maxCreateTime =    tag.createTime
+        ) latestTag
+        ) latestTag2 ON latestTag2.releaseId = entInquiry.releaseId
+        <include refid="wasteInquiryCondition"></include>
+        order by entInquiry.createTime desc
+        <if test='startRowIndex!=null and rows!=null and rows!=0 '>
+            LIMIT ${startRowIndex} , ${rows}
+        </if>
+
+    </select>
+
+
+
+
+
+    <select id="countWasteInquiry" resultType="Integer" parameterType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryParam">
+        SELECT
+        count(1)
+        FROM
+        ent_inquiry entInquiry
+        INNER JOIN sys_enterprise_base enterBase ON entInquiry.entId = enterBase.entId and entInquiry.deleteFlag = 0
+        <if test='activityId !=null and activityId !="" '>
+            <choose>
+                <when test="activityId == 'resourcePull' ">
+                    and entInquiry.activityId is null
+                </when>
+                <otherwise>
+                    INNER JOIN waste_activity activity ON activity.id = entInquiry.activityId AND activity.id =
+                    #{activityId}
+                </otherwise>
+            </choose>
+        </if>
+        INNER JOIN ent_release entRelease ON entInquiry.releaseId = entRelease.id
+        LEFT JOIN (
+        select latestTag.* from (
+        select * from (
+        SELECT releaseId as relaseId2, max(createTime) as maxCreateTime
+        FROM discuss_tag     WHERE entId = #{loginEntId}  AND deleteFlag = '0' GROUP BY releaseId
+        ) maxTag inner join discuss_tag tag on maxTag.relaseId2 = tag.releaseId and maxTag.maxCreateTime =  tag.createTime
+        ) latestTag
+        ) latestTag2 ON latestTag2.releaseId = entInquiry.releaseId
+        <include refid="wasteInquiryCondition"></include>
+    </select>
+
+    <select id="listInquiryAmount" resultType="com.mlsc.yifeiwang.wasterealase.model.EntReleaseDetailModel" parameterType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryParam">
+        SELECT
+        unitCode.`value` AS unitValue,
+        sum(releaseDetail.releaseAmount) AS wasteAmount
+        FROM
+        ent_inquiry entInquiry
+        INNER JOIN sys_enterprise_base enterBase ON entInquiry.entId = enterBase.entId and entInquiry.deleteFlag = 0
+        inner join ent_inquiry_detail inquiryDetail on entInquiry.id = inquiryDetail.inquiryId
+        <if test='activityId !=null and activityId !="" '>
+            <choose>
+                <when test="activityId == 'resourcePull' ">
+                    and entInquiry.activityId is null
+                </when>
+                <otherwise>
+                    INNER JOIN waste_activity activity ON activity.id = entInquiry.activityId AND activity.id =
+                    #{activityId}
+                </otherwise>
+            </choose>
+        </if>
+        inner join ent_release_detail releaseDetail on inquiryDetail.releaseDetailId = releaseDetail.id
+        INNER JOIN ent_waste entWaste ON releaseDetail.entWasteId = entWaste.id
+        INNER JOIN code_value unitCode ON entWaste.unitCode = unitCode.`code` AND unitCode.type_code = 'UNIT_TYPE'
+        INNER JOIN ent_release entRelease ON entInquiry.releaseId = entRelease.id
+        LEFT JOIN (
+        select latestTag.* from (
+        select * from (
+        SELECT releaseId as relaseId2, max(createTime) as maxCreateTime
+        FROM discuss_tag     WHERE entId = #{loginEntId} AND deleteFlag = '0'  GROUP BY releaseId
+        ) maxTag inner join discuss_tag tag on maxTag.relaseId2 = tag.releaseId and maxTag.maxCreateTime =  tag.createTime
+        ) latestTag
+        ) latestTag2 ON latestTag2.releaseId = entInquiry.releaseId
+        <include refid="wasteInquiryCondition"></include>
+        group by unitValue
+    </select>
+
+    <select id="inquiryTotalPrice" resultType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryDetailModel" parameterType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryParam">
+        SELECT
+        sum(entInquiry.totalPrice) as wasteTotalPrice
+        FROM
+        ent_inquiry entInquiry
+        INNER JOIN sys_enterprise_base enterBase ON entInquiry.entId = enterBase.entId and entInquiry.deleteFlag = 0
+        <if test='activityId !=null and activityId !="" '>
+            <choose>
+                <when test="activityId == 'resourcePull' ">
+                    and entInquiry.activityId is null
+                </when>
+                <otherwise>
+                    INNER JOIN waste_activity activity ON activity.id = entInquiry.activityId AND activity.id =
+                    #{activityId}
+                </otherwise>
+            </choose>
+        </if>
+        LEFT JOIN (
+        select latestTag.* from (
+        select * from (
+        SELECT releaseId as relaseId2, max(createTime) as maxCreateTime
+        FROM discuss_tag     WHERE entId = #{loginEntId} AND deleteFlag = '0'   GROUP BY releaseId
+        ) maxTag inner join discuss_tag tag on maxTag.relaseId2 = tag.releaseId and maxTag.maxCreateTime =  tag.createTime
+        ) latestTag
+        ) latestTag2 ON latestTag2.releaseId = entInquiry.releaseId
+        <include refid="wasteInquiryCondition"></include>
+    </select>
+
+
+    <select id="listEntInquiryByReleaseId" resultType="com.mlsc.yifeiwang.entinquiry.entity.EntInquiry">
+        SELECT
+        entInquiry.*
+        FROM
+        ent_inquiry entInquiry
+        <where>
+            <if test='releaseId !=null  and releaseId !="" '>
+                entInquiry.releaseId = #{releaseId}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="countUntreatedInquiry" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM ent_inquiry entInquiry
+        where entInquiry.busiStatus = 'SUBMIT'
+        <if test='entId !=null  and entId !="" '>
+            and entInquiry.releaseEntId = #{entId} and entInquiry.facilitatorEntId is null
+        </if>
+    </select>
+
+
+    <select id="listReleaseEntNameByEntId" resultType="com.mlsc.yifeiwang.entinquiry.model.EntInquiryModel">
+        SELECT
+        DISTINCT entBase.entName as releaseEnterName,
+        entBase.entId as releaseEntId
+        FROM
+        ent_inquiry entInquiry inner JOIN
+        sys_enterprise_base entBase on entInquiry.releaseEntId = entBase.entId
+        <where>
+            <if test='entId !=null  and entId !="" '>
+                entInquiry.entId = #{entId} or entInquiry.facilitatorEntId = #{entId}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,114 @@
+body{
+    background-color: #f8f8fa;
+}
+.van-button--bottom-action.van-button--primary.sure-btn{
+    position: fixed;
+    bottom: 0;
+    background-color: #2676FF;
+    height: 1rem;
+    line-height: 1rem;
+}
+.success-title{
+    font-size: 0.26rem;
+    color: #6b7c99;
+    line-height: .5rem;
+    letter-spacing: .02rem;
+    padding: .2rem 0.3rem;
+    background-color: #fff;
+}
+.success-title i.van-icon-warn{
+    color: #e6a23c;
+}
+.noInquiry{
+    width: 3.48rem;
+    height: 2.59rem;
+    background: url(../img/wait.png) center center no-repeat;
+    background-size: 100% 100%;
+    margin: 1rem auto 0;
+}
+.release-container{
+    padding: .28rem .3rem .15rem;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #fff;
+}
+.release-container .van-row{
+    margin-bottom: .2rem;
+    font-size: .26rem;
+}
+.total-container{
+    padding: .1rem .3rem .2rem;
+    background-color: #fff;
+}
+.total-container .van-row{
+    font-size: .26rem;
+}
+.total-container .van-row span{
+    font-size: .3rem;
+    font-weight: bold;
+}
+.desc{
+    padding: .1rem .3rem .2rem;
+    font-size: .26rem;
+    border-top: 1px solid #e4e4ec;
+    color: #6b7c99;
+    line-height: .45rem;
+    background-color: #fff;
+}
+.desc p{
+    margin: .1rem 0;
+}
+/*新的样式*/
+.success-icon{
+    width: .44rem;
+    height: .44rem;
+    background: url(../img/success-icon.png) center center no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: .13rem;
+    top: -0.02rem;
+}
+.info-icon{
+    width: .44rem;
+    height: .44rem;
+    background: url(../img/info-icon.png) center center no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: .13rem;
+    top: -0.02rem;
+}
+.split{
+    background-color: #f8f8fa;
+    border-top:1px solid #e7ebf6;
+    border-bottom:1px solid #dfe5f1;
+    height: .2rem;
+}
+em{
+    font-size: .26rem;
+    color: #6b7c99;
+    font-style: normal;
+}
+b{
+    color: #263e64;
+    font-size: .35rem;
+}
+.totalPrice b{
+    color: #fc3d5c;
+}
+.waste-name{
+    color: #2b3f64;
+    font-size: .3rem;
+}
+.dispositionType{
+    font-size: .26rem;
+    color: #6b7c99;
+}
+.waste-code{
+    color: #6b7c99;
+}
+.release-container b{
+    font-size: .27rem;
+}

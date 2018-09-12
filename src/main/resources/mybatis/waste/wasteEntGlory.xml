@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mlsc.yifeiwang.enterprise.mapper.EntGloryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mlsc.yifeiwang.enterprise.entity.EntGlory">
+        <id column="id" property="id"/>
+        <result column="gloryType" property="gloryType"/>
+        <result column="entId" property="entId"/>
+        <result column="fileId" property="fileId"/>
+        <result column="getTime" property="getTime"/>
+        <result column="createBy" property="createBy"/>
+        <result column="createTime" property="createTime"/>
+        <result column="editBy" property="editBy"/>
+        <result column="editTime" property="editTime"/>
+        <result column="deleteFlag" property="deleteFlag"/>
+    </resultMap>
+    <select id="listEntGloryByEntId" resultType="com.mlsc.yifeiwang.enterprise.entity.EntGlory" parameterType="java.lang.String">
+        select id,entId,gloryType,getTime,fileId
+        from ent_glory
+        where deleteFlag = 0
+        <if test='entId !=null and entId !="" '>
+            and entId = #{entId}
+        </if>
+    </select>
+</mapper>
