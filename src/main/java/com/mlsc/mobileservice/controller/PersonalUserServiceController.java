@@ -40,33 +40,6 @@ public class PersonalUserServiceController {
     private MyEnterpriseService myEnterpriseService;
 
     @Autowired
-    private EnterpriseService enterpriseService;
-
-    @Autowired
-    private LicenceService licenceService;
-    @Autowired
-    private ICodeValueService codeValueService;
-
-    @Autowired
-    private DispositionCapacityReleaseService dispositionCapacityReleaseService;
-
-    @Autowired
-    private LicenceDetailService licenceDetailService;
-
-
-    @Autowired
-    private ISysNoticeService noticeService;
-
-    @Autowired
-    private UploadfileService uploadfileService;
-
-    @Autowired
-    private SysCantonService sysCantonService;
-
-    @Autowired
-    private UserExtendedService userExtendedService;
-
-    @Autowired
     private UserService userService;
 
     @ResponseBody
