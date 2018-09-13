@@ -8,25 +8,6 @@
 <%@ page import="com.mlsc.yifeiwang.bindserve.entity.EntRecharge" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java"
          errorPage="" %>
-<link rel="stylesheet" href="../main/pc/css/common.css?8" />
-<div class="header" style="position: relative">
-    <div class="container">
-        <div class="logo">
-            <a href="#" tag="0" title="易废网"><img src="../main/pc/img/logo_short.png" alt="易废网 logo"></a>
-        </div>
-        <ul>
-            <li  class="homePage">
-                <a href="javascript:" title="首页" onclick="goIndex()">首页</a>
-            </li>
-            <li class="company_menu">
-                <a href="javascript:" onclick="toPage('company')">企业信息</a>
-            </li>
-            <li class="company_menu">
-                <a href="javascript:" onclick="toPage('activityList')">活动</a>
-            </li>
-        </ul>
-    </div>
-</div>
 <%
     String appPath = request.getContextPath();
     try{
