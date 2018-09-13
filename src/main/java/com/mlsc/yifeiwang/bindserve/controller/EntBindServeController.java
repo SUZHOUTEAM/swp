@@ -97,6 +97,7 @@ public class EntBindServeController {
         Result<Map<String, Object>> result = new Result<>();
         Map<String, Object> resultMap = new HashMap<>();
         try {
+            entBindServeParam.setBindUserId(user.getUserId());
             List<EntBindServeModel> entBindServeModels = entBindServeService.listBindServe(entBindServeParam, pagingParameter);
             resultMap.put("entBindServeModels", entBindServeModels);
             resultMap.put("pagingParameter", pagingParameter);
