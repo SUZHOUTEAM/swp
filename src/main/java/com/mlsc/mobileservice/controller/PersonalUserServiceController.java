@@ -77,20 +77,9 @@ public class PersonalUserServiceController {
         String ticketId = request.getParameter("ticketId");
         String enterpriseId = request.getParameter("enterpriseId");
         User user = LoginStatusUtils.getUserByTicketId(ticketId);
-
-        // 获取企业类型
-        List<CodeValue> enterpriseTypes = codeValueService.getEnterpriseTypesByEntId(enterpriseId);
-        // 获取企业基本信息
         RPCSysEnterpriseBaseVo sysEnterpriseBaseVo = myEnterpriseService.getSysEnterpriseBasesByEntId(ticketId, enterpriseId);
-        sysEnterpriseBaseVo.setEntTypes(enterpriseTypes);
-        UserExtended userExtended = userExtendedService.getUserAdminByEnterId(enterpriseId,user.getUserId());
-
-        if (userExtended != null && StringUtils.isNotEmpty(userExtended.getSysUserId())) {
-            User sysUser = userService.getUserByUserId(userExtended.getSysUserId());
-            if (sysUser != null) {
-                dataMap.put("userInformation", JSONArray.toJSON(sysUser));
-            }
-        }
+        User sysUser = userService.getUserByUserId(user.getUserId());
+        dataMap.put("userInformation", JSONArray.toJSON(sysUser));
         dataMap.put("enterpriseInformation", JSONArray.toJSON(sysEnterpriseBaseVo));
         result.setStatus(ResultStatus.Success);
         result.setData(dataMap);
