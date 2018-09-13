@@ -267,34 +267,35 @@ function editLicence(t){
         $.notify("只能选择一个许可证进行编辑",{"status":"<%=Constant.STATUS_INFO%>"});
     } else {
         // 判断当前需要编辑的许可证的审核状态
-        if(($checkItem.parent().parent().parent().find('td').eq(4).html()=== '审核退回') || ($checkItem.parent().parent().parent().find('td').eq(4).html()=== '企业创建') ){
-        	$.page.ajax($.page.getAjaxSettings({
-                async: false,
-                type: "POST",
-                dataType: "json",
-                url: "/licence/getAuditStatus.htm?etc=" + new Date().getTime(),
-                data: $checkItem.serialize(),
-                success: function (result, textStatus, jqXHR) {
-                    if (result.data.auditStatusCode == "<%=CodeTypeConstant.LIC_AUDIT_PASS%>") {
-                        $.notify("[审核通过]的许可证不能编辑",{"status":"<%=Constant.STATUS_INFO%>"}); 
-                    } else {
+        <%--var statusText=$checkItem.parent().parent().parent().find('td').eq(4).html();--%>
+        <%--if(statusText=== '审核退回' || statusText=== '企业创建'||statusText=== '审核通过' ){--%>
+        	<%--$.page.ajax($.page.getAjaxSettings({--%>
+                <%--async: false,--%>
+                <%--type: "POST",--%>
+                <%--dataType: "json",--%>
+                <%--url: "/licence/getAuditStatus.htm?etc=" + new Date().getTime(),--%>
+                <%--data: $checkItem.serialize(),--%>
+                <%--success: function (result, textStatus, jqXHR) {--%>
+                    <%--if (result.data.auditStatusCode == "<%=CodeTypeConstant.LIC_AUDIT_PASS%>") {--%>
+                        <%--$.notify("[审核通过]的许可证不能编辑",{"status":"<%=Constant.STATUS_INFO%>"}); --%>
+                    <%--} else {--%>
                         var paramObj = {};
                         paramObj.licenceId = $checkItem.val();
                         paramObj.enterpriseId = "${enterpriseId}";
                         var pageUrl = "/licence/licenceSteps.htm";
                         $.page.gotoTargetLocation(pageUrl, paramObj);
-                    }
-                },complete: function (jqXHR, textStatus) {
-                    var result = jqXHR.responseJSON;
-                    if (result.status != 1) {
-                        
-                    }
-                }
-            }));
-        }else{
-        	$.notify("只有[审核退回]和[企业创建]状态的许可证可编辑",{"status":"info"});
-
-        }
+//                    }
+//                },complete: function (jqXHR, textStatus) {
+//                    var result = jqXHR.responseJSON;
+//                    if (result.status != 1) {
+//
+//                    }
+//                }
+//            }));
+//        }else{
+//        	$.notify("只有[审核退回]和[企业创建]状态的许可证可编辑",{"status":"info"});
+//
+//        }
         
     }
 }

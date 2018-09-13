@@ -233,7 +233,8 @@ function confirmReject(t){
     if($checkItem.length == 0){
         $.notify("请选择一条或多条进行审核", {"status": "info"});
     }else{
-    	if($checkItem.parent().parent().parent().find('td').eq(4).html()=== '待审核'){
+        var statusText=$checkItem.parent().parent().parent().find('td').eq(4).html();
+    	if(statusText== '待审核'||statusText== '审核通过'){
     		swal({  title: "确认退回",   
                 text: "请确认是否退回",   
                 type: "warning",   
@@ -268,7 +269,7 @@ function confirmReject(t){
                 }  
             });
     	}else{
-   		 $.notify("只有[待审核]的许可证可以审核退回",{"status":"info"});
+   		 $.notify("已经审核退回的许可证不可以再次审核退回",{"status":"info"});
     	}
         
     }
